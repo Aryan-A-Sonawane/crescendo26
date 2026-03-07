@@ -1,12 +1,12 @@
 export default function Hero() {
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-pink-50 pt-16">
+    <section id="home" className="min-h-screen flex items-center justify-center bg-[#f3ba35] pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="space-y-8">
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900">
-            Welcome to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+            Welcome to{"\ "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 font-nistha">
               CRESCENDO&apos;26
             </span>
           </h1>

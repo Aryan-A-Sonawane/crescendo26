@@ -4,7 +4,7 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            About <span className="text-purple-600">CRESCENDO&apos;26</span>
+            About <span className="text-purple-600 font-nistha">CRESCENDO&apos;26</span>
           </h2>
           <div className="w-24 h-1 bg-purple-600 mx-auto"></div>
         </div>

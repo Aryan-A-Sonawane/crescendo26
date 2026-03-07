@@ -56,10 +56,10 @@ export default function About() {
 
         {/* Right — Radio image (large, pulls left to overlap title) */}
         <div
-          className="shrink-0 flex items-center justify-center w-full md:w-auto"
+          className="shrink-0 flex items-center justify-start w-full md:w-auto"
           style={{ zIndex: 5, width: "100%", marginLeft: "0", marginTop: "2rem" }}
         >
-          <div className="relative w-full md:w-[70%] md:-ml-[8%]">
+          <div className="relative w-full md:w-[90%] md:-ml-[20%]">
             {/* Radio image */}
             <Image
               src="/radio.webp"
@@ -99,7 +99,7 @@ export default function About() {
             </div>
 
             {/* Text overlay on top of radio */}
-            <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-8 md:px-20 lg:px-34 xl:px-36">
+            <div className="absolute inset-0 flex items-center justify-start px-16 sm:px-20 md:px-40 lg:px-52 xl:px-60">
               <p
                 style={{
                   color: "#ffd21f",

@@ -61,17 +61,17 @@ body {
 /* ===== Hero banner — responsive width ===== */
 
 .hero-banner-wrapper {
-  width: clamp(420px, 55vw, 900px);
+  width: clamp(180px, 26vw, 420px);
 }
 
 @media (max-width: 1024px) {
   .hero-banner-wrapper {
-    width: 70vw;
+    width: 52vw;
   }
 }
 
 @media (max-width: 768px) {
   .hero-banner-wrapper {
-    width: 85vw;
+    width: 72vw;
   }
 }

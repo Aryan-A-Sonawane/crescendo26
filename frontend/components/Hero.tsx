@@ -21,12 +21,20 @@ export default function Hero() {
         style={{ height: "88vh", backgroundColor: "#E7A92E" }}
       >
 
-        {/* Top decorative strip — border.webp is the horizontal band (maroon bar + hanging flowers) */}
-        <div className="absolute top-0 left-0 right-0 pointer-events-none select-none"
-          style={{ zIndex: 6, height: "clamp(70px, 15vh, 140px)" }}>
-          <Image src="/border.webp" alt="" fill className="object-fill"
-            priority aria-hidden="true" sizes="100vw" />
-        </div>
+        {/* Top decorative strip — border_left image at natural vertical scale, clipped to show top flower band */}
+        {/* Background-size: 100% 630px → stretches to full width, 630px tall (near-natural height) */}
+        {/* Container clips to ~130px → reveals top ~20% of image = corner medallion + hanging flowers */}
+        <div
+          className="absolute top-0 left-0 right-0 pointer-events-none select-none"
+          style={{
+            zIndex: 6,
+            height: "clamp(100px, 18vh, 150px)",
+            backgroundImage: "url('/border_left-removebg-preview.png')",
+            backgroundSize: "100% 630px",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "top left",
+          }}
+        />
 
         {/* Left side border — object-cover anchored top-left, z-7 so corner medallion overlaps top strip */}
         <div className="absolute top-0 left-0 h-full pointer-events-none select-none"
@@ -117,8 +125,8 @@ export default function Hero() {
 
         {/* banner.webp — behind all decoratives and logo, centered — z-1 */}
         <div
-          className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
-          style={{ zIndex: 1, width: "clamp(600px, 80vw, 1300px)" }}
+          className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+          style={{ zIndex: 1, width: "clamp(360px, 55vw, 900px)" }}
         >
           <Image
             src="/banner.webp"
@@ -132,7 +140,7 @@ export default function Hero() {
 
         {/* Crescendo logo — centered, 40–50% width — z-3 */}
         <div
-          className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none hero-banner-wrapper"
+          className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none hero-banner-wrapper"
           style={{ zIndex: 3 }}
         >
           <Image

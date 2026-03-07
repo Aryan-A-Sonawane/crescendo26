@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 const navLinks = [
@@ -12,10 +12,10 @@ const navLinks = [
 ];
 
 const navLinkClass =
-  "text-[#a71d16] hover:text-white transition-all duration-300 px-4 py-2 text-2xl font-bold tracking-wide hover:scale-105 font-nistha";
+  "text-[#a71d16] hover:text-white transition-all duration-300 px-4 py-2 text-2xl font-bold tracking-wide hover:scale-105";
 
 const mobileNavLinkClass =
-  "text-[#a71d16] hover:text-white py-2 px-4 text-center text-base font-bold rounded-full hover:bg-white/30 transition-all font-nistha";
+  "text-[#a71d16] hover:text-white py-2 px-4 text-center text-base font-bold rounded-full hover:bg-white/30 transition-all";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,17 +29,30 @@ export default function Navbar() {
             <div className="flex flex-col items-center py-2">
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center justify-center space-x-6">
-                {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href} className={navLinkClass}>
-                    {link.label}
-                  </Link>
+              <div className="hidden md:flex items-center justify-center space-x-3">
+                {navLinks.map((link, index) => (
+                  <React.Fragment key={link.href}>
+                    <Link 
+                      href={link.href} 
+                      className={navLinkClass}
+                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                    >
+                      {link.label}
+                    </Link>
+                    {index < navLinks.length - 1 && (
+                      <span className="text-[#a71d16] text-xl">*</span>
+                    )}
+                  </React.Fragment>
                 ))}
               </div>
 
               {/* Mobile Menu Button */}
               <div className="md:hidden w-full flex justify-between items-center">
-                <Link href="/" className="text-lg font-bold text-[#a71d16] font-nistha">
+                <Link 
+                  href="/" 
+                  className="text-lg font-bold text-[#a71d16]"
+                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                >
                   CRESCENDO&apos;26
                 </Link>
                 <button
@@ -74,6 +87,7 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       className={mobileNavLinkClass}
+                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {link.label}

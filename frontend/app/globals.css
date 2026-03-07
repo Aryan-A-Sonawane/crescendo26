@@ -80,8 +80,8 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --font-sans: var(--font-poppins);
   }
-  --font-sans: var(--font-poppins);
 }
 
 body {

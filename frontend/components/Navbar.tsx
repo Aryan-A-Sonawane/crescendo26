@@ -14,6 +14,9 @@ const navLinks = [
 const navLinkClass =
   "text-[#a71d16] hover:text-white transition-all duration-300 px-4 py-2 text-2xl font-bold tracking-wide hover:scale-105";
 
+const mobileNavLinkClass =
+  "text-[#a71d16] hover:text-white py-2 px-4 text-center text-sm font-bold rounded-full hover:bg-white/30 transition-all";
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

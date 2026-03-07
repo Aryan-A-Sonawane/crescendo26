@@ -3,12 +3,12 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
           {/* Brand */}
-          <div className="col-span-1">
-            <h3 className="text-2xl font-bold text-purple-400 mb-4">CRESCENDO&apos;26</h3>
-            <p className="text-gray-400 mb-4">
+          <div className="col-span-1 sm:col-span-2 md:col-span-1">
+            <h3 className="text-xl md:text-2xl font-bold text-purple-400 mb-3 md:mb-4">CRESCENDO&apos;26</h3>
+            <p className="text-sm md:text-base text-gray-400 mb-3 md:mb-4">
               The ultimate inter-college cultural fest celebrating creativity and talent.
             </p>
             <div className="flex space-x-4">
@@ -32,8 +32,8 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
+            <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Quick Links</h4>
+            <ul className="space-y-1.5 md:space-y-2 text-sm md:text-base">
               <li>
                 <Link href="#home" className="text-gray-400 hover:text-purple-400 transition-colors">
                   Home
@@ -59,8 +59,8 @@ export default function Footer() {
 
           {/* Events */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Popular Events</h4>
-            <ul className="space-y-2">
+            <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Popular Events</h4>
+            <ul className="space-y-1.5 md:space-y-2 text-sm md:text-base">
               <li className="text-gray-400">Battle of Bands</li>
               <li className="text-gray-400">Group Dance</li>
               <li className="text-gray-400">Street Play</li>
@@ -70,23 +70,23 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-            <ul className="space-y-2 text-gray-400">
+            <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Contact Us</h4>
+            <ul className="space-y-1.5 md:space-y-2 text-gray-400 text-sm md:text-base">
               <li className="flex items-start gap-2">
-                <svg className="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <span>College Campus, City, State</span>
               </li>
               <li className="flex items-center gap-2">
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <span>info@crescendo26.com</span>
               </li>
               <li className="flex items-center gap-2">
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
                 <span>+91 12345 67890</span>
@@ -96,16 +96,16 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
+        <div className="border-t border-gray-800 pt-6 md:pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+            <p className="text-gray-400 text-xs md:text-sm text-center md:text-left">
               © 2026 CRESCENDO. All rights reserved.
             </p>
-            <div className="flex gap-6 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-purple-400 text-sm transition-colors">
+            <div className="flex gap-4 md:gap-6">
+              <Link href="#" className="text-gray-400 hover:text-purple-400 text-xs md:text-sm transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-purple-400 text-sm transition-colors">
+              <Link href="#" className="text-gray-400 hover:text-purple-400 text-xs md:text-sm transition-colors">
                 Terms of Service
               </Link>
             </div>

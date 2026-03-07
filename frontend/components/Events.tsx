@@ -41,25 +41,25 @@ export default function Events() {
   const [activeCategory, setActiveCategory] = useState(0);
 
   return (
-    <section id="events" className="py-20 bg-gradient-to-br from-purple-50 via-white to-pink-50">
+    <section id="events" className="py-12 md:py-20 bg-linear-to-br from-purple-50 via-white to-pink-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Our <span className="text-purple-600">Events</span>
           </h2>
           <div className="w-24 h-1 bg-purple-600 mx-auto mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
             Explore our diverse range of competitions and showcase your talents
           </p>
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 md:mb-12">
           {eventCategories.map((cat, index) => (
             <button
               key={index}
               onClick={() => setActiveCategory(index)}
-              className={`px-6 py-3 rounded-full font-semibold transition-all ${
+              className={`px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold transition-all text-sm md:text-base ${
                 activeCategory === index
                   ? "bg-purple-600 text-white shadow-lg scale-105"
                   : "bg-white text-gray-700 hover:bg-purple-50"
@@ -71,15 +71,15 @@ export default function Events() {
         </div>
 
         {/* Events Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {eventCategories[activeCategory].events.map((event, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-2"
+              className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-2"
             >
-              <div className="text-5xl mb-4">{event.icon}</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">{event.name}</h3>
-              <p className="text-gray-600 mb-6">{event.description}</p>
+              <div className="text-4xl md:text-5xl mb-4">{event.icon}</div>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">{event.name}</h3>
+              <p className="text-sm md:text-base text-gray-600 mb-6">{event.description}</p>
               <button className="text-purple-600 font-semibold hover:text-purple-700 flex items-center gap-2">
                 View Details
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,8 +91,8 @@ export default function Events() {
         </div>
 
         {/* View All Button */}
-        <div className="text-center mt-12">
-          <button className="bg-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-purple-700 transition-all hover:scale-105 shadow-lg">
+        <div className="text-center mt-8 md:mt-12">
+          <button className="w-full sm:w-auto bg-purple-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-base md:text-lg font-semibold hover:bg-purple-700 transition-all hover:scale-105 shadow-lg">
             View All Events
           </button>
         </div>

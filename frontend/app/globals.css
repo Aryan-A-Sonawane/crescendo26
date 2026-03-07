@@ -2,6 +2,24 @@
 
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Nistha";
+  src: url("/fonts/nistha.otf") format("opentype"),
+       url("/fonts/nistha.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Taiganja";
+  src: url("/fonts/Taiganja Type.otf") format("opentype"),
+       url("/fonts/Taiganja Type.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Fonts */
   --font-nishtha: 'Nishtha', serif;
@@ -52,6 +70,17 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-nistha: "Nistha", serif;
+  --font-taiganja: "Taiganja", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
   --font-sans: var(--font-poppins);
 }
 
@@ -87,4 +116,19 @@ body {
     var(--primary-orange) 10px,
     var(--primary-orange) 20px
   ) 1;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@layer utilities {
+  .speaker-spin {
+    animation: spin-slow 4s linear infinite;
+  }
+
+  .speaker-spin-reverse {
+    animation: spin-slow 4s linear infinite reverse;
+  }
 }

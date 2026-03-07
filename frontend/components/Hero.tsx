@@ -5,8 +5,8 @@ export default function Hero() {
         <div className="space-y-8">
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900">
-            Welcome to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+            Welcome to{"\ "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 font-nistha">
               CRESCENDO&apos;26
             </span>
           </h1>

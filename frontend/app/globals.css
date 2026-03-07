@@ -1,26 +1,90 @@
+/* Crescendo'2026 - The Indian Odyssey - Design System */
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Fonts */
+  --font-nishtha: 'Nishtha', serif;
+  --font-cinzel: 'Cinzel Decorative', serif;
+  --font-poppins: 'Poppins', sans-serif;
+
+  /* Primary Colors */
+  --primary-maroon: #8B1538;
+  --primary-gold: #D4A017;
+  --primary-orange: #FF6B35;
+  --primary-yellow: #F7B32B;
+
+  /* Navbar Specific Colors */
+  --navbar-bg: #e87700;
+  --navbar-border: #a71d16;
+
+  /* Secondary Colors */
+  --secondary-burgundy: #6B0F1A;
+  --secondary-rust: #B85042;
+  --secondary-cream: #FFF8E7;
+  --secondary-terracotta: #E07A5F;
+
+  /* Accent Colors */
+  --accent-turquoise: #3AAFA9;
+  --accent-pink: #F72585;
+  --accent-green: #2D6A4F;
+  --accent-blue: #1B4965;
+
+  /* Neutral Colors */
+  --neutral-white: #FFFFFF;
+  --neutral-off-white: #FFF8F0;
+  --neutral-light: #F5F1E8;
+  --neutral-medium: #8B8680;
+  --neutral-dark: #3E3B36;
+  --neutral-black: #1A1816;
+
+  /* Gradients */
+  --gradient-sunset: linear-gradient(135deg, #8B1538 0%, #FF6B35 50%, #F7B32B 100%);
+  --gradient-festival: linear-gradient(to right, #D4A017, #FF6B35, #F72585);
+  --gradient-warm: linear-gradient(180deg, #FFF8E7 0%, #FFE5B4 100%);
+  --gradient-navbar: linear-gradient(180deg, #F7B32B 0%, #FFD96B 100%);
+
+  /* Legacy support */
+  --background: #f3ba35;
+  --foreground: #1A1816;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-poppins);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins);
+  scroll-behavior: smooth;
+}
+
+/* Utility classes for Indian theme */
+.text-nishtha {
+  font-family: var(--font-nishtha);
+}
+
+.text-decorative {
+  font-family: var(--font-cinzel);
+}
+
+.gradient-text {
+  background: var(--gradient-festival);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-indian {
+  border-style: solid;
+  border-image: repeating-linear-gradient(
+    45deg,
+    var(--primary-gold),
+    var(--primary-gold) 10px,
+    var(--primary-orange) 10px,
+    var(--primary-orange) 20px
+  ) 1;
 }

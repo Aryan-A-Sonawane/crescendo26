@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 const navLinks = [
   { href: "#home", label: "HOME" },
   { href: "#events", label: "EVENTS" },
   { href: "#competitions", label: "COMPETITIONS" },
-  { href: "#partner", label: "PARTNER" },
+  { href: "#partner", label: "PARTNERS" },
   { href: "#team", label: "TEAM" },
 ];
 
@@ -18,28 +18,25 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-2 md:px-4">
-      <div className="w-full md:max-w-5xl max-w-[95%]">
-        {/* Main Navigation */}
-        <div className="bg-[#e87700] shadow-2xl rounded-3xl md:rounded-full border-3 md:border-4 border-[#a71d16]">
-          <div className="px-3 py-2 md:px-8 lg:px-16 md:py-0">
-            <div className="flex flex-col md:items-center py-0 md:py-2">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-4">
+      <div className="w-full max-w-5xl flex items-center gap-4">
+
+        {/* Main Navigation Pill */}
+        <div className="flex-1 bg-[#e87700] shadow-2xl rounded-full border-4 border-[#a71d16]">
+          <div className="px-12 sm:px-12 lg:px-16">
+            <div className="flex items-center justify-center py-2">
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center justify-center space-x-3">
-                {navLinks.map((link, index) => (
-                  <React.Fragment key={link.href}>
-                    <Link 
-                      href={link.href} 
-                      className={navLinkClass}
-                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    >
-                      {link.label}
-                    </Link>
-                    {index < navLinks.length - 1 && (
-                      <span className="text-[#a71d16] text-xl">*</span>
-                    )}
-                  </React.Fragment>
+              <div className="hidden md:flex items-center justify-center space-x-6">
+                {navLinks.map((link) => (
+                  <Link 
+                    key={link.href} 
+                    href={link.href} 
+                    className={navLinkClass}
+                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                  >
+                    {link.label}
+                  </Link>
                 ))}
               </div>
 
@@ -83,18 +80,36 @@ export default function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="text-[#a71d16] hover:text-white py-1.5 px-3 text-center text-sm font-bold rounded-full hover:bg-white/30 transition-all"
-                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                      className={mobileNavLinkClass}
                       onClick={() => setIsMenuOpen(false)}
+                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
                     >
                       {link.label}
                     </Link>
                   ))}
+                  <Link
+                    href="/register"
+                    className="bg-[#a71d16] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#a71d16] transition-all mt-2"
+                    onClick={() => setIsMenuOpen(false)}
+                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                  >
+                    REGISTER
+                  </Link>
                 </div>
               </div>
             )}
           </div>
         </div>
+
+        {/* Register Button — outside the pill, to the right */}
+        <Link
+          href="/register"
+          className="hidden md:inline-flex items-center text-lg font-bold px-6 py-3 rounded-full border-4 border-[#a71d16] shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
+          style={{ backgroundColor: "#a71d16", color: "#ffb51d", fontFamily: "'Cinzel Decorative', serif" }}
+        >
+          REGISTER
+        </Link>
+
       </div>
     </nav>
   );

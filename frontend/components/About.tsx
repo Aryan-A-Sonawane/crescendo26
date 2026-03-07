@@ -4,7 +4,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-x-hidden"
       style={{ backgroundColor: "#9f3026", minHeight: "100vh" }}
     >
       {/* Left decorative border */}
@@ -31,11 +31,11 @@ export default function About() {
 
       {/* Main content */}
       <div
-        className="relative flex flex-col md:flex-row items-center h-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 py-12 md:py-20 gap-0"
+        className="relative flex flex-col md:flex-row items-center justify-between h-full px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28 py-12 md:py-20 gap-0 max-w-screen-2xl mx-auto"
         style={{ zIndex: 4, minHeight: "100vh" }}
       >
         {/* Left — Title (sits on top, overlaps radio) */}
-        <div className="flex flex-col justify-center shrink-0 md:w-1/2" style={{ zIndex: 6 }}>
+        <div className="flex flex-col justify-center shrink-0 md:w-[45%] lg:w-[40%]" style={{ zIndex: 6 }}>
           <h2
             className="font-taiganja text-white leading-tight text-center md:text-left"
             style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
@@ -56,10 +56,10 @@ export default function About() {
 
         {/* Right — Radio image (large, pulls left to overlap title) */}
         <div
-          className="shrink-0 flex items-center justify-center w-full md:w-auto"
-          style={{ zIndex: 5, width: "100%", marginLeft: "0", marginTop: "2rem" }}
+          className="shrink-0 flex items-center justify-center w-full md:w-[55%] lg:w-[60%] mt-8 md:mt-0"
+          style={{ zIndex: 5 }}
         >
-          <div className="relative w-full md:w-[70%] md:-ml-[8%]">
+          <div className="relative w-full max-w-[900px] md:-ml-[5%] lg:-ml-[8%]">
             {/* Radio image */}
             <Image
               src="/radio.webp"

@@ -1,65 +1,160 @@
+/**
+ * Slide-in keyframes (slideInLeft / slideInRight) are defined in app/globals.css.
+ * Z-index layers:
+ *   css bg → background color #E7A92E (behind everything)
+ *   0 → border_left-removebg-preview.png decorative border frame
+ *   1 → banner.webp (centered, behind decoratives)
+ *   2 → decorative elements (mandala, truck, camel, sitar, gramophone)
+ *   3 → crescendo.png (primary focus)
+ *   10 → Border_top-removebg-preview.png (top strip, above all)
+ */
+
+import Image from "next/image";
+
 export default function Hero() {
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-pink-50 pt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <div className="space-y-8">
-          {/* Main Heading */}
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900">
-            Welcome to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
-              CRESCENDO&apos;26
-            </span>
-          </h1>
+    <>
+      {/* ── Hero section — 88vh gives enough room to separate decoratives ── */}
+      <section
+        id="home"
+        className="relative w-full overflow-hidden"
+        style={{ height: "88vh", backgroundColor: "#E7A92E" }}
+      >
 
-          {/* Subheading */}
-          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
-            The Ultimate Inter-College Cultural Fest
-          </p>
-
-          {/* Date & Venue */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-lg text-gray-700">
-            <div className="flex items-center gap-2">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>March 15-17, 2026</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>Your College Campus</span>
-            </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-            <button className="bg-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-purple-700 transition-all hover:scale-105 shadow-lg">
-              Register Now
-            </button>
-            <button className="border-2 border-purple-600 text-purple-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-purple-50 transition-all">
-              View Events
-            </button>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 max-w-3xl mx-auto pt-16">
-            <div>
-              <div className="text-4xl font-bold text-purple-600">50+</div>
-              <div className="text-gray-600 mt-2">Colleges</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-purple-600">100+</div>
-              <div className="text-gray-600 mt-2">Events</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-purple-600">5000+</div>
-              <div className="text-gray-600 mt-2">Participants</div>
-            </div>
-          </div>
+        {/* Top decorative strip — border.webp is the horizontal band (maroon bar + hanging flowers) */}
+        <div className="absolute top-0 left-0 right-0 pointer-events-none select-none"
+          style={{ zIndex: 6, height: "clamp(70px, 15vh, 140px)" }}>
+          <Image src="/border.webp" alt="" fill className="object-fill"
+            priority aria-hidden="true" sizes="100vw" />
         </div>
-      </div>
-    </section>
+
+        {/* Left side border — object-cover anchored top-left, z-7 so corner medallion overlaps top strip */}
+        <div className="absolute top-0 left-0 h-full pointer-events-none select-none"
+          style={{ zIndex: 7, width: "clamp(60px, 7vw, 110px)" }}>
+          <Image src="/border_left-removebg-preview.png" alt="" fill
+            style={{ objectFit: "cover", objectPosition: "left top" }}
+            aria-hidden="true" sizes="8vw" />
+        </div>
+
+        {/* Right side border — mirrored */}
+        <div className="absolute top-0 right-0 h-full pointer-events-none select-none"
+          style={{ zIndex: 7, width: "clamp(60px, 7vw, 110px)", transform: "scaleX(-1)" }}>
+          <Image src="/border_left-removebg-preview.png" alt="" fill
+            style={{ objectFit: "cover", objectPosition: "left top" }}
+            aria-hidden="true" sizes="8vw" />
+        </div>
+
+        {/* Mandala — top-left corner, behind truck — z-2, low opacity */}
+        <div
+          className="absolute pointer-events-none select-none"
+          style={{ top: "18vh", left: "0%", zIndex: 2, width: "clamp(160px, 14vw, 240px)", opacity: 0.45 }}
+        >
+          <Image
+            src="/mandala.webp"
+            alt=""
+            width={300}
+            height={300}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Truck — just below border, top-left — z-2 — hidden on mobile */}
+        <div
+          className="absolute hidden md:block pointer-events-none select-none animate-[slideInLeft_1.5s_ease-out_1.5s_both]"
+          style={{ top: "18vh", left: "-12px", zIndex: 2, width: "clamp(220px, 20vw, 300px)" }}
+        >
+          <Image
+            src="/truck.webp"
+            alt="Decorated Indian Truck"
+            width={400}
+            height={320}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Camel — bottom-left, flush with section bottom — z-2 — hidden on mobile */}
+        <div
+          className="absolute hidden md:block pointer-events-none select-none animate-[slideInLeft_1.5s_ease-out_1.5s_both]"
+          style={{ bottom: 0, left: "-12px", zIndex: 2, width: "clamp(280px, 24vw, 360px)" }}
+        >
+          <Image
+            src="/camel.webp"
+            alt="Decorated Camel"
+            width={460}
+            height={400}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Sitar — just below border, top-right — z-2 */}
+        <div
+          className="absolute pointer-events-none select-none animate-[slideInRight_1.5s_ease-out_1.5s_both]"
+          style={{ top: "18vh", right: "-12px", zIndex: 2, width: "clamp(240px, 22vw, 320px)" }}
+        >
+          <Image
+            src="/sitar.webp"
+            alt="Classical instruments"
+            width={420}
+            height={380}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Gramophone — bottom-right, flush with section bottom — z-2 */}
+        <div
+          className="absolute pointer-events-none select-none animate-[slideInRight_1.5s_ease-out_1.5s_both]"
+          style={{ bottom: 0, right: "-12px", zIndex: 2, width: "clamp(240px, 20vw, 320px)" }}
+        >
+          <Image
+            src="/music_driver.webp"
+            alt="Gramophone"
+            width={420}
+            height={380}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* banner.webp — behind all decoratives and logo, centered — z-1 */}
+        <div
+          className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+          style={{ zIndex: 1, width: "clamp(600px, 80vw, 1300px)" }}
+        >
+          <Image
+            src="/banner.webp"
+            alt=""
+            width={1200}
+            height={800}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Crescendo logo — centered, 40–50% width — z-3 */}
+        <div
+          className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none hero-banner-wrapper"
+          style={{ zIndex: 3 }}
+        >
+          <Image
+            src="/crescendo.png"
+            alt="Crescendo: The Indian Odyssey"
+            width={900}
+            height={450}
+            priority
+            style={{
+              width: "100%",
+              height: "auto",
+              filter: "drop-shadow(0 10px 25px rgba(0,0,0,0.25))",
+            }}
+          />
+        </div>
+
+
+      </section>
+
+      {/* Bottom maroon section — 15–18% screen height */}
+      <div style={{ width: "100%", height: "10vh", backgroundColor: "#9E2F24" }} />
+
+    </>
   );
 }

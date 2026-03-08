@@ -8,7 +8,7 @@ export default function About() {
       style={{ backgroundColor: "#9f3026", minHeight: "100vh" }}
     >
       {/* Left decorative border */}
-      <div className="absolute left-0 top-0 h-full w-8 md:w-16 lg:w-20" style={{ zIndex: 2 }}>
+      {/* <div className="absolute left-0 top-0 h-full w-8 md:w-16 lg:w-20" style={{ zIndex: 2 }}>
         <Image
           src="/border_1.png"
           alt="left border"
@@ -19,7 +19,7 @@ export default function About() {
       </div>
 
       {/* Right decorative border */}
-      <div className="absolute right-0 top-0 h-full w-8 md:w-16 lg:w-20" style={{ zIndex: 2 }}>
+      {/* <div className="absolute right-0 top-0 h-full w-8 md:w-16 lg:w-20" style={{ zIndex: 2 }}>
         <Image
           src="/border_1.png"
           alt="right border"
@@ -27,7 +27,7 @@ export default function About() {
           className="object-cover"
           style={{ objectPosition: "center", transform: "scaleX(-1)" }}
         />
-      </div>
+      </div> */} 
 
       {/* Main content */}
       <div

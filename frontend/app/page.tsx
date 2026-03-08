@@ -11,32 +11,32 @@ export default function Home() {
     <div className="min-h-screen bg-[#f3ba35] relative overflow-x-hidden">
       {/* Left Border (scrolling with page) */}
       <div 
-        className="absolute left-0 pointer-events-none" 
+        className="fixed left-0 top-0 bottom-0 pointer-events-none" 
         style={{ 
-          top: 0,
-          bottom: 0,
           width: '120px',
           zIndex: 9999,
           backgroundImage: 'url(/border_1.png)',
           backgroundRepeat: 'repeat-y',
           backgroundSize: '100% auto',
-          backgroundPosition: 'left center'
+          backgroundPosition: 'left center',
+          margin: 0,
+          padding: 0,
         }}
       />
 
       {/* Right Border (scrolling with page - flipped) */}
       <div 
-        className="absolute right-0 pointer-events-none" 
+        className="fixed right-0 top-0 bottom-0 pointer-events-none" 
         style={{ 
-          top: 0,
-          bottom: 0,
           width: '120px',
           zIndex: 9999,
           backgroundImage: 'url(/border_1.png)',
           backgroundRepeat: 'repeat-y',
           backgroundSize: '100% auto',
           backgroundPosition: 'right center',
-          transform: 'scaleX(-1)'
+          transform: 'scaleX(-1)',
+          margin: 0,
+          padding: 0,
         }}
       />
 

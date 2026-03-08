@@ -5,33 +5,47 @@ export default function About() {
     <section
       id="about"
       className="relative w-full overflow-hidden"
-      style={{ backgroundColor: "#9f3026", minHeight: "100vh" }}
+      style={{ backgroundColor: "#9f3026", minHeight: "100vh", padding: 0, margin: 0 }}
     >
-      {/* Left decorative border */}
-      {/* <div className="absolute left-0 top-0 h-full w-8 md:w-16 lg:w-20" style={{ zIndex: 2 }}>
-        <Image
-          src="/border_1.png"
-          alt="left border"
-          fill
-          className="object-cover"
-          style={{ objectPosition: "center" }}
-        />
-      </div>
 
-      {/* Right decorative border */}
-      {/* <div className="absolute right-0 top-0 h-full w-8 md:w-16 lg:w-20" style={{ zIndex: 2 }}>
-        <Image
-          src="/border_1.png"
-          alt="right border"
-          fill
-          className="object-cover"
-          style={{ objectPosition: "center", transform: "scaleX(-1)" }}
-        />
-      </div> */} 
+      {/* Scrolling Warli painting band */}
+      <div
+        className="w-full overflow-hidden"
+        style={{
+          position: "relative",
+          zIndex: 10,
+          backgroundColor: "#5a1a0e",
+          height: 160,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        {/* Double the images so the loop is seamless */}
+        <div
+          style={{
+            display: "flex",
+            width: "max-content",
+            animation: "warli-scroll 18s linear infinite",
+          }}
+        >
+          {[...Array(8)].map((_, i) => (
+            <Image
+              key={i}
+              src="/warli-painting.jpg"
+              alt="warli dancers"
+              width={566}
+              height={164}
+              className="object-cover"
+              style={{ flexShrink: 0, opacity: 0.92 }}
+              priority={i === 0}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Main content */}
       <div
-        className="relative flex flex-col md:flex-row items-center h-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 py-12 md:py-20 gap-0"
+        className="relative flex flex-col md:flex-row items-center h-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 gap-0"
         style={{ zIndex: 4, minHeight: "100vh" }}
       >
         {/* Left — Title (sits on top, overlaps radio) */}

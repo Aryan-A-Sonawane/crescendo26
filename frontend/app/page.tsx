@@ -11,14 +11,18 @@ export default function Home() {
     <div className="min-h-screen bg-[#f3ba35] relative overflow-x-hidden">
       {/* Left Border (scrolling with page) */}
       <div 
-        className="fixed left-0 top-0 bottom-0 pointer-events-none" 
+        className="pointer-events-none" 
         style={{ 
+          position: 'fixed',
+          left: -1,
+          top: 0,
+          bottom: 0,
           width: '120px',
-          zIndex: 9999,
+          zIndex: 9998,
           backgroundImage: 'url(/border_1.png)',
           backgroundRepeat: 'repeat-y',
           backgroundSize: '100% auto',
-          backgroundPosition: 'left center',
+          backgroundPosition: '0 0',
           margin: 0,
           padding: 0,
         }}
@@ -26,14 +30,18 @@ export default function Home() {
 
       {/* Right Border (scrolling with page - flipped) */}
       <div 
-        className="fixed right-0 top-0 bottom-0 pointer-events-none" 
+        className="pointer-events-none" 
         style={{ 
+          position: 'fixed',
+          right: -1,
+          top: 0,
+          bottom: 0,
           width: '120px',
-          zIndex: 9999,
+          zIndex: 9998,
           backgroundImage: 'url(/border_1.png)',
           backgroundRepeat: 'repeat-y',
           backgroundSize: '100% auto',
-          backgroundPosition: 'right center',
+          backgroundPosition: '0 0',
           transform: 'scaleX(-1)',
           margin: 0,
           padding: 0,

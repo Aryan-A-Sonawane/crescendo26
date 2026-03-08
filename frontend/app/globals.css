@@ -139,9 +139,52 @@ body {
   }
 }
 
+@keyframes slide-in-right {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-140%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(140%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
 @keyframes truck-bob {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-6px); }
+}
+
+@keyframes warli-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes truck-drive {
+  0%   { left: -320px; }
+  100% { left: 100%; }
 }
 
 @layer utilities {

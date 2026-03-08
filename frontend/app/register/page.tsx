@@ -66,6 +66,9 @@ export default function RegisterPage() {
         backgroundRepeat: "no-repeat",
       }}
     >
+      {/* ── Sunray background ── */}
+      <div className="sunray" aria-hidden="true" />
+
       {/* Outer decorative border frame — 12px strips on all 4 sides */}
       {/* Top */}
       <div className="fixed top-0 left-0 right-0 h-10 z-[9998] pointer-events-none"
@@ -119,14 +122,24 @@ export default function RegisterPage() {
 
       {/* ── Left side: Camel + Truck ── */}
       <div className="fixed left-0 bottom-0 z-20 pointer-events-none hidden lg:block">
-        {/* Truck — on top */}
-        
+        {/* Truck — slides in first, then bobs */}
         <Image src="/truck.webp" alt="truck" width={340} height={480}
-          style={{ objectFit: "contain", display: "block", marginTop: "-120px" }} />
+          style={{
+            objectFit: "contain",
+            display: "block",
+            marginTop: "-120px",
+            animation:
+              "slide-in-left 1s cubic-bezier(0.22,1,0.36,1) 0.2s both",
+          }} />
+        {/* Camel — slides in slightly after */}
         <Image src="/camel-blue.webp" alt="camel" width={410} height={410}
-          style={{ objectFit: "contain", display: "block", marginTop: "-220px"}} />
-        {/* Camel — shifted down so it peeks behind the truck */}
-        
+          style={{
+            objectFit: "contain",
+            display: "block",
+            marginTop: "-220px",
+            animation:
+              "slide-in-left 1.2s cubic-bezier(0.22,1,0.36,1) 0.55s both",
+          }} />
       </div>
 
       {/* ── Page content ── */}

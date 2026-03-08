@@ -21,7 +21,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-4">
+    <nav className="fixed top-10 left-0 right-0 z-50 flex justify-center pt-6 px-4">
       <div className="w-full max-w-5xl flex items-center gap-4">
 
         {/* Main Navigation Pill */}

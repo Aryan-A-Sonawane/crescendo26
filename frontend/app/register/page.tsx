@@ -14,6 +14,7 @@ export default function RegisterPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [agreed, setAgreed] = useState(false);
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [customCollege, setCustomCollege] = useState("");
   const [customColleges, setCustomColleges] = useState<string[]>([]);
@@ -534,61 +535,53 @@ export default function RegisterPage() {
                     }}
                   >
                     <option value="" disabled>Select your college</option>
-                    <optgroup label="Government / Public Engineering Colleges">
-                      <option>COEP Technological University</option>
-                      <option>Government College of Engineering and Research, Avasari Khurd</option>
-                      <option>College of Military Engineering</option>
-                    </optgroup>
-                    <optgroup label="Autonomous / Top Private Engineering Colleges">
-                      <option>Pune Institute of Computer Technology</option>
-                      <option>Vishwakarma Institute of Technology</option>
-                      <option>Pimpri Chinchwad College of Engineering</option>
-                      <option>MIT Academy of Engineering</option>
-                      <option>Army Institute of Technology</option>
-                      <option>Symbiosis Institute of Technology</option>
-                    </optgroup>
-                    <optgroup label="Major Private Engineering Colleges">
-                      <option>Bharati Vidyapeeth Deemed University College of Engineering, Pune</option>
-                      <option>Dr. D. Y. Patil College of Engineering, Akurdi</option>
-                      <option>Dr. D. Y. Patil Institute of Technology, Pimpri</option>
-                      <option>AISSMS College of Engineering</option>
-                      <option>AISSMS Institute of Information Technology</option>
-                      <option>International Institute of Information Technology, Pune</option>
-                    </optgroup>
-                    <optgroup label="Other Engineering Colleges in Pune">
-                      <option>Modern Education Society&apos;s College of Engineering</option>
-                      <option>PES Modern College of Engineering</option>
-                      <option>Pune Vidyarthi Griha&apos;s College of Engineering and Technology</option>
-                      <option>Marathwada Mitra Mandal&apos;s College of Engineering</option>
-                      <option>Rajarshi Shahu College of Engineering</option>
-                      <option>Cummins College of Engineering for Women, Pune</option>
-                    </optgroup>
-                    <optgroup label="Sinhgad Group Engineering Colleges">
-                      <option>Sinhgad College of Engineering, Vadgaon</option>
-                      <option>Sinhgad Institute of Technology, Lonavala</option>
-                      <option>NBN Sinhgad School of Engineering</option>
-                      <option>Sinhgad Institute of Technology and Science</option>
-                    </optgroup>
-                    <optgroup label="Other Private Engineering Colleges">
-                      <option>JSPM&apos;s Jayawantrao Sawant College of Engineering</option>
-                      <option>JSPM&apos;s Imperial College of Engineering and Research</option>
-                      <option>JSPM&apos;s Bhivarabai Sawant Institute of Technology and Research</option>
-                      <option>Indira College of Engineering and Management</option>
-                      <option>Genba Sopanrao Moze College of Engineering</option>
-                      <option>Trinity College of Engineering and Research</option>
-                      <option>Zeal College of Engineering and Research</option>
-                      <option>Nutan College of Engineering and Research</option>
-                      <option>Siddhant College of Engineering</option>
-                      <option>Sahyadri Valley College of Engineering and Technology</option>
-                      <option>Imperial College of Engineering and Research</option>
-                      <option>Shri Chhatrapati Shivajiraje College of Engineering</option>
-                    </optgroup>
+                    <option>Vishwakarma Institute of Technology, Bibwewadi</option>
+                    <option>Vishwakarma Institute of Technology, Kondhwa</option>
+                    <option>COEP Technological University</option>
+                    <option>Government College of Engineering and Research, Avasari Khurd</option>
+                    <option>College of Military Engineering</option>
+                    <option>Pune Institute of Computer Technology</option>
+                    <option>Pimpri Chinchwad College of Engineering</option>
+                    <option>MIT Academy of Engineering</option>
+                    <option>Army Institute of Technology</option>
+                    <option>Symbiosis Institute of Technology</option>
+                    <option>Bharati Vidyapeeth Deemed University College of Engineering, Pune</option>
+                    <option>Dr. D. Y. Patil College of Engineering, Akurdi</option>
+                    <option>Dr. D. Y. Patil Institute of Technology, Pimpri</option>
+                    <option>AISSMS College of Engineering</option>
+                    <option>AISSMS Institute of Information Technology</option>
+                    <option>International Institute of Information Technology, Pune</option>
+                    <option>Modern Education Society&apos;s College of Engineering</option>
+                    <option>PES Modern College of Engineering</option>
+                    <option>Pune Vidyarthi Griha&apos;s College of Engineering and Technology</option>
+                    <option>Marathwada Mitra Mandal&apos;s College of Engineering</option>
+                    <option>Rajarshi Shahu College of Engineering</option>
+                    <option>Cummins College of Engineering for Women, Pune</option>
+                    <option>Sinhgad College of Engineering, Vadgaon</option>
+                    <option>Sinhgad Institute of Technology, Lonavala</option>
+                    <option>NBN Sinhgad School of Engineering</option>
+                    <option>Sinhgad Institute of Technology and Science</option>
+                    <option>JSPM&apos;s Jayawantrao Sawant College of Engineering</option>
+                    <option>JSPM&apos;s Imperial College of Engineering and Research</option>
+                    <option>JSPM&apos;s Bhivarabai Sawant Institute of Technology and Research</option>
+                    <option>Indira College of Engineering and Management</option>
+                    <option>Genba Sopanrao Moze College of Engineering</option>
+                    <option>Trinity College of Engineering and Research</option>
+                    <option>Zeal College of Engineering and Research</option>
+                    <option>Nutan College of Engineering and Research</option>
+                    <option>Siddhant College of Engineering</option>
+                    <option>Sahyadri Valley College of Engineering and Technology</option>
+                    <option>Imperial College of Engineering and Research</option>
+                    <option>Shri Chhatrapati Shivajiraje College of Engineering</option>
+                    {customColleges.map((college, index) => (
+                      <option key={index}>{college}</option>
+                    ))}
                     <option value="Other">Other</option>
                   </select>
                   {errors.college && <p className="text-red-600 text-xs mt-0.5">{errors.college}</p>}
                 </div>
 
-                {/* CUSTOM COLLEGE INPUT — shows when "Other" is selected */}
+                {/* CUSTOM COLLEGE INPUT - shows when "Other" is selected */}
                 {showOtherInput && (
                   <div>
                     <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#7B2D0E" }}>
@@ -602,6 +595,11 @@ export default function RegisterPage() {
                         placeholder="Type your college name"
                         className="flex-1 px-3 py-2 text-sm rounded-lg outline-none transition-all"
                         style={{ backgroundColor: "#fff8e1", border: "2px solid #b5420a", color: "#3a1a00" }}
+                        style={{
+                          backgroundColor: "#fff8e1",
+                          border: "2px solid #b5420a",  
+                          color: "#3a1a00",
+                        }}
                       />
                       <button
                         type="button"
@@ -617,6 +615,10 @@ export default function RegisterPage() {
                         }}
                         className="px-4 py-2 text-sm font-bold rounded-lg transition-all"
                         style={{ backgroundColor: "#8B1538", color: "#FFFFFF" }}
+                        style={{
+                          backgroundColor: "#8B1538",
+                          color: "#FFFFFF",
+                        }}
                       >
                         Add
                       </button>

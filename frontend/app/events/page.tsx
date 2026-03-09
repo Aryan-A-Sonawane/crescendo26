@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 const technical = [
   { name: "RC Rampage", fee: "₹60", prize: "—", desc: "High-speed RC car racing on a challenging track. Precision and speed are key!", img: "https://images.unsplash.com/photo-1563884072595-24f49fe5aa94?w=400&q=80" },
   { name: "Robo Soccer", fee: "₹500", prize: "₹8,000", desc: "Build a bot and battle it out on the soccer field. Goals, grit, and gears!", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&q=80" },
-  { name: "Software Hackathon", fee: "₹400", prize: "₹25,000", desc: "24-hour coding sprint. Build innovative solutions to real-world problems.", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&q=80" },
+  { name: "Software Hackathon", fee : "₹400", prize: "₹25,000", desc: "24-hour coding sprint. Build innovative solutions to real-world problems.", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&q=80" },
   { name: "Code Relay", fee: "₹100", prize: "₹2,000", desc: "Team-based coding relay race. Each member adds their piece to the puzzle.", img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&q=80" },
   { name: "Gun Range Shooting", fee: "₹60", prize: "—", desc: "Test your aim and precision on the virtual gun range. Steady hands win!", img: "https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&q=80" },
   { name: "Buzzwire", fee: "₹40", prize: "—", desc: "Navigate the wire without touching it. Nerves of steel required!", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },

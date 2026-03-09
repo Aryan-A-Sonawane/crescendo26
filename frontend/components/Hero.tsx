@@ -41,9 +41,9 @@ export default function Hero() {
         style={{ height: "88vh", backgroundColor: "#E7A92E" }}
       >
 
-        {/* Border Corner — top-left */}
+        {/* Border Corner — top-left — desktop only */}
         <div
-          className="absolute pointer-events-none select-none"
+          className="absolute pointer-events-none select-none hidden md:block"
           style={{ top: -10, left: -16, zIndex: 9999, width: "clamp(220px, 14vw, 200px)" }}
         >
           <Image
@@ -57,9 +57,9 @@ export default function Hero() {
         </div>
 
 
-        {/* Border Corner — top-right (flipped) */}
+        {/* Border Corner — top-right (flipped) — desktop only */}
         <div
-          className="absolute pointer-events-none select-none"
+          className="absolute pointer-events-none select-none hidden md:block"
           style={{ top: -10, right: -16, zIndex: 9999, width: "clamp(225px, 14vw, 200px)", transform: "scaleX(-1)" }}
         >
           <Image
@@ -72,9 +72,9 @@ export default function Hero() {
           />
         </div>
 
-        {/* Top Border Strip — cropped to 3/4, rotated 90°, between corners */}
+        {/* Top Border Strip — desktop only */}
         <div
-          className="absolute pointer-events-none select-none overflow-hidden"
+          className="absolute pointer-events-none select-none overflow-hidden hidden md:flex"
           style={{
             top: 0,
             left: "clamp(120px, 14vw, 200px)",
@@ -135,9 +135,9 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Mandala — top-left corner, behind auto — z-2, low opacity */}
+        {/* Mandala — top-right corner — desktop only */}
         <div
-          className="absolute pointer-events-none select-none"
+          className="absolute pointer-events-none select-none hidden md:block"
           style={{ top: "18vh", right: "0%", zIndex: 2, width: "clamp(360px, 14vw, 240px)", opacity: 0.45 }}
         >
           <Image
@@ -166,10 +166,10 @@ export default function Hero() {
           />
         </div>
 
-        {/* Sitar — just below border, top-right — z-2 */}
+        {/* Sitar — just below border, top-right — desktop only */}
         <div
           ref={sitarRef}
-          className="absolute pointer-events-none select-none"
+          className="absolute pointer-events-none select-none hidden md:block"
           style={{ top: "18vh", right: "-100px", zIndex: 2, width: "clamp(440px, 22vw, 320px)", willChange: "transform" }}
         >
           <div style={{ animation: "slide-in-right 1s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}>
@@ -183,9 +183,9 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Gramophone — bottom-right, flush with section bottom — z-2 */}
+        {/* Gramophone — bottom-right — desktop only */}
         <div
-          className="absolute pointer-events-none select-none"
+          className="absolute pointer-events-none select-none hidden md:block"
           style={{ bottom: -40, right: "-72px", zIndex: 2, width: "clamp(340px, 20vw, 320px)", animation: "slide-in-right 1.2s cubic-bezier(0.22,1,0.36,1) 0.55s both" }}
         >
           <Image
@@ -200,7 +200,7 @@ export default function Hero() {
         {/* banner.webp — behind all decoratives and logo, centered — z-1 */}
         <div
           className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
-          style={{ zIndex: 3, width: "clamp(600px, 80vw, 1300px)" }}
+          style={{ zIndex: 3, width: "min(95vw, 1300px)" }}
         >
           <Image
             src="/banner.webp"
@@ -215,7 +215,7 @@ export default function Hero() {
         {/* Crescendo logo — centered, 40–50% width — z-3 */}
         <div
           className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none hero-banner-wrapper"
-          style={{ zIndex: 3, width: "clamp(400px, 38vw, 650px)" }}
+          style={{ zIndex: 3, width: "min(85vw, 650px)" }}
         >
           <Image
             src="/crescendo.png"

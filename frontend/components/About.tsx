@@ -48,29 +48,44 @@ export default function About() {
         className="relative flex flex-col md:flex-row items-center h-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 gap-0"
         style={{ zIndex: 4, minHeight: "100vh" }}
       >
-        {/* Left — Title (sits on top, overlaps radio) */}
-        <div className="flex flex-col justify-center shrink-0 md:w-1/2" style={{ zIndex: 6 }}>
+        {/* Left — Title */}
+        <div className="flex flex-col justify-center shrink-0 md:w-1/2 pt-8 md:pt-0" style={{ zIndex: 6 }}>
           <h2
             className="font-taiganja text-white leading-tight text-center md:text-left"
-            style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
+            style={{ fontSize: "clamp(2.2rem, 8vw, 6.5rem)" }}
           >
             What is
           </h2>
           <h1
             className="font-nistha leading-none text-center md:text-left"
             style={{
-              fontSize: "clamp(4rem, 12vw, 8rem)",
+              fontSize: "clamp(3rem, 12vw, 8rem)",
               color: "#ffb51d",
               textShadow: "2px 2px 8px rgba(0,0,0,0.4)",
             }}
           >
             Crescendo?
           </h1>
+          {/* Mobile-only description — shown instead of the radio overlay */}
+          <p
+            className="block md:hidden text-center mt-4 px-4"
+            style={{
+              color: "#ffd21f",
+              fontStyle: "italic",
+              fontSize: "clamp(0.9rem, 4vw, 1.1rem)",
+              lineHeight: 1.6,
+            }}
+          >
+            Crescendo is VIT&apos;s inter-college fest that brings together students from
+            different institutions to celebrate talent, creativity, and competition.
+            Not just a fest — an experience filled with energy, innovation, performances,
+            and unforgettable campus moments.
+          </p>
         </div>
 
-        {/* Right — Radio image (large, pulls left to overlap title) */}
+        {/* Right — Radio image — desktop only */}
         <div
-          className="shrink-0 flex items-center justify-start w-full md:w-auto"
+          className="hidden md:flex shrink-0 items-center justify-start w-full md:w-auto"
           style={{ zIndex: 5, width: "100%", marginLeft: "0", marginTop: "2rem" }}
         >
           <div className="relative w-full md:w-[90%] md:-ml-[20%]">

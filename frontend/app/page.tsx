@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Events from "@/components/Events";
 import FAQs from "@/components/FAQs";
 import Footer from "@/components/Footer";
 import Image from "next/image";
@@ -9,9 +8,9 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#f3ba35] relative overflow-x-hidden">
-      {/* Left Border (scrolling with page) */}
+      {/* Left Border — desktop only */}
       <div 
-        className="pointer-events-none" 
+        className="pointer-events-none hidden md:block" 
         style={{ 
           position: 'fixed',
           left: -1,
@@ -28,9 +27,9 @@ export default function Home() {
         }}
       />
 
-      {/* Right Border (scrolling with page - flipped) */}
+      {/* Right Border — desktop only */}
       <div 
-        className="pointer-events-none" 
+        className="pointer-events-none hidden md:block" 
         style={{ 
           position: 'fixed',
           right: -1,
@@ -54,7 +53,6 @@ export default function Home() {
         <main>
           <Hero />
           <About />
-          <Events />
           <FAQs />
         </main>
         <Footer />

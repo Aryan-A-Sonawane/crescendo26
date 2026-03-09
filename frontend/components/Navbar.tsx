@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 
 const navLinks = [
-  { href: "#home", label: "HOME" },
-  { href: "#events", label: "EVENTS" },
+  { href: "/", label: "HOME" },
+  { href: "/events", label: "EVENTS" },
   { href: "#competitions", label: "COMPETITIONS" },
   { href: "#partner", label: "PARTNERS" },
   { href: "#team", label: "TEAM" },
@@ -21,7 +21,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-10 left-0 right-0 z-50 flex justify-center pt-6 px-4">
+    <nav className="fixed top-4 md:top-10 left-0 right-0 z-50 flex justify-center pt-2 md:pt-6 px-4">
       <div className="w-full max-w-5xl flex items-center gap-4">
 
         {/* Main Navigation Pill */}

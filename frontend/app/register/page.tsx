@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,7 +14,17 @@ export default function RegisterPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [agreed, setAgreed] = useState(false);
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const [customCollege, setCustomCollege] = useState("");
+  const [customColleges, setCustomColleges] = useState<string[]>([]);
+
+  // Load custom colleges from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("customColleges");
+    if (stored) {
+      setCustomColleges(JSON.parse(stored));
+    }
+  }, []);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -511,8 +521,10 @@ export default function RegisterPage() {
                     name="college"
                     value={formData.college}
                     onChange={(e) => {
-                      setFormData({ ...formData, college: e.target.value });
+                      const value = e.target.value;
+                      setFormData({ ...formData, college: value });
                       setErrors({ ...errors, college: "" });
+                      setShowOtherInput(value === "Other");
                     }}
                     className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
                     style={{
@@ -576,6 +588,41 @@ export default function RegisterPage() {
                   {errors.college && <p className="text-red-600 text-xs mt-0.5">{errors.college}</p>}
                 </div>
 
+                {/* CUSTOM COLLEGE INPUT — shows when "Other" is selected */}
+                {showOtherInput && (
+                  <div>
+                    <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#7B2D0E" }}>
+                      ENTER COLLEGE NAME
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={customCollege}
+                        onChange={(e) => setCustomCollege(e.target.value)}
+                        placeholder="Type your college name"
+                        className="flex-1 px-3 py-2 text-sm rounded-lg outline-none transition-all"
+                        style={{ backgroundColor: "#fff8e1", border: "2px solid #b5420a", color: "#3a1a00" }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (customCollege.trim()) {
+                            const newCustomColleges = [...customColleges, customCollege.trim()];
+                            setCustomColleges(newCustomColleges);
+                            localStorage.setItem("customColleges", JSON.stringify(newCustomColleges));
+                            setFormData({ ...formData, college: customCollege.trim() });
+                            setShowOtherInput(false);
+                            setCustomCollege("");
+                          }
+                        }}
+                        className="px-4 py-2 text-sm font-bold rounded-lg transition-all"
+                        style={{ backgroundColor: "#8B1538", color: "#FFFFFF" }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Submit Button */}
                 <button

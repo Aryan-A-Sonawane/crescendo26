@@ -26,7 +26,6 @@ export default function RegisterPage() {
     else if (!/^[6-9]\d{9}$/.test(formData.phone))
       newErrors.phone = "Enter a valid 10-digit Indian mobile number";
     if (!formData.college.trim()) newErrors.college = "College name is required";
-    if (!agreed) newErrors.agreed = "You must agree to the terms and conditions";
     return newErrors;
   };
 
@@ -45,16 +44,246 @@ export default function RegisterPage() {
     setSubmitted(true);
   };
 
-  return (
-    <main
-      className="relative min-h-screen w-full overflow-hidden"
+  const mobileCollegeSelect = (
+    <select
+      name="college"
+      value={formData.college}
+      onChange={(e) => {
+        setFormData({ ...formData, college: e.target.value });
+        setErrors({ ...errors, college: "" });
+      }}
+      className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
       style={{
-        backgroundImage: "url('/blue-background.jpeg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        backgroundColor: "rgba(255,220,150,0.55)",
+        border: `2px solid ${errors.college ? "#cc0000" : "#c45e00"}`,
+        color: formData.college ? "#3a0a00" : "#7a4010",
+        backdropFilter: "blur(2px)",
       }}
     >
+      <option value="" disabled>Select your college</option>
+      <optgroup label="Government / Public Engineering Colleges">
+        <option>COEP Technological University</option>
+        <option>Government College of Engineering and Research, Avasari Khurd</option>
+        <option>College of Military Engineering</option>
+      </optgroup>
+      <optgroup label="Autonomous / Top Private Engineering Colleges">
+        <option>Pune Institute of Computer Technology</option>
+        <option>Vishwakarma Institute of Technology</option>
+        <option>Pimpri Chinchwad College of Engineering</option>
+        <option>MIT Academy of Engineering</option>
+        <option>Army Institute of Technology</option>
+        <option>Symbiosis Institute of Technology</option>
+      </optgroup>
+      <optgroup label="Major Private Engineering Colleges">
+        <option>Bharati Vidyapeeth Deemed University College of Engineering, Pune</option>
+        <option>Dr. D. Y. Patil College of Engineering, Akurdi</option>
+        <option>Dr. D. Y. Patil Institute of Technology, Pimpri</option>
+        <option>AISSMS College of Engineering</option>
+        <option>AISSMS Institute of Information Technology</option>
+        <option>International Institute of Information Technology, Pune</option>
+      </optgroup>
+      <optgroup label="Other Engineering Colleges in Pune">
+        <option>Modern Education Society&apos;s College of Engineering</option>
+        <option>PES Modern College of Engineering</option>
+        <option>Pune Vidyarthi Griha&apos;s College of Engineering and Technology</option>
+        <option>Marathwada Mitra Mandal&apos;s College of Engineering</option>
+        <option>Rajarshi Shahu College of Engineering</option>
+        <option>Cummins College of Engineering for Women, Pune</option>
+      </optgroup>
+      <optgroup label="Sinhgad Group Engineering Colleges">
+        <option>Sinhgad College of Engineering, Vadgaon</option>
+        <option>Sinhgad Institute of Technology, Lonavala</option>
+        <option>NBN Sinhgad School of Engineering</option>
+        <option>Sinhgad Institute of Technology and Science</option>
+      </optgroup>
+      <optgroup label="Other Private Engineering Colleges">
+        <option>JSPM&apos;s Jayawantrao Sawant College of Engineering</option>
+        <option>JSPM&apos;s Imperial College of Engineering and Research</option>
+        <option>JSPM&apos;s Bhivarabai Sawant Institute of Technology and Research</option>
+        <option>Indira College of Engineering and Management</option>
+        <option>Genba Sopanrao Moze College of Engineering</option>
+        <option>Trinity College of Engineering and Research</option>
+        <option>Zeal College of Engineering and Research</option>
+        <option>Nutan College of Engineering and Research</option>
+        <option>Siddhant College of Engineering</option>
+        <option>Sahyadri Valley College of Engineering and Technology</option>
+        <option>Imperial College of Engineering and Research</option>
+        <option>Shri Chhatrapati Shivajiraje College of Engineering</option>
+      </optgroup>
+      <option value="Other">Other</option>
+    </select>
+  );
+
+  // ─── Shared college list ──────────────────────────────────────────────────
+  const collegeSelect = (
+    <select
+      name="college"
+      value={formData.college}
+      onChange={(e) => {
+        setFormData({ ...formData, college: e.target.value });
+        setErrors({ ...errors, college: "" });
+      }}
+      className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
+      style={{
+        backgroundColor: "#fff8e1",
+        border: `2px solid ${errors.college ? "#cc0000" : "#b5420a"}`,
+        color: formData.college ? "#3a1a00" : "#9a7a5a",
+      }}
+    >
+      <option value="" disabled>Select your college</option>
+      <optgroup label="Government / Public Engineering Colleges">
+        <option>COEP Technological University</option>
+        <option>Government College of Engineering and Research, Avasari Khurd</option>
+        <option>College of Military Engineering</option>
+      </optgroup>
+      <optgroup label="Autonomous / Top Private Engineering Colleges">
+        <option>Pune Institute of Computer Technology</option>
+        <option>Vishwakarma Institute of Technology</option>
+        <option>Pimpri Chinchwad College of Engineering</option>
+        <option>MIT Academy of Engineering</option>
+        <option>Army Institute of Technology</option>
+        <option>Symbiosis Institute of Technology</option>
+      </optgroup>
+      <optgroup label="Major Private Engineering Colleges">
+        <option>Bharati Vidyapeeth Deemed University College of Engineering, Pune</option>
+        <option>Dr. D. Y. Patil College of Engineering, Akurdi</option>
+        <option>Dr. D. Y. Patil Institute of Technology, Pimpri</option>
+        <option>AISSMS College of Engineering</option>
+        <option>AISSMS Institute of Information Technology</option>
+        <option>International Institute of Information Technology, Pune</option>
+      </optgroup>
+      <optgroup label="Other Engineering Colleges in Pune">
+        <option>Modern Education Society&apos;s College of Engineering</option>
+        <option>PES Modern College of Engineering</option>
+        <option>Pune Vidyarthi Griha&apos;s College of Engineering and Technology</option>
+        <option>Marathwada Mitra Mandal&apos;s College of Engineering</option>
+        <option>Rajarshi Shahu College of Engineering</option>
+        <option>Cummins College of Engineering for Women, Pune</option>
+      </optgroup>
+      <optgroup label="Sinhgad Group Engineering Colleges">
+        <option>Sinhgad College of Engineering, Vadgaon</option>
+        <option>Sinhgad Institute of Technology, Lonavala</option>
+        <option>NBN Sinhgad School of Engineering</option>
+        <option>Sinhgad Institute of Technology and Science</option>
+      </optgroup>
+      <optgroup label="Other Private Engineering Colleges">
+        <option>JSPM&apos;s Jayawantrao Sawant College of Engineering</option>
+        <option>JSPM&apos;s Imperial College of Engineering and Research</option>
+        <option>JSPM&apos;s Bhivarabai Sawant Institute of Technology and Research</option>
+        <option>Indira College of Engineering and Management</option>
+        <option>Genba Sopanrao Moze College of Engineering</option>
+        <option>Trinity College of Engineering and Research</option>
+        <option>Zeal College of Engineering and Research</option>
+        <option>Nutan College of Engineering and Research</option>
+        <option>Siddhant College of Engineering</option>
+        <option>Sahyadri Valley College of Engineering and Technology</option>
+        <option>Imperial College of Engineering and Research</option>
+        <option>Shri Chhatrapati Shivajiraje College of Engineering</option>
+      </optgroup>
+      <option value="Other">Other</option>
+    </select>
+  );
+
+  return (
+    <main className="relative min-h-screen w-full overflow-hidden">
+
+      {/* ════════════════════════════════════════════════════
+          MOBILE LAYOUT  (shown only on screens < lg)
+      ════════════════════════════════════════════════════ */}
+      <div
+        className="lg:hidden relative w-full"
+        style={{
+          backgroundImage: "url('/register_page.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+          minHeight: "100svh",
+        }}
+      >
+        {/* Back to Home — top right corner */}
+        <div className="absolute top-4 right-4 z-10">
+          <Link href="/"
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border-2 transition-all hover:scale-105 shadow-md"
+            style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
+            Back to home
+          </Link>
+        </div>
+
+        {/* Success overlay — full screen, always visible */}
+        {submitted && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 px-6"
+            style={{ background: "rgba(255,220,150,0.85)", backdropFilter: "blur(6px)" }}>
+            <div className="text-6xl">🎉</div>
+            <p className="font-bold text-xl" style={{ color: "#4a0e00" }}>Welcome, {formData.name}!</p>
+            <p className="text-sm" style={{ color: "#7B2D0E" }}>Confirmation sent to <span className="font-bold">{formData.email}</span></p>
+            <Link href="/" className="inline-block mt-2 font-taiganja text-sm font-bold px-7 py-2.5 rounded-full border-2 transition-all hover:scale-105"
+              style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
+              BACK TO HOME
+            </Link>
+          </div>
+        )}
+
+        {/* Form — positioned absolutely so you can freely move it */}
+        {!submitted && (
+        <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
+          <h2 className="text-center font-bold tracking-widest mb-3 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>REGISTRATION <br /> FORM</h2>
+          <form onSubmit={handleSubmit} className="space-y-3 w-full" noValidate>
+              {/* NAME */}
+              <div>
+                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>NAME</label>
+                <input type="text" name="name" value={formData.name} onChange={handleChange}
+                  placeholder="Enter your full name"
+                  className="w-full px-3 py-2 text-sm rounded-lg outline-none"
+                  style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${errors.name ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }} />
+                {errors.name && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.name}</p>}
+              </div>
+              {/* EMAIL */}
+              <div>
+                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>EMAIL ID</label>
+                <input type="email" name="email" value={formData.email} onChange={handleChange}
+                  placeholder="Enter your email"
+                  className="w-full px-3 py-2 text-sm rounded-lg outline-none"
+                  style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${errors.email ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }} />
+                {errors.email && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.email}</p>}
+              </div>
+              {/* PHONE */}
+              <div>
+                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>MOBILE NO</label>
+                <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
+                  placeholder="10-digit mobile number" maxLength={10}
+                  className="w-full px-3 py-2 text-sm rounded-lg outline-none"
+                  style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${errors.phone ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }} />
+                {errors.phone && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.phone}</p>}
+              </div>
+              {/* COLLEGE */}
+              <div>
+                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>COLLEGE NAME</label>
+                {mobileCollegeSelect}
+                {errors.college && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.college}</p>}
+              </div>
+              {/* Submit */}
+              <button type="submit"
+                className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest"
+                style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
+                SUBMIT
+              </button>
+            </form>
+        </div>
+        )}
+      </div>
+
+      {/* ════════════════════════════════════════════════════
+          DESKTOP LAYOUT  (hidden on mobile, shown on lg+)
+      ════════════════════════════════════════════════════ */}
+      <div
+        className="hidden lg:block relative min-h-screen w-full overflow-hidden"
+        style={{
+          backgroundImage: "url('/blue-background.jpeg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
       {/* ── Sunray background ── */}
       <div className="sunray" aria-hidden="true" />
 
@@ -347,6 +576,7 @@ export default function RegisterPage() {
                   {errors.college && <p className="text-red-600 text-xs mt-0.5">{errors.college}</p>}
                 </div>
 
+
                 {/* Submit Button */}
                 <button
                   type="submit"
@@ -357,7 +587,7 @@ export default function RegisterPage() {
                     borderColor: "#b5420a",
                   }}
                 >
-                  SUBMIT REGISTRATION
+                  SUBMIT 
                 </button>
 
               </form>
@@ -367,6 +597,7 @@ export default function RegisterPage() {
         </div>{/* end form right wrapper */}
 
       </div>
+      </div> {/* end desktop layout */}
     </main>
   );
 }

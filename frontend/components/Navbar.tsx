@@ -3,79 +3,65 @@
 import { useState } from "react";
 import Link from "next/link";
 
+const navLinks = [
+  { href: "/", label: "HOME" },
+  { href: "/events", label: "EVENTS" },
+  { href: "#competitions", label: "COMPETITIONS" },
+  { href: "#partner", label: "PARTNERS" },
+  { href: "#team", label: "TEAM" },
+];
+
+const navLinkClass =
+  "text-[#a71d16] hover:text-white transition-all duration-300 px-4 py-2 text-2xl font-bold tracking-wide hover:scale-105";
+
+const mobileNavLinkClass =
+  "text-[#a71d16] hover:text-white py-2 px-4 text-center text-sm font-bold rounded-full hover:bg-white/30 transition-all";
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-14 px-4">
-      <div className="w-full max-w-4xl">
-        {/* Main Navigation */}
-        <div className="bg-[#e87700] shadow-2xl rounded-full border-4 border-[#a71d16]">
-          <div className="px-6 sm:px-8 lg:px-10">
-            <div className="flex flex-col items-center py-4">
-              
+    <nav className="fixed top-4 md:top-10 left-0 right-0 z-50 flex justify-center pt-2 md:pt-6 px-4">
+      <div className="w-full max-w-5xl flex items-center gap-4">
+
+        {/* Main Navigation Pill */}
+        <div className="flex-1 bg-[#e87700] shadow-2xl rounded-full border-4 border-[#a71d16]">
+          <div className="px-12 sm:px-12 lg:px-16">
+            <div className="flex items-center justify-center py-2">
+
               {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center justify-center space-x-3">
-                <Link 
-                  href="#home" 
-                  className="text-[#a71d16] hover:text-white transition-all duration-300 px-3 py-2 text-lg font-bold tracking-wide hover:scale-105"
-                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                >
-                  HOME
-                </Link>
-                <span className="text-[#a71d16] text-xl">*</span>
-                <Link 
-                  href="#events" 
-                  className="text-[#a71d16] hover:text-white transition-all duration-300 px-3 py-2 text-lg font-bold tracking-wide hover:scale-105"
-                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                >
-                  EVENTS
-                </Link>
-                <span className="text-[#a71d16] text-xl">*</span>
-                <Link 
-                  href="#competitions" 
-                  className="text-[#a71d16] hover:text-white transition-all duration-300 px-3 py-2 text-lg font-bold tracking-wide hover:scale-105"
-                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                >
-                  COMPETITIONS
-                </Link>
-                <span className="text-[#a71d16] text-xl">*</span>
-                <Link 
-                  href="#partner" 
-                  className="text-[#a71d16] hover:text-white transition-all duration-300 px-3 py-2 text-lg font-bold tracking-wide hover:scale-105"
-                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                >
-                  PARTNER
-                </Link>
-                <span className="text-[#a71d16] text-xl">*</span>
-                <Link 
-                  href="#team" 
-                  className="text-[#a71d16] hover:text-white transition-all duration-300 px-3 py-2 text-lg font-bold tracking-wide hover:scale-105"
-                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                >
-                  TEAM
-                </Link>
+              <div className="hidden md:flex items-center justify-center space-x-6">
+                {navLinks.map((link) => (
+                  <Link 
+                    key={link.href} 
+                    href={link.href} 
+                    className={navLinkClass}
+                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </div>
 
               {/* Mobile Menu Button */}
-              <div className="md:hidden w-full flex justify-between items-center">
+              <div className="md:hidden w-full flex justify-between items-center py-1">
                 <Link 
                   href="/" 
-                  className="text-lg font-bold text-[#a71d16]"
+                  className="text-sm font-bold text-[#a71d16]"
                   style={{ fontFamily: "'Cinzel Decorative', serif" }}
                 >
                   CRESCENDO&apos;26
                 </Link>
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="text-[#a71d16] hover:text-white p-2"
+                  className="text-[#a71d16] hover:text-white p-1"
                 >
                   <svg
-                    className="h-6 w-6"
+                    className="h-5 w-5"
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
+                    strokeWidth="2.5"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
@@ -91,53 +77,42 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-              <div className="md:hidden pb-4 border-t border-[#a71d16]/20">
-                <div className="flex flex-col space-y-2 pt-4">
-                  <Link 
-                    href="#home" 
-                    className="text-[#a71d16] hover:text-white py-2 px-4 text-center text-base font-bold rounded-full hover:bg-white/30 transition-all"
-                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
+              <div className="md:hidden pb-2 border-t border-[#a71d16]/20 mt-2">
+                <div className="flex flex-col space-y-1 pt-2">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={mobileNavLinkClass}
+                      onClick={() => setIsMenuOpen(false)}
+                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/register"
+                    className="bg-[#a71d16] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#a71d16] transition-all mt-2"
                     onClick={() => setIsMenuOpen(false)}
-                  >
-                    HOME
-                  </Link>
-                  <Link 
-                    href="#events" 
-                    className="text-[#a71d16] hover:text-white py-2 px-4 text-center text-base font-bold rounded-full hover:bg-white/30 transition-all"
                     style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    onClick={() => setIsMenuOpen(false)}
                   >
-                    EVENTS
-                  </Link>
-                  <Link 
-                    href="#competitions" 
-                    className="text-[#a71d16] hover:text-white py-2 px-4 text-center text-base font-bold rounded-full hover:bg-white/30 transition-all"
-                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    COMPETITIONS
-                  </Link>
-                  <Link 
-                    href="#partner" 
-                    className="text-[#a71d16] hover:text-white py-2 px-4 text-center text-base font-bold rounded-full hover:bg-white/30 transition-all"
-                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    PARTNER
-                  </Link>
-                  <Link 
-                    href="#team" 
-                    className="text-[#a71d16] hover:text-white py-2 px-4 text-center text-base font-bold rounded-full hover:bg-white/30 transition-all"
-                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    TEAM
+                    REGISTER
                   </Link>
                 </div>
               </div>
             )}
           </div>
         </div>
+
+        {/* Register Button — outside the pill, to the right */}
+        <Link
+          href="/register"
+          className="hidden md:inline-flex items-center text-lg font-bold px-6 py-3 rounded-full border-4 border-[#a71d16] shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
+          style={{ backgroundColor: "#a71d16", color: "#ffb51d", fontFamily: "'Cinzel Decorative', serif" }}
+        >
+          REGISTER
+        </Link>
+
       </div>
     </nav>
   );

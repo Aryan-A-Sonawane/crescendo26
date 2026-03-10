@@ -12,9 +12,12 @@ export default function RegisterPage() {
     college: "",
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"form" | "otp" | "success">("form");
+  const [otpInput, setOtpInput] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [agreed, setAgreed] = useState(false);
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [customCollege, setCustomCollege] = useState("");
   const [customColleges, setCustomColleges] = useState<string[]>([]);
@@ -45,14 +48,75 @@ export default function RegisterPage() {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    setSubmitted(true);
+    setLoading(true);
+    setServerError("");
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, name: formData.name }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setServerError(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+      setStep("otp");
+    } catch {
+      setServerError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(otpInput)) {
+      setOtpError("Please enter the 6-digit OTP sent to your email.");
+      return;
+    }
+    setLoading(true);
+    setOtpError("");
+    try {
+      const verifyRes = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, otp: otpInput }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) {
+        setOtpError(verifyData.error || "Invalid OTP. Please try again.");
+        return;
+      }
+      const regRes = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const regData = await regRes.json();
+      if (!regRes.ok) {
+        if (regData.errors) {
+          setErrors(regData.errors);
+          setStep("form");
+          setServerError("Please check the form and try again.");
+        } else {
+          setOtpError(regData.error || "Registration failed. Please try again.");
+        }
+        return;
+      }
+      setStep("success");
+    } catch {
+      setOtpError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const mobileCollegeSelect = (
@@ -69,76 +133,6 @@ export default function RegisterPage() {
         border: `2px solid ${errors.college ? "#cc0000" : "#c45e00"}`,
         color: formData.college ? "#3a0a00" : "#7a4010",
         backdropFilter: "blur(2px)",
-      }}
-    >
-      <option value="" disabled>Select your college</option>
-      <optgroup label="Government / Public Engineering Colleges">
-        <option>COEP Technological University</option>
-        <option>Government College of Engineering and Research, Avasari Khurd</option>
-        <option>College of Military Engineering</option>
-      </optgroup>
-      <optgroup label="Autonomous / Top Private Engineering Colleges">
-        <option>Pune Institute of Computer Technology</option>
-        <option>Vishwakarma Institute of Technology</option>
-        <option>Pimpri Chinchwad College of Engineering</option>
-        <option>MIT Academy of Engineering</option>
-        <option>Army Institute of Technology</option>
-        <option>Symbiosis Institute of Technology</option>
-      </optgroup>
-      <optgroup label="Major Private Engineering Colleges">
-        <option>Bharati Vidyapeeth Deemed University College of Engineering, Pune</option>
-        <option>Dr. D. Y. Patil College of Engineering, Akurdi</option>
-        <option>Dr. D. Y. Patil Institute of Technology, Pimpri</option>
-        <option>AISSMS College of Engineering</option>
-        <option>AISSMS Institute of Information Technology</option>
-        <option>International Institute of Information Technology, Pune</option>
-      </optgroup>
-      <optgroup label="Other Engineering Colleges in Pune">
-        <option>Modern Education Society&apos;s College of Engineering</option>
-        <option>PES Modern College of Engineering</option>
-        <option>Pune Vidyarthi Griha&apos;s College of Engineering and Technology</option>
-        <option>Marathwada Mitra Mandal&apos;s College of Engineering</option>
-        <option>Rajarshi Shahu College of Engineering</option>
-        <option>Cummins College of Engineering for Women, Pune</option>
-      </optgroup>
-      <optgroup label="Sinhgad Group Engineering Colleges">
-        <option>Sinhgad College of Engineering, Vadgaon</option>
-        <option>Sinhgad Institute of Technology, Lonavala</option>
-        <option>NBN Sinhgad School of Engineering</option>
-        <option>Sinhgad Institute of Technology and Science</option>
-      </optgroup>
-      <optgroup label="Other Private Engineering Colleges">
-        <option>JSPM&apos;s Jayawantrao Sawant College of Engineering</option>
-        <option>JSPM&apos;s Imperial College of Engineering and Research</option>
-        <option>JSPM&apos;s Bhivarabai Sawant Institute of Technology and Research</option>
-        <option>Indira College of Engineering and Management</option>
-        <option>Genba Sopanrao Moze College of Engineering</option>
-        <option>Trinity College of Engineering and Research</option>
-        <option>Zeal College of Engineering and Research</option>
-        <option>Nutan College of Engineering and Research</option>
-        <option>Siddhant College of Engineering</option>
-        <option>Sahyadri Valley College of Engineering and Technology</option>
-        <option>Imperial College of Engineering and Research</option>
-        <option>Shri Chhatrapati Shivajiraje College of Engineering</option>
-      </optgroup>
-      <option value="Other">Other</option>
-    </select>
-  );
-
-  // ─── Shared college list ──────────────────────────────────────────────────
-  const collegeSelect = (
-    <select
-      name="college"
-      value={formData.college}
-      onChange={(e) => {
-        setFormData({ ...formData, college: e.target.value });
-        setErrors({ ...errors, college: "" });
-      }}
-      className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
-      style={{
-        backgroundColor: "#fff8e1",
-        border: `2px solid ${errors.college ? "#cc0000" : "#b5420a"}`,
-        color: formData.college ? "#3a1a00" : "#9a7a5a",
       }}
     >
       <option value="" disabled>Select your college</option>
@@ -221,7 +215,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Success overlay — full screen, always visible */}
-        {submitted && (
+        {step === "success" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 px-6"
             style={{ background: "rgba(255,220,150,0.85)", backdropFilter: "blur(6px)" }}>
             <div className="text-6xl">🎉</div>
@@ -235,7 +229,7 @@ export default function RegisterPage() {
         )}
 
         {/* Form — positioned absolutely so you can freely move it */}
-        {!submitted && (
+        {step === "form" && (
         <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
           <h2 className="text-center font-bold tracking-widest mb-3 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>REGISTRATION <br /> FORM</h2>
           <form onSubmit={handleSubmit} className="space-y-3 w-full" noValidate>
@@ -272,13 +266,48 @@ export default function RegisterPage() {
                 {mobileCollegeSelect}
                 {errors.college && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.college}</p>}
               </div>
+              {serverError && <p className="text-red-700 text-xs font-bold text-center">{serverError}</p>}
               {/* Submit */}
-              <button type="submit"
-                className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest"
+              <button type="submit" disabled={loading}
+                className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
-                SUBMIT
+                {loading ? "SENDING OTP..." : "SUBMIT"}
               </button>
             </form>
+        </div>
+        )}
+
+        {/* OTP Step — mobile */}
+        {step === "otp" && (
+        <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
+          <h2 className="text-center font-bold tracking-widest mb-1 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>VERIFY<br/>EMAIL</h2>
+          <p className="text-center text-xs mb-3" style={{ color: "#7B2D0E" }}>OTP sent to<br/><span className="font-bold">{formData.email}</span></p>
+          <form onSubmit={handleVerifyOtp} className="space-y-3 w-full" noValidate>
+            <div>
+              <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>ENTER OTP</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={otpInput}
+                onChange={(e) => { setOtpInput(e.target.value.replace(/\D/g, "")); setOtpError(""); }}
+                placeholder="6-digit OTP"
+                className="w-full px-3 py-2 text-sm rounded-lg outline-none text-center tracking-[0.3em] font-bold"
+                style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${otpError ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }}
+              />
+              {otpError && <p className="text-red-700 text-xs mt-0.5 font-bold">{otpError}</p>}
+            </div>
+            <button type="submit" disabled={loading}
+              className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
+              {loading ? "VERIFYING..." : "VERIFY OTP"}
+            </button>
+            <button type="button" disabled={loading} onClick={() => setStep("form")}
+              className="w-full text-xs font-bold py-1 transition-all hover:underline disabled:opacity-50"
+              style={{ color: "#7B2D0E", background: "none", border: "none" }}>
+              ← Edit Details / Resend OTP
+            </button>
+          </form>
         </div>
         )}
       </div>
@@ -300,13 +329,13 @@ export default function RegisterPage() {
 
       {/* Outer decorative border frame — 12px strips on all 4 sides */}
       {/* Top */}
-      <div className="fixed top-0 left-0 right-0 h-10 z-[9998] pointer-events-none"
+      <div className="fixed top-0 left-0 right-0 h-10 z-9998 pointer-events-none"
         style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x" }} />
       {/* Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 h-10 z-[9998] pointer-events-none"
+      <div className="fixed bottom-0 left-0 right-0 h-10 z-9998 pointer-events-none"
         style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x", transform: "scaleY(-1)" }} />
       {/* Left */}
-      <div className="fixed top-0 left-0 bottom-0 w-10 z-[9998] pointer-events-none overflow-hidden">
+      <div className="fixed top-0 left-0 bottom-0 w-10 z-9998 pointer-events-none overflow-hidden">
         <div style={{
           position: "absolute",
           top: 0, left: 0,
@@ -321,7 +350,7 @@ export default function RegisterPage() {
         }} />
       </div>
       {/* Right */}
-      <div className="fixed top-0 right-0 bottom-0 w-10 z-[9998] pointer-events-none overflow-hidden">
+      <div className="fixed top-0 right-0 bottom-0 w-10 z-9998 pointer-events-none overflow-hidden">
         <div style={{
           position: "absolute",
           top: 0, right: 0,
@@ -338,15 +367,15 @@ export default function RegisterPage() {
 
       {/* Corner triangles */}
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed top-10 right-10 z-[9999] pointer-events-none" />
+        className="fixed top-10 right-10 z-9999 pointer-events-none" />
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed top-10 left-10 z-[9999] pointer-events-none"
+        className="fixed top-10 left-10 z-9999 pointer-events-none"
         style={{ transform: "scaleX(-1)" }} />
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed bottom-10 right-10 z-[9999] pointer-events-none"
+        className="fixed bottom-10 right-10 z-9999 pointer-events-none"
         style={{ transform: "scaleY(-1)" }} />
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed bottom-10 left-10 z-[9999] pointer-events-none"
+        className="fixed bottom-10 left-10 z-9999 pointer-events-none"
         style={{ transform: "scale(-1)" }} />
 
       {/* ── Left side: Camel + Truck ── */}
@@ -423,7 +452,7 @@ export default function RegisterPage() {
 
             {/* Form — drives the height of the container */}
             <div className="relative z-10 flex flex-col items-center justify-center w-full px-16 pt-32 pb-8">
-            {submitted ? (
+            {step === "success" ? (
               /* Success State */
               <div className="text-center space-y-4">
                 <div className="text-5xl">🎉</div>
@@ -444,6 +473,57 @@ export default function RegisterPage() {
                 >
                   BACK TO HOME
                 </Link>
+              </div>
+            ) : step === "otp" ? (
+              /* OTP Verification Step */
+              <div className="w-full space-y-5">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">📧</div>
+                  <h3 className="font-taiganja text-xl font-bold" style={{ color: "#7B2D0E" }}>Verify Your Email</h3>
+                  <p className="text-sm mt-1" style={{ color: "#b5420a" }}>
+                    We sent a 6-digit OTP to<br/>
+                    <span className="font-bold">{formData.email}</span>
+                  </p>
+                </div>
+                <form onSubmit={handleVerifyOtp} className="w-full space-y-4" noValidate>
+                  <div>
+                    <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#7B2D0E" }}>
+                      ENTER OTP
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={otpInput}
+                      onChange={(e) => { setOtpInput(e.target.value.replace(/\D/g, "")); setOtpError(""); }}
+                      placeholder="• • • • • •"
+                      className="w-full px-3 py-3 text-xl rounded-lg outline-none transition-all text-center tracking-[0.5em] font-bold"
+                      style={{
+                        backgroundColor: "#fff8e1",
+                        border: `2px solid ${otpError ? "#cc0000" : "#b5420a"}`,
+                        color: "#3a1a00",
+                      }}
+                    />
+                    {otpError && <p className="text-red-600 text-xs mt-0.5">{otpError}</p>}
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg mt-1 tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: "#7B2D0E", color: "#fff8e1", borderColor: "#b5420a" }}
+                  >
+                    {loading ? "VERIFYING..." : "VERIFY OTP"}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={() => setStep("form")}
+                    className="w-full text-sm font-bold py-1 transition-all hover:underline disabled:opacity-50"
+                    style={{ color: "#7B2D0E", background: "none", border: "none" }}
+                  >
+                    ← Edit Details / Resend OTP
+                  </button>
+                </form>
               </div>
             ) : (
               /* Form */
@@ -595,11 +675,6 @@ export default function RegisterPage() {
                         placeholder="Type your college name"
                         className="flex-1 px-3 py-2 text-sm rounded-lg outline-none transition-all"
                         style={{ backgroundColor: "#fff8e1", border: "2px solid #b5420a", color: "#3a1a00" }}
-                        style={{
-                          backgroundColor: "#fff8e1",
-                          border: "2px solid #b5420a",  
-                          color: "#3a1a00",
-                        }}
                       />
                       <button
                         type="button"
@@ -615,10 +690,6 @@ export default function RegisterPage() {
                         }}
                         className="px-4 py-2 text-sm font-bold rounded-lg transition-all"
                         style={{ backgroundColor: "#8B1538", color: "#FFFFFF" }}
-                        style={{
-                          backgroundColor: "#8B1538",
-                          color: "#FFFFFF",
-                        }}
                       >
                         Add
                       </button>
@@ -626,17 +697,19 @@ export default function RegisterPage() {
                   </div>
                 )}
 
+                {serverError && <p className="text-red-600 text-xs font-bold text-center">{serverError}</p>}
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg mt-1 tracking-widest"
+                  disabled={loading}
+                  className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg mt-1 tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
                     backgroundColor: "#7B2D0E",
                     color: "#fff8e1",
                     borderColor: "#b5420a",
                   }}
                 >
-                  SUBMIT 
+                  {loading ? "SENDING OTP..." : "SUBMIT"}
                 </button>
 
               </form>

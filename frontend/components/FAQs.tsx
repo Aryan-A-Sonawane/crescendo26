@@ -5,36 +5,44 @@ import { useState } from "react";
 const faqs = [
   {
     question: "When is CRESCENDO'26?",
-    answer: "CRESCENDO'26 will be held from March 15-17, 2026. The fest will run for three exciting days filled with various events and performances."
+    answer:
+      "CRESCENDO'26 will be held from April 6-9, 2026. The fest will run for three exciting days filled with various events and performances.",
   },
   {
     question: "How do I register for events?",
-    answer: "You can register for events through our official website by clicking the 'Register Now' button. Fill in your details, select the events you want to participate in, and complete the payment process."
+    answer:
+      "You can register for events through our official website by clicking the 'Register Now' button. Fill in your details, select the events you want to participate in, and complete the payment process.",
   },
   {
     question: "Is there a registration fee?",
-    answer: "Yes, there is a nominal registration fee that varies depending on the events you choose. Individual event fees and combo packages are available. Check the Events section for detailed pricing."
+    answer:
+      "Yes, there is a nominal registration fee that varies depending on the events you choose. Individual event fees and combo packages are available. Check the Events section for detailed pricing.",
   },
   {
     question: "Can I participate in multiple events?",
-    answer: "Absolutely! You can participate in as many events as you want, provided there are no time clashes. We offer special combo packages for multiple event registrations."
+    answer:
+      "Absolutely! You can participate in as many events as you want, provided there are no time clashes. We offer special combo packages for multiple event registrations.",
   },
   {
     question: "Are there accommodation facilities?",
-    answer: "Yes, we provide accommodation facilities for outstation participants. You need to opt for accommodation during registration. Limited seats are available on a first-come, first-served basis."
+    answer:
+      "Yes, we provide accommodation facilities for outstation participants. You need to opt for accommodation during registration. Limited seats are available on a first-come, first-served basis.",
   },
   {
     question: "What prizes can I win?",
-    answer: "Winners in each event will receive cash prizes, certificates, and trophies. The prize pool varies by event, with total prizes worth over ₹5 lakhs up for grabs!"
+    answer:
+      "Winners in each event will receive cash prizes, certificates, and trophies. The prize pool varies by event, with total prizes worth over ₹5 lakhs up for grabs!",
   },
   {
     question: "Is there a dress code?",
-    answer: "There is no specific dress code for general attendance. However, some events may have specific requirements (e.g., traditional wear for classical dance). Check individual event guidelines."
+    answer:
+      "There is no specific dress code for general attendance. However, some events may have specific requirements (e.g., traditional wear for classical dance). Check individual event guidelines.",
   },
   {
     question: "Who can participate?",
-    answer: "CRESCENDO'26 is open to all college students with valid student ID cards. Both undergraduate and postgraduate students from any college can participate."
-  }
+    answer:
+      "CRESCENDO'26 is open to all college students with valid student ID cards. Both undergraduate and postgraduate students from any college can participate.",
+  },
 ];
 
 export default function FAQs() {
@@ -88,7 +96,9 @@ export default function FAQs() {
               </button>
               {openIndex === index && (
                 <div className="px-4 md:px-6 py-3 md:py-4 bg-purple-50 border-t border-purple-100">
-                  <p className="text-sm md:text-base text-gray-700 leading-relaxed">{faq.answer}</p>
+                  <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+                    {faq.answer}
+                  </p>
                 </div>
               )}
             </div>
@@ -96,7 +106,9 @@ export default function FAQs() {
         </div>
 
         <div className="text-center mt-8 md:mt-12">
-          <p className="text-sm md:text-base text-gray-600 mb-4 px-2">Still have questions?</p>
+          <p className="text-sm md:text-base text-gray-600 mb-4 px-2">
+            Still have questions?
+          </p>
           <button className="w-full sm:w-auto bg-purple-600 text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors">
             Contact Us
           </button>

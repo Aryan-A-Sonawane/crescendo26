@@ -11,6 +11,5 @@ export default defineConfig({
   },
   datasource: {
     url: process.env["DATABASE_URL"] as string,
-    directUrl: process.env["DATABASE_URL_UNPOOLED"] as string,
   },
 });

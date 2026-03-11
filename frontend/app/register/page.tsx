@@ -14,7 +14,6 @@ export default function RegisterPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [agreed, setAgreed] = useState(false);
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [customCollege, setCustomCollege] = useState("");
   const [customColleges, setCustomColleges] = useState<string[]>([]);
@@ -300,13 +299,13 @@ export default function RegisterPage() {
 
       {/* Outer decorative border frame — 12px strips on all 4 sides */}
       {/* Top */}
-      <div className="fixed top-0 left-0 right-0 h-10 z-[9998] pointer-events-none"
+      <div className="fixed top-0 left-0 right-0 h-10 z-9998 pointer-events-none"
         style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x" }} />
       {/* Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 h-10 z-[9998] pointer-events-none"
+      <div className="fixed bottom-0 left-0 right-0 h-10 z-9998 pointer-events-none"
         style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x", transform: "scaleY(-1)" }} />
       {/* Left */}
-      <div className="fixed top-0 left-0 bottom-0 w-10 z-[9998] pointer-events-none overflow-hidden">
+      <div className="fixed top-0 left-0 bottom-0 w-10 z-9998 pointer-events-none overflow-hidden">
         <div style={{
           position: "absolute",
           top: 0, left: 0,
@@ -321,7 +320,7 @@ export default function RegisterPage() {
         }} />
       </div>
       {/* Right */}
-      <div className="fixed top-0 right-0 bottom-0 w-10 z-[9998] pointer-events-none overflow-hidden">
+      <div className="fixed top-0 right-0 bottom-0 w-10 z-9998 pointer-events-none overflow-hidden">
         <div style={{
           position: "absolute",
           top: 0, right: 0,
@@ -338,15 +337,15 @@ export default function RegisterPage() {
 
       {/* Corner triangles */}
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed top-10 right-10 z-[9999] pointer-events-none" />
+        className="fixed top-10 right-10 z-9999 pointer-events-none" />
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed top-10 left-10 z-[9999] pointer-events-none"
+        className="fixed top-10 left-10 z-9999 pointer-events-none"
         style={{ transform: "scaleX(-1)" }} />
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed bottom-10 right-10 z-[9999] pointer-events-none"
+        className="fixed bottom-10 right-10 z-9999 pointer-events-none"
         style={{ transform: "scaleY(-1)" }} />
       <Image src="/corner-triangle.png" alt="" width={250} height={250}
-        className="fixed bottom-10 left-10 z-[9999] pointer-events-none"
+        className="fixed bottom-10 left-10 z-9999 pointer-events-none"
         style={{ transform: "scale(-1)" }} />
 
       {/* ── Left side: Camel + Truck ── */}
@@ -595,11 +594,6 @@ export default function RegisterPage() {
                         placeholder="Type your college name"
                         className="flex-1 px-3 py-2 text-sm rounded-lg outline-none transition-all"
                         style={{ backgroundColor: "#fff8e1", border: "2px solid #b5420a", color: "#3a1a00" }}
-                        style={{
-                          backgroundColor: "#fff8e1",
-                          border: "2px solid #b5420a",  
-                          color: "#3a1a00",
-                        }}
                       />
                       <button
                         type="button"
@@ -615,10 +609,6 @@ export default function RegisterPage() {
                         }}
                         className="px-4 py-2 text-sm font-bold rounded-lg transition-all"
                         style={{ backgroundColor: "#8B1538", color: "#FFFFFF" }}
-                        style={{
-                          backgroundColor: "#8B1538",
-                          color: "#FFFFFF",
-                        }}
                       >
                         Add
                       </button>

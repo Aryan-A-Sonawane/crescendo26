@@ -12,9 +12,12 @@ export default function RegisterPage() {
     college: "",
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"form" | "otp" | "success">("form");
+  const [otpInput, setOtpInput] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [agreed, setAgreed] = useState(false);
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [customCollege, setCustomCollege] = useState("");
   const [customColleges, setCustomColleges] = useState<string[]>([]);
@@ -46,14 +49,75 @@ export default function RegisterPage() {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    setSubmitted(true);
+    setLoading(true);
+    setServerError("");
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, name: formData.name }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setServerError(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+      setStep("otp");
+    } catch {
+      setServerError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(otpInput)) {
+      setOtpError("Please enter the 6-digit OTP sent to your email.");
+      return;
+    }
+    setLoading(true);
+    setOtpError("");
+    try {
+      const verifyRes = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, otp: otpInput }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) {
+        setOtpError(verifyData.error || "Invalid OTP. Please try again.");
+        return;
+      }
+      const regRes = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const regData = await regRes.json();
+      if (!regRes.ok) {
+        if (regData.errors) {
+          setErrors(regData.errors);
+          setStep("form");
+          setServerError("Please check the form and try again.");
+        } else {
+          setOtpError(regData.error || "Registration failed. Please try again.");
+        }
+        return;
+      }
+      setStep("success");
+    } catch {
+      setOtpError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const mobileCollegeSelect = (
@@ -259,8 +323,11 @@ export default function RegisterPage() {
               backdropFilter: "blur(6px)",
             }}
           >
+        {step === "success" && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 px-6"
+            style={{ background: "rgba(255,220,150,0.85)", backdropFilter: "blur(6px)" }}>
             <div className="text-6xl">🎉</div>
-            <p className="font-bold text-xl" style={{ color: "#4a0e00" }}>
+            <p className="font-bold text-xl" style={{ color: "#4a0e00" }}>  
               Welcome, {formData.name}!
             </p>
             <p className="text-sm" style={{ color: "#7B2D0E" }}>
@@ -307,6 +374,10 @@ export default function RegisterPage() {
               className="space-y-3 w-full"
               noValidate
             >
+        {step === "form" && (
+        <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
+          <h2 className="text-center font-bold tracking-widest mb-3 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>REGISTRATION <br /> FORM</h2>
+          <form onSubmit={handleSubmit} className="space-y-3 w-full" noValidate>
               {/* NAME */}
               <div>
                 <label
@@ -407,6 +478,7 @@ export default function RegisterPage() {
                   </p>
                 )}
               </div>
+              {serverError && <p className="text-red-700 text-xs font-bold text-center">{serverError}</p>}
               {/* Submit */}
               <button
                 type="submit"
@@ -418,9 +490,47 @@ export default function RegisterPage() {
                 }}
               >
                 SUBMIT
+              <button type="submit" disabled={loading}
+                className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
+                {loading ? "SENDING OTP..." : "SUBMIT"}
               </button>
             </form>
           </div>
+        )}
+
+        {/* OTP Step — mobile */}
+        {step === "otp" && (
+        <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
+          <h2 className="text-center font-bold tracking-widest mb-1 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>VERIFY<br/>EMAIL</h2>
+          <p className="text-center text-xs mb-3" style={{ color: "#7B2D0E" }}>OTP sent to<br/><span className="font-bold">{formData.email}</span></p>
+          <form onSubmit={handleVerifyOtp} className="space-y-3 w-full" noValidate>
+            <div>
+              <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>ENTER OTP</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={otpInput}
+                onChange={(e) => { setOtpInput(e.target.value.replace(/\D/g, "")); setOtpError(""); }}
+                placeholder="6-digit OTP"
+                className="w-full px-3 py-2 text-sm rounded-lg outline-none text-center tracking-[0.3em] font-bold"
+                style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${otpError ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }}
+              />
+              {otpError && <p className="text-red-700 text-xs mt-0.5 font-bold">{otpError}</p>}
+            </div>
+            <button type="submit" disabled={loading}
+              className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
+              {loading ? "VERIFYING..." : "VERIFY OTP"}
+            </button>
+            <button type="button" disabled={loading} onClick={() => setStep("form")}
+              className="w-full text-xs font-bold py-1 transition-all hover:underline disabled:opacity-50"
+              style={{ color: "#7B2D0E", background: "none", border: "none" }}>
+              ← Edit Details / Resend OTP
+            </button>
+          </form>
+        </div>
         )}
       </div>
       {/* ════════════════════════════════════════════════════
@@ -442,6 +552,61 @@ export default function RegisterPage() {
         {/* Top */}
         <div
           className="fixed top-0 left-0 right-0 h-10 z-[9998] pointer-events-none"
+      {/* Outer decorative border frame — 12px strips on all 4 sides */}
+      {/* Top */}
+      <div className="fixed top-0 left-0 right-0 h-10 z-9998 pointer-events-none"
+        style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x" }} />
+      {/* Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 h-10 z-9998 pointer-events-none"
+        style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x", transform: "scaleY(-1)" }} />
+      {/* Left */}
+      <div className="fixed top-0 left-0 bottom-0 w-10 z-9998 pointer-events-none overflow-hidden">
+        <div style={{
+          position: "absolute",
+          top: 0, left: 0,
+          width: "100vh",
+          height: "40px",
+          transformOrigin: "top left",
+          transform: "rotate(90deg) translateY(-100%)",
+          backgroundColor: "#D4A017",
+          backgroundImage: "url('/border-blue.png')",
+          backgroundSize: "auto 100%",
+          backgroundRepeat: "repeat-x",
+        }} />
+      </div>
+      {/* Right */}
+      <div className="fixed top-0 right-0 bottom-0 w-10 z-9998 pointer-events-none overflow-hidden">
+        <div style={{
+          position: "absolute",
+          top: 0, right: 0,
+          width: "100vh",
+          height: "40px",
+          transformOrigin: "top right",
+          transform: "rotate(-90deg) translateY(-100%)",
+          backgroundColor: "#D4A017",
+          backgroundImage: "url('/border-blue.png')",
+          backgroundSize: "auto 100%",
+          backgroundRepeat: "repeat-x",
+        }} />
+      </div>
+
+      {/* Corner triangles */}
+      <Image src="/corner-triangle.png" alt="" width={250} height={250}
+        className="fixed top-10 right-10 z-9999 pointer-events-none" />
+      <Image src="/corner-triangle.png" alt="" width={250} height={250}
+        className="fixed top-10 left-10 z-9999 pointer-events-none"
+        style={{ transform: "scaleX(-1)" }} />
+      <Image src="/corner-triangle.png" alt="" width={250} height={250}
+        className="fixed bottom-10 right-10 z-9999 pointer-events-none"
+        style={{ transform: "scaleY(-1)" }} />
+      <Image src="/corner-triangle.png" alt="" width={250} height={250}
+        className="fixed bottom-10 left-10 z-9999 pointer-events-none"
+        style={{ transform: "scale(-1)" }} />
+
+      {/* ── Left side: Camel + Truck ── */}
+      <div className="fixed left-0 bottom-0 z-20 pointer-events-none hidden lg:block">
+        {/* Truck — slides in first, then bobs */}
+        <Image src="/truck.webp" alt="truck" width={340} height={480}
           style={{
             backgroundColor: "#D4A017",
             backgroundImage: "url('/border-blue.png')",
@@ -595,12 +760,128 @@ export default function RegisterPage() {
                 <p
                   className="font-taiganja text-3xl text-center tracking-widest font-bold pt-18"
                   style={{ color: "#7B2D0E" }}
+            {/* Form — drives the height of the container */}
+            <div className="relative z-10 flex flex-col items-center justify-center w-full px-16 pt-32 pb-8">
+            {step === "success" ? (
+              /* Success State */
+              <div className="text-center space-y-4">
+                <div className="text-5xl">🎉</div>
+                <h3 className="font-taiganja text-2xl" style={{ color: "#7B2D0E" }}>
+                  You&apos;re Registered!
+                </h3>
+                <p className="font-bold text-lg" style={{ color: "#b5420a" }}>
+                  Welcome, {formData.name}!
+                </p>
+                <p className="text-sm" style={{ color: "#7B2D0E" }}>
+                  Confirmation sent to{" "}
+                  <span className="font-bold">{formData.email}</span>
+                </p>
+                <Link
+                  href="/"
+                  className="inline-block mt-4 font-taiganja text-base font-bold px-8 py-2 rounded-full border-2 transition-all hover:scale-105"
+                  style={{ backgroundColor: "#7B2D0E", color: "#fff8e1", borderColor: "#b5420a" }}
                 >
                   REGISTRATION <br /> PAGE
                 </p>
               </div>
             </div>
           </div>
+            ) : step === "otp" ? (
+              /* OTP Verification Step */
+              <div className="w-full space-y-5">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">📧</div>
+                  <h3 className="font-taiganja text-xl font-bold" style={{ color: "#7B2D0E" }}>Verify Your Email</h3>
+                  <p className="text-sm mt-1" style={{ color: "#b5420a" }}>
+                    We sent a 6-digit OTP to<br/>
+                    <span className="font-bold">{formData.email}</span>
+                  </p>
+                </div>
+                <form onSubmit={handleVerifyOtp} className="w-full space-y-4" noValidate>
+                  <div>
+                    <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#7B2D0E" }}>
+                      ENTER OTP
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={otpInput}
+                      onChange={(e) => { setOtpInput(e.target.value.replace(/\D/g, "")); setOtpError(""); }}
+                      placeholder="• • • • • •"
+                      className="w-full px-3 py-3 text-xl rounded-lg outline-none transition-all text-center tracking-[0.5em] font-bold"
+                      style={{
+                        backgroundColor: "#fff8e1",
+                        border: `2px solid ${otpError ? "#cc0000" : "#b5420a"}`,
+                        color: "#3a1a00",
+                      }}
+                    />
+                    {otpError && <p className="text-red-600 text-xs mt-0.5">{otpError}</p>}
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg mt-1 tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: "#7B2D0E", color: "#fff8e1", borderColor: "#b5420a" }}
+                  >
+                    {loading ? "VERIFYING..." : "VERIFY OTP"}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={() => setStep("form")}
+                    className="w-full text-sm font-bold py-1 transition-all hover:underline disabled:opacity-50"
+                    style={{ color: "#7B2D0E", background: "none", border: "none" }}
+                  >
+                    ← Edit Details / Resend OTP
+                  </button>
+                </form>
+              </div>
+            ) : (
+              /* Form */
+              <form onSubmit={handleSubmit} className="w-full space-y-6" noValidate>
+
+                {/* NAME */}
+                <div>
+                  <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#7B2D0E" }}>
+                    NAME
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
+                    style={{
+                      backgroundColor: "#fff8e1",
+                      border: `2px solid ${errors.name ? "#cc0000" : "#b5420a"}`,
+                      color: "#3a1a00",
+                    }}
+                  />
+                  {errors.name && <p className="text-red-600 text-xs mt-0.5">{errors.name}</p>}
+                </div>
+
+                {/* EMAIL */}
+                <div>
+                  <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#7B2D0E" }}>
+                    EMAIL ID
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
+                    style={{
+                      backgroundColor: "#fff8e1",
+                      border: `2px solid ${errors.email ? "#cc0000" : "#b5420a"}`,
+                      color: "#3a1a00",
+                    }}
+                  />
+                  {errors.email && <p className="text-red-600 text-xs mt-0.5">{errors.email}</p>}
+                </div>
 
           {/* ── FORM AREA — centered ── */}
           <div className="w-full flex justify-center">
@@ -742,6 +1023,11 @@ export default function RegisterPage() {
                           border: `2px solid ${errors.phone ? "#cc0000" : "#b5420a"}`,
                           color: "#3a1a00",
                         }}
+                        value={customCollege}
+                        onChange={(e) => setCustomCollege(e.target.value)}
+                        placeholder="Type your college name"
+                        className="flex-1 px-3 py-2 text-sm rounded-lg outline-none transition-all"
+                        style={{ backgroundColor: "#fff8e1", border: "2px solid #b5420a", color: "#3a1a00" }}
                       />
                       {errors.phone && (
                         <p className="text-red-600 text-xs mt-0.5">
@@ -773,6 +1059,8 @@ export default function RegisterPage() {
                           border: `2px solid ${errors.college ? "#cc0000" : "#b5420a"}`,
                           color: formData.college ? "#3a1a00" : "#9a7a5a",
                         }}
+                        className="px-4 py-2 text-sm font-bold rounded-lg transition-all"
+                        style={{ backgroundColor: "#8B1538", color: "#FFFFFF" }}
                       >
                         <option value="" disabled>
                           Select your college
@@ -942,6 +1230,20 @@ export default function RegisterPage() {
                         </div>
                       </div>
                     )}
+                {serverError && <p className="text-red-600 text-xs font-bold text-center">{serverError}</p>}
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg mt-1 tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{
+                    backgroundColor: "#7B2D0E",
+                    color: "#fff8e1",
+                    borderColor: "#b5420a",
+                  }}
+                >
+                  {loading ? "SENDING OTP..." : "SUBMIT"}
+                </button>
 
                     {/* Submit Button */}
                     <button

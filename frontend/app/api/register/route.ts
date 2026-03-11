@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     if (!parsed.success) {
       const fieldErrors: Record<string, string> = {};
-      for (const err of parsed.error.errors) {
+      for (const err of parsed.error.issues) {
         const field = err.path[0] as string;
         if (!fieldErrors[field]) fieldErrors[field] = err.message;
       }

@@ -70,8 +70,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "OTP sent successfully" }, { status: 200 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("[send-otp] Error:", message);
+    console.error("[send-otp] Error:", {
+      message: err instanceof Error ? err.message : String(err),
+      hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
+      hasEmailUser: Boolean(process.env.EMAIL_USER),
+      hasEmailPass: Boolean(process.env.EMAIL_PASS),
+    });
     return NextResponse.json(
       { error: "Failed to send OTP. Please try again." },
       { status: 500 }

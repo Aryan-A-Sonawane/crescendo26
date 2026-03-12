@@ -1,16 +1,28 @@
-import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+declare global {
+  // eslint-disable-next-line no-var
+  var __prisma: PrismaClient | undefined;
+}
 
-function createPrismaClient() {
-  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
+function createPrismaClient(): PrismaClient {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("[prisma] DATABASE_URL is not set. Check your .env.local or Vercel environment variables.");
+  }
+  // PrismaNeonHttp uses HTTP fetch — works everywhere, no WebSocket needed
+  const adapter = new PrismaNeonHttp(connectionString, {});
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   } as ConstructorParameters<typeof PrismaClient>[0]);
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+// In production: create fresh (serverless, no persistent state).
+// In dev: reuse across hot reloads via globalThis to avoid re-instantiation.
+export const prisma: PrismaClient =
+  process.env.NODE_ENV === "production"
+    ? createPrismaClient()
+    : (globalThis.__prisma ??= createPrismaClient());
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

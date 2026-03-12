@@ -38,7 +38,10 @@ export async function POST(req: NextRequest) {
     const { email, name } = parsed.data;
 
     // Check if email is already registered and verified
-    const existing = await prisma.registration.findUnique({ where: { email } });
+    const existing = await prisma.registration.findUnique({
+      where: { email },
+      select: { verified: true },
+    });
     if (existing?.verified) {
       return NextResponse.json(
         { error: "This email is already registered for Crescendo'26." },

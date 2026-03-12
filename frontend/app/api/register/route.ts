@@ -33,7 +33,10 @@ export async function POST(req: NextRequest) {
     const { name, email, phone, college } = parsed.data;
 
     // Check duplicate email
-    const existingEmail = await prisma.registration.findUnique({ where: { email } });
+    const existingEmail = await prisma.registration.findUnique({
+      where: { email },
+      select: { id: true },
+    });
     if (existingEmail) {
       return NextResponse.json(
         { errors: { email: "This email is already registered." } },
@@ -42,7 +45,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Check duplicate phone
-    const existingPhone = await prisma.registration.findUnique({ where: { phone } });
+    const existingPhone = await prisma.registration.findUnique({
+      where: { phone },
+      select: { id: true },
+    });
     if (existingPhone) {
       return NextResponse.json(
         { errors: { phone: "This phone number is already registered." } },

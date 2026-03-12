@@ -1,65 +1,312 @@
+"use client";
+
+/**
+ * Slide-in keyframes (slideInLeft / slideInRight) are defined in app/globals.css.
+ * Z-index layers:
+ *   css bg → background color #E7A92E (behind everything)
+ *   0 → border_left-removebg-preview.png decorative border frame
+ *   1 → banner.webp (centered, behind decoratives)
+ *   2 → decorative elements (mandala, truck, camel, sitar, gramophone)
+ *   3 → crescendo.png (primary focus)
+ *   10 → Border_top-removebg-preview.png (top strip, above all)
+ */
+
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import MusicVisualizer from "./MusicVisualizer";
+
 export default function Hero() {
+  const sitarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+
+      // Sitar: move at 40% of scroll speed (parallax depth)
+      if (sitarRef.current) {
+        sitarRef.current.style.transform = `translateY(${scrollY * 0.4}px)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center bg-[#f3ba35] pt-24 md:pt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 text-center">
-        <div className="space-y-6 md:space-y-8">
-          {/* Main Heading */}
-          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900">
-            Welcome to{"\ "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-600 font-nistha">
-              CRESCENDO&apos;26
-            </span>
-          </h1>
+    <>
+      {/* ── Hero section — 88vh gives enough room to separate decoratives ── */}
+      <section
+        id="home"
+        className="relative w-full overflow-hidden"
+        style={{ height: "88vh", backgroundColor: "#E7A92E" }}
+      >
 
-          {/* Subheading */}
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto px-2">
-            The Ultimate Inter-College Cultural Fest
-          </p>
+        {/* Border Corner — top-left — desktop only */}
+        <div
+          className="absolute pointer-events-none select-none hidden md:block"
+          style={{ top: -10, left: -16, zIndex: 9999, width: "clamp(220px, 14vw, 200px)" }}
+        >
+          <Image
+            src="/border-corner.png"
+            alt=""
+            width={300}
+            height={300}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
 
-          {/* Date & Venue */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-sm sm:text-base md:text-lg text-gray-700">
-            <div className="flex items-center gap-2">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>March 15-17, 2026</span>
+
+        {/* Border Corner — top-right (flipped) — desktop only */}
+        <div
+          className="absolute pointer-events-none select-none hidden md:block"
+          style={{ top: -10, right: -16, zIndex: 9999, width: "clamp(225px, 14vw, 200px)", transform: "scaleX(-1)" }}
+        >
+          <Image
+            src="/border-corner.png"
+            alt=""
+            width={500}
+            height={300}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Top Border Strip — desktop only */}
+        <div
+          className="absolute pointer-events-none select-none overflow-hidden hidden md:flex"
+          style={{
+            top: 0,
+            left: "clamp(120px, 14vw, 200px)",
+            right: "clamp(120px, 14vw, 200px)",
+            height: 105,
+            zIndex: 9999,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
+          }}
+        >
+          {Array.from({ length: 20 }).map((_, i) => (
+            /* Each tile: show only 3/4 of the image width, crop the rest */
+            <div
+              key={i}
+              style={{
+                flexShrink: 0,
+                width: 700,
+                height: 105,
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              <Image
+                src="/border_1.png"
+                alt=""
+                width={214}
+                height={1076}
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: 105,
+                  height: 700,
+                  transform: "translate(-50%, -50%) rotate(90deg)",
+                  maxWidth: "none",
+                }}
+              />
             </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>Your College Campus</span>
-            </div>
+          ))}
+        </div>
+
+
+        {/* Auto — top-left, where truck used to be — z-2 — hidden on mobile */}
+        <div
+          className="absolute hidden md:block pointer-events-none select-none"
+          style={{ top: "16vh", left: "-12px", zIndex: 2, width: "clamp(320px, 20vw, 300px)" }}
+        >
+          <div style={{ animation: "slide-in-left 1s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}>
+            <Image
+              src="/auto.webp"
+              alt="Decorated Auto"
+              width={400}
+              height={320}
+              style={{ width: "100%", height: "auto" }}
+            />
           </div>
+        </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center pt-6 md:pt-8 px-4">
-            <button className="w-full sm:w-auto bg-purple-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-base md:text-lg font-semibold hover:bg-purple-700 transition-all hover:scale-105 shadow-lg">
-              Register Now
-            </button>
-            <button className="w-full sm:w-auto border-2 border-purple-600 text-purple-600 px-6 md:px-8 py-3 md:py-4 rounded-full text-base md:text-lg font-semibold hover:bg-purple-50 transition-all">
-              View Events
-            </button>
+        {/* Mandala — top-right corner — desktop only */}
+        <div
+          className="absolute pointer-events-none select-none hidden md:block"
+          style={{ top: "18vh", right: "0%", zIndex: 2, width: "clamp(360px, 14vw, 240px)", opacity: 0.45 }}
+        >
+          <Image
+            src="/mandala.webp"
+            alt=""
+            width={300}
+            height={300}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto", animation: "spin-slow 12s linear infinite" }}
+          />
+        </div>
+
+
+
+        {/* Camel — bottom-left, flush with section bottom — z-2 — hidden on mobile */}
+        <div
+          className="absolute hidden md:block pointer-events-none select-none"
+          style={{ bottom: 0, left: "-12px", zIndex: 4, width: "clamp(380px, 24vw, 360px)", animation: "slide-in-left 1.2s cubic-bezier(0.22,1,0.36,1) 0.55s both" }}
+        >
+          <Image
+            src="/camel.webp"
+            alt="Decorated Camel"
+            width={460}
+            height={400}  
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Sitar — just below border, top-right — desktop only */}
+        <div
+          ref={sitarRef}
+          className="absolute pointer-events-none select-none hidden md:block"
+          style={{ top: "18vh", right: "-100px", zIndex: 2, width: "clamp(440px, 22vw, 320px)", willChange: "transform" }}
+        >
+          <div style={{ animation: "slide-in-right 1s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}>
+            <Image
+              src="/sitar.webp"
+              alt="Classical instruments"
+              width={420}
+              height={380}
+              style={{ width: "100%", height: "auto" }}
+            />
           </div>
+        </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto pt-8 md:pt-16">
-            <div>
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600">50+</div>
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1 md:mt-2">Colleges</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600">100+</div>
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1 md:mt-2">Events</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600">5000+</div>
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1 md:mt-2">Participants</div>
+        {/* Gramophone — bottom-right — desktop only */}
+        <div
+          className="absolute pointer-events-none select-none hidden md:block"
+          style={{ bottom: -40, right: "-72px", zIndex: 2, width: "clamp(340px, 20vw, 320px)", animation: "slide-in-right 1.2s cubic-bezier(0.22,1,0.36,1) 0.55s both" }}
+        >
+          <Image
+            src="/music_driver.webp"
+            alt="Gramophone"
+            width={420}
+            height={380}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* banner.webp — behind all decoratives and logo, centered — z-1 */}
+        <div
+          className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+          style={{ zIndex: 3, width: "min(95vw, 1300px)" }}
+        >
+          <Image
+            src="/banner.webp"
+            alt=""
+            width={1200}
+            height={800}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        {/* Crescendo logo — centered, 40–50% width — z-3 */}
+        <div
+          className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none hero-banner-wrapper"
+          style={{ zIndex: 3, width: "min(85vw, 650px)" }}
+        >
+          <Image
+            src="/crescendo.png"
+            alt="Crescendo: The Indian Odyssey"
+            width={900}
+            height={450}
+            priority
+            style={{
+              width: "100%",
+              height: "auto",
+              filter: "drop-shadow(0 10px 25px rgba(0,0,0,0.25))",
+              transition: "transform 0.3s ease-in-out, filter 0.3s ease-in-out",
+              cursor: "pointer",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLImageElement).style.transform = "scale(1.26)";
+              (e.currentTarget as HTMLImageElement).style.filter = "drop-shadow(0 16px 35px rgba(0,0,0,0.35))";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLImageElement).style.transform = "scale(1)";
+              (e.currentTarget as HTMLImageElement).style.filter = "drop-shadow(0 10px 25px rgba(0,0,0,0.25))";
+            }}
+          />
+        </div>
+
+        {/* Music visualizer + audio player */}
+        <MusicVisualizer />
+
+        {/* Truck driving strip — bottom of Hero, runs left → right */}
+        <div
+          className="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+          style={{ height: 180, zIndex: 5, overflow: "hidden" }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              bottom: -70,
+              left: 0,
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {/* Truck image */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                animation: "truck-drive 10s linear infinite",
+                width: 280,
+                
+              }}
+            >
+              <Image
+                src="/truck.webp"
+                alt="Decorated Indian Truck"
+                width={280}
+                height={280}
+                style={{ width: 280, height: "280", display: "block" }}
+              />
+              {/* Date label on the truck */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "38%",
+                  left: "31%",
+                  transform: "translate(-50%, -50%)",
+                  backgroundColor: "rgba(139,21,56,0.88)",
+                  border: "2px solid #D4A017",
+                  borderRadius: 6,
+                  padding: "16px 8px",
+                  whiteSpace: "nowrap",
+                  color: "#F7B32B",
+                  fontFamily: "'Poppins', sans-serif",
+                  fontWeight: 700,
+                  fontSize: 16,
+                  letterSpacing: "0.04em",
+                  textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                }}
+              >
+                6th – 9th April
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+
+      </section>
+
+      {/* Bottom maroon section removed — About section starts immediately */}
+
+    </>
   );
 }

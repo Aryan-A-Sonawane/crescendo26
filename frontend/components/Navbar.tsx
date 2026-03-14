@@ -8,7 +8,7 @@ const navLinks = [
   { href: "/events", label: "EVENTS" },
   { href: "#competitions", label: "COMPETITIONS" },
   { href: "#partner", label: "PARTNERS" },
-  { href: "#team", label: "TEAM" },
+  { href: "/team", label: "TEAM" },
 ];
 
 const navLinkClass =

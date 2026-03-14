@@ -1,3 +1,5 @@
+import { Pool } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 
@@ -6,6 +8,10 @@ declare global {
   var __prisma: PrismaClient | undefined;
 }
 
+function createPrismaClient() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL! }) as any;
+  const adapter = new PrismaNeon(pool);
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
@@ -16,7 +22,7 @@ function createPrismaClient(): PrismaClient {
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  } as ConstructorParameters<typeof PrismaClient>[0]);
+  });
 }
 
 // In production: create fresh (serverless, no persistent state).

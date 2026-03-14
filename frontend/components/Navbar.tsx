@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const navLinks = [
-  { href: "/", label: "HOME" }, 
+  { href: "/", label: "HOME" },
   { href: "#events", label: "EVENTS" },
+  { href: "https://learner.vierp.in/events", label: "BUY TICKETS", external: true },
   { href: "/competitions", label: "COMPETITIONS" },
   { href: "#partner", label: "PARTNERS" },
   { href: "/team", label: "TEAM" },
@@ -46,7 +47,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-4 md:top-10 left-0 right-0 z-50 flex justify-center pt-2 md:pt-6 px-4">
-      <div className="w-full max-w-5xl flex items-center gap-4">
+      <div className="w-full max-w-5xl flex items-center gap-4 origin-top" style={{ transform: "scale(0.7)" }}>
 
         {/* Main Navigation Pill */}
         <div className="flex-1 bg-[#e87700] shadow-2xl rounded-full border-4 border-[#a71d16]">
@@ -56,14 +57,27 @@ export default function Navbar() {
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center justify-center space-x-6">
                 {navLinks.map((link) => (
-                  <Link 
-                    key={link.href} 
-                    href={link.href} 
-                    className={navLinkClass}
-                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                  >
-                    {link.label}
-                  </Link>
+                  link.external ? (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={navLinkClass}
+                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link 
+                      key={link.href} 
+                      href={link.href} 
+                      className={navLinkClass}
+                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                    >
+                      {link.label}
+                    </Link>
+                  )
                 ))}
               </div>
 
@@ -104,15 +118,29 @@ export default function Navbar() {
               <div className="md:hidden pb-2 border-t border-[#a71d16]/20 mt-2">
                 <div className="flex flex-col space-y-1 pt-2">
                   {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={mobileNavLinkClass}
-                      onClick={() => setIsMenuOpen(false)}
-                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    >
-                      {link.label}
-                    </Link>
+                    link.external ? (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={mobileNavLinkClass}
+                        onClick={() => setIsMenuOpen(false)}
+                        style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={mobileNavLinkClass}
+                        onClick={() => setIsMenuOpen(false)}
+                        style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                      >
+                        {link.label}
+                      </Link>
+                    )
                   ))}
                   {registeredUser ? (
                     <button
@@ -124,7 +152,7 @@ export default function Navbar() {
                     </button>
                   ) : (
                     <Link
-                      href="/register"
+                      href="/onboard"
                       className="bg-[#a71d16] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#a71d16] transition-all mt-2"
                       onClick={() => setIsMenuOpen(false)}
                       style={{ fontFamily: "'Cinzel Decorative', serif" }}
@@ -149,7 +177,7 @@ export default function Navbar() {
           </button>
         ) : (
           <Link
-            href="/register"
+            href="/onboard"
             className="hidden md:inline-flex items-center text-lg font-bold px-6 py-3 rounded-full border-4 border-[#a71d16] shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
             style={{ backgroundColor: "#a71d16", color: "#ffb51d", fontFamily: "'Cinzel Decorative', serif" }}
           >

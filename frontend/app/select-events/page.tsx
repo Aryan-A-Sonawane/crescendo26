@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EventsInterest from "@/components/EventsInterest";
 
+const TICKETS_URL = "https://learner.vierp.in/events";
+
 interface StoredUser {
   name: string;
   email: string;
@@ -63,6 +65,20 @@ export default function SelectEventsPage() {
         <p className="text-sm mb-6" style={{ color: "#7B2D0E" }}>
           Your event interests have been saved. Our team will reach out!
         </p>
+        <a
+          href={TICKETS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
+          style={{
+            backgroundColor: "#D4A017",
+            color: "#4a0e00",
+            borderColor: "#8B1538",
+            fontFamily: "'Cinzel Decorative', serif",
+          }}
+        >
+          BUY TICKETS
+        </a>
         <Link
           href="/"
           className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest"

@@ -6,7 +6,7 @@ declare global {
   var __prisma: PrismaClient | undefined;
 }
 
-function createPrismaClient(): PrismaClient {
+function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
     throw new Error("[prisma] DATABASE_URL is not set. Check your .env.local or Vercel environment variables.");
@@ -16,7 +16,7 @@ function createPrismaClient(): PrismaClient {
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  } as ConstructorParameters<typeof PrismaClient>[0]);
+  });
 }
 
 // In production: create fresh (serverless, no persistent state).

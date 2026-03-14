@@ -7,51 +7,51 @@ import Footer from "@/components/Footer";
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const technical = [
-  { name: "RC Rampage", fee: "₹60", prize: "—", desc: "High-speed RC car racing on a challenging track. Precision and speed are key!", img: "https://images.unsplash.com/photo-1563884072595-24f49fe5aa94?w=400&q=80" },
-  { name: "Robo Soccer", fee: "₹500", prize: "₹8,000", desc: "Build a bot and battle it out on the soccer field. Goals, grit, and gears!", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&q=80" },
-  { name: "Software Hackathon", fee: "₹400", prize: "₹25,000", desc: "24-hour coding sprint. Build innovative solutions to real-world problems.", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&q=80" },
-  { name: "Code Relay", fee: "₹100", prize: "₹2,000", desc: "Team-based coding relay race. Each member adds their piece to the puzzle.", img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&q=80" },
-  { name: "Gun Range Shooting", fee: "₹60", prize: "—", desc: "Test your aim and precision on the virtual gun range. Steady hands win!", img: "https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&q=80" },
-  { name: "Buzzwire", fee: "₹40", prize: "—", desc: "Navigate the wire without touching it. Nerves of steel required!", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80" },
-  { name: "Line Following", fee: "₹500", prize: "₹7,500", desc: "Program your bot to follow a line at blazing speed. Accuracy is everything.", img: "https://images.unsplash.com/photo-1561144257-e32e8efc6c4f?w=400&q=80" },
-  { name: "LLM Workshop", fee: "₹100", prize: "—", desc: "Hands-on workshop on Large Language Models. Learn, build, and innovate.", img: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=400&q=80" },
-  { name: "Agentic AI", fee: "Free", prize: "—", desc: "Explore autonomous AI agents and their real-world applications. The future is here.", img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&q=80" },
-  { name: "Escape Room", fee: "₹120", prize: "—", desc: "Solve puzzles, crack codes, escape before time runs out. Think fast!", img: "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?w=400&q=80" },
-  { name: "Scavenger Hunt", fee: "₹70", prize: "₹3,000", desc: "Race across campus solving clues. Team work and wit lead the way.", img: "https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=400&q=80" },
+  { name: "RC Rampage", fee: "₹60", prize: "—", desc: "High-speed RC car racing on a challenging track. Precision and speed are key!", img: "/events/technical/RC_RAMPAGE.png" },
+  { name: "Robo Soccer", fee: "₹500", prize: "₹8,000", desc: "Build a bot and battle it out on the soccer field. Goals, grit, and gears!", img: "/events/technical/ROBO_SOCCER.png" },
+  { name: "Software Hackathon", fee: "₹400", prize: "₹25,000", desc: "24-hour coding sprint. Build innovative solutions to real-world problems.", img: "/events/technical/SOFTWARE_HACKATHON.png" },
+  { name: "Code Relay", fee: "₹100", prize: "₹2,000", desc: "Team-based coding relay race. Each member adds their piece to the puzzle.", img: "/events/technical/CODE_RELAY.png" },
+  { name: "Gun Range Shooting", fee: "₹60", prize: "—", desc: "Test your aim and precision on the virtual gun range. Steady hands win!", img: "/events/technical/GUN RANGE SHOOTING.png" },
+  { name: "Buzzwire", fee: "₹40", prize: "—", desc: "Navigate the wire without touching it. Nerves of steel required!", img: "/events/technical/BUZZWIRE.png" },
+  { name: "Line Following", fee: "₹500", prize: "₹7,500", desc: "Program your bot to follow a line at blazing speed. Accuracy is everything.", img: "/events/technical/LINE_FOLLOWING.png" },
+  { name: "LLM Workshop", fee: "₹100", prize: "—", desc: "Hands-on workshop on Large Language Models. Learn, build, and innovate.", img: "/events/technical/LLM WORKSHOP.png" },
+  { name: "Agentic AI", fee: "Free", prize: "—", desc: "Explore autonomous AI agents and their real-world applications. The future is here.", img: "/events/technical/LLM WORKSHOP.png" },
+  { name: "Escape Room", fee: "₹120", prize: "—", desc: "Solve puzzles, crack codes, escape before time runs out. Think fast!", img: "/events/technical/ESCAPE ROOM.png" },
+  { name: "Scavenger Hunt", fee: "₹70", prize: "₹3,000", desc: "Race across campus solving clues. Team work and wit lead the way.", img: "/events/technical/SCAVENGER HUNT.png" },
 ];
 
 const ec = [
-  { name: "Nerf Mania", fee: "₹60", prize: "—", desc: "Epic Nerf battles in a custom arena. Dodge, aim, and dominate!", img: "https://images.unsplash.com/photo-1559181567-c3190bcd4f0c?w=400&q=80" },
-  { name: "Splash Wars", fee: "₹90", prize: "—", desc: "Water balloon warfare! The wettest event of the fest!", img: "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=400&q=80" },
-  { name: "Mini Basketball", fee: "₹30", prize: "—", desc: "Pocket-sized hoops, full-sized fun. Shoot your shot!", img: "/events/sports/basketball.png" },
-  { name: "Blind Rush", fee: "₹50", prize: "—", desc: "Navigate a blindfolded obstacle course guided only by your teammates.", img: "https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=400&q=80" },
-  { name: "Human Ludo", fee: "₹80", prize: "—", desc: "You are the token! Play life-sized Ludo and outwit your rivals.", img: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=400&q=80" },
-  { name: "Valorant", fee: "₹250", prize: "₹10,000", desc: "5v5 tactical shooter showdown. Prove you're the best agent on campus.", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80" },
-  { name: "BGMI (Solo)", fee: "₹100", prize: "₹5,000", desc: "Battle Royale at its finest. Survive, loot, and be the last one standing.", img: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&q=80" },
-  { name: "BGMI (Squad)", fee: "₹240", prize: "₹6,500", desc: "Squad up and dominate the battleground. Communication wins wars.", img: "https://images.unsplash.com/photo-1587095951604-287a606ea78e?w=400&q=80" },
-  { name: "FIFA", fee: "₹100", prize: "₹6,000", desc: "The beautiful game goes digital. Build your team and conquer the pitch.", img: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&q=80" },
-  { name: "Clash Royale", fee: "₹80", prize: "₹6,000", desc: "Strategic card battles in real time. Outthink and outlast your opponent.", img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&q=80" },
-  { name: "Free Fire", fee: "₹100", prize: "—", desc: "Intense BR action on mobile. Survive 50-player madness and claim victory.", img: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&q=80" },
-  { name: "IPL Auction", fee: "₹200", prize: "₹10,000", desc: "Be the team owner. Draft smartly, manage your budget, win the season.", img: "https://images.unsplash.com/photo-1540747913346-19212a4f3aac?w=400&q=80" },
-  { name: "Fandom Trek", fee: "₹80", prize: "—", desc: "Quiz, cosplay, trivia — the ultimate fandom celebration on campus!", img: "https://images.unsplash.com/photo-1608889476561-6242cfdbf622?w=400&q=80" },
-  { name: "Stand-Up", fee: "₹100", prize: "₹5,000", desc: "Got jokes? Take the mic and make the crowd roar. Comedy open stage.", img: "https://images.unsplash.com/photo-1527224538127-2104bb71c51b?w=400&q=80" },
-  { name: "Stock Market Workshop", fee: "₹100", prize: "—", desc: "Simulate real stock trades. Learn investing, risk, and strategy hands-on.", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&q=80" },
-  { name: "Dance Centric (Solo)", fee: "₹150", prize: "₹8,000", desc: "Electrify the stage solo — any form, any style, pure expression.", img: "https://images.unsplash.com/photo-1504609813442-a8924e83f76e?w=400&q=80" },
-  { name: "Dance Centric (Group)", fee: "₹1,000", prize: "₹15,000", desc: "Synchronised power, creative choreography, and group energy. Wow the crowd.", img: "https://images.unsplash.com/photo-1547153760-18fc86324498?w=400&q=80" },
-  { name: "VRock", fee: "₹800", prize: "₹15,000", desc: "Band showdown! Rock the stage with original or cover performances.", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80" },
-  { name: "Natyasamrat", fee: "₹1,000", prize: "₹10,000", desc: "Classical and contemporary drama competition. Let the curtain rise!", img: "https://images.unsplash.com/photo-1503095396549-807759245b35?w=400&q=80" },
-  { name: "Miss/Mr Crescendo", fee: "₹150", prize: "₹6,500", desc: "Personality, poise, and panache. Compete for the crown of Crescendo'26.", img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&q=80" },
+  { name: "Nerf Mania", fee: "₹60", prize: "—", desc: "Epic Nerf battles in a custom arena. Dodge, aim, and dominate!", img: "/events/extracircular/NERF_MANIA.png" },
+  { name: "Splash Wars", fee: "₹90", prize: "—", desc: "Water balloon warfare! The wettest event of the fest!", img: "/events/extracircular/SPLASH_WARS.png" },
+  { name: "Mini Basketball", fee: "₹30", prize: "—", desc: "Pocket-sized hoops, full-sized fun. Shoot your shot!", img: "/events/extracircular/MINI_BASKETBALL.png" },
+  { name: "Blind Rush", fee: "₹50", prize: "—", desc: "Navigate a blindfolded obstacle course guided only by your teammates.", img: "/events/extracircular/BLIND_RUSH.png" },
+  { name: "Human Ludo", fee: "₹80", prize: "—", desc: "You are the token! Play life-sized Ludo and outwit your rivals.", img: "/events/extracircular/HUMAN_LUDO.png" },
+  { name: "Valorant", fee: "₹250", prize: "₹10,000", desc: "5v5 tactical shooter showdown. Prove you're the best agent on campus.", img: "/events/extracircular/VALORANT.png" },
+  { name: "BGMI (Solo)", fee: "₹100", prize: "₹5,000", desc: "Battle Royale at its finest. Survive, loot, and be the last one standing.", img: "/events/extracircular/BGMI(solo).png" },
+  { name: "BGMI (Squad)", fee: "₹240", prize: "₹6,500", desc: "Squad up and dominate the battleground. Communication wins wars.", img: "/events/extracircular/BGMI(squad).png" },
+  { name: "FIFA", fee: "₹100", prize: "₹6,000", desc: "The beautiful game goes digital. Build your team and conquer the pitch.", img: "/events/extracircular/FIFA.png" },
+  { name: "Clash Royale", fee: "₹80", prize: "₹6,000", desc: "Strategic card battles in real time. Outthink and outlast your opponent.", img: "/events/extracircular/CLASH_ROYALE.png" },
+  { name: "Free Fire", fee: "₹100", prize: "—", desc: "Intense BR action on mobile. Survive 50-player madness and claim victory.", img: "/events/extracircular/FREE_FIRE.png" },
+  { name: "IPL Auction", fee: "₹200", prize: "₹10,000", desc: "Be the team owner. Draft smartly, manage your budget, win the season.", img: "/events/extracircular/IPL_AUCTION.png" },
+  { name: "Fandom Trek", fee: "₹80", prize: "—", desc: "Quiz, cosplay, trivia — the ultimate fandom celebration on campus!", img: "/events/extracircular/FANDOM_TREK.png" },
+  { name: "Stand-Up", fee: "₹100", prize: "₹5,000", desc: "Got jokes? Take the mic and make the crowd roar. Comedy open stage.", img: "/events/extracircular/STANDUP_COMEDY.png" },
+  { name: "Stock Market Workshop", fee: "₹100", prize: "—", desc: "Simulate real stock trades. Learn investing, risk, and strategy hands-on.", img: "/events/extracircular/STOCK MARKET_WORKSHOP.png" },
+  { name: "Dance Centric (Solo)", fee: "₹150", prize: "₹8,000", desc: "Electrify the stage solo — any form, any style, pure expression.", img: "/events/extracircular/DANCE-CENTRIC(SOLO).png" },
+  { name: "Dance Centric (Group)", fee: "₹1,000", prize: "₹15,000", desc: "Synchronised power, creative choreography, and group energy. Wow the crowd.", img: "/events/extracircular/DANCE-GROUP.png" },
+  { name: "VRock", fee: "₹800", prize: "₹15,000", desc: "Band showdown! Rock the stage with original or cover performances.", img: "/events/extracircular/VROCK.png" },
+  { name: "Natyasamrat", fee: "₹1,000", prize: "₹10,000", desc: "Classical and contemporary drama competition. Let the curtain rise!", img: "/events/extracircular/NATYASAMRAT.png" },
+  { name: "Miss/Mr Crescendo", fee: "₹150", prize: "₹6,500", desc: "Personality, poise, and panache. Compete for the crown of Crescendo'26.", img: "/events/extracircular/MRMISS%20CRESCENDO.png" },
 ];
 
 const sports = [
-  { name: "Basketball (Boys)", fee: "₹2,500", prize: "₹11,200", desc: "5-on-5 hardcourt battle. Shoot, dribble, and dunk your way to the championship.", img: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&q=80" },
-  { name: "Football (7-a-side)", fee: "₹3,000", prize: "₹25,000", desc: "Seven-a-side football on the campus ground. Beautiful game, fierce competition.", img: "https://images.unsplash.com/photo-1540747913346-19212a4f3aac?w=400&q=80" },
-  { name: "Cricket", fee: "₹13,000", prize: "₹50,000", desc: "Full team cricket tournament. Bat, bowl, field — glory awaits the best XI.", img: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=400&q=80" },
-  { name: "Badminton (Boys)", fee: "₹1,500", prize: "₹13,000", desc: "Shuttlecock showdown on the court. Speed, agility, and smashes decide it.", img: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=400&q=80" },
-  { name: "Chess (Boys)", fee: "₹200", prize: "₹12,000", desc: "64 squares, infinite strategies. Outthink your opponent move by move.", img: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=400&q=80" },
-  { name: "Badminton (Girls)", fee: "₹1,500", prize: "₹13,000", desc: "Lightning reflexes and court coverage. Who will claim the women's title?", img: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=400&q=80" },
-  { name: "Basketball (Girls)", fee: "₹2,200", prize: "₹11,000", desc: "Women's basketball — skill, teamwork, and heart on the hardwood.", img: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=400&q=80" },
-  { name: "Football (Girls 7-a-side)", fee: "₹2,500", prize: "₹12,000", desc: "Women's seven-a-side football. Pace, precision, and passion on the pitch.", img: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&q=80" },
+  { name: "Basketball (Boys)", fee: "₹2,500", prize: "₹11,200", desc: "5-on-5 hardcourt battle. Shoot, dribble, and dunk your way to the championship.", img: "/events/sports/BASKETBALL(BOYS).png" },
+  { name: "Football (7-a-side)", fee: "₹3,000", prize: "₹25,000", desc: "Seven-a-side football on the campus ground. Beautiful game, fierce competition.", img: "/events/sports/FOOTBALL(BOYS).png" },
+  { name: "Cricket", fee: "₹13,000", prize: "₹50,000", desc: "Full team cricket tournament. Bat, bowl, field — glory awaits the best XI.", img: "/events/sports/CRICKET.png" },
+  { name: "Badminton (Boys)", fee: "₹1,500", prize: "₹13,000", desc: "Shuttlecock showdown on the court. Speed, agility, and smashes decide it.", img: "/events/sports/BADMINTON(BOYS).png" },
+  { name: "Chess (Boys)", fee: "₹200", prize: "₹12,000", desc: "64 squares, infinite strategies. Outthink your opponent move by move.", img: "/events/sports/CHESS.png" },
+  { name: "Badminton (Girls)", fee: "₹1,500", prize: "₹13,000", desc: "Lightning reflexes and court coverage. Who will claim the women's title?", img: "/events/sports/BADMINTON(GIRLS).png" },
+  { name: "Basketball (Girls)", fee: "₹2,200", prize: "₹11,000", desc: "Women's basketball — skill, teamwork, and heart on the hardwood.", img: "/events/sports/BASKETBALL(GIRLS).png" },
+  { name: "Football (Girls 7-a-side)", fee: "₹2,500", prize: "₹12,000", desc: "Women's seven-a-side football. Pace, precision, and passion on the pitch.", img: "/events/sports/FOOTBALL(GIRLS).png" },
 ];
 
 // ─── Flip Card ───────────────────────────────────────────────────────────────
@@ -168,7 +168,7 @@ export default function EventsPage() {
       {/* Hero banner */}
       <div
         style={{
-          backgroundImage: "url('/events-body.png')",
+          backgroundColor: "#f3ba35",
           backgroundSize: "auto",
           backgroundPosition: "top left",
           backgroundRepeat: "repeat",
@@ -194,7 +194,7 @@ export default function EventsPage() {
       {/* Body section — same events-body.png tiled */}
       <div
         style={{
-          backgroundImage: "url('/events-body.png')",
+          backgroundColor: "#f3ba35",
           backgroundSize: "auto",
           backgroundPosition: "top left",
           backgroundRepeat: "repeat",

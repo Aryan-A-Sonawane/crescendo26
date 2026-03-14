@@ -1,0 +1,12 @@
+# Local editor/agent configuration (keep local, do not commit)
+.codex/
+.cursor/
+.gemini/
+.vscode/
+.zed/
+.mcp.json
+opencode.json
+config/
+
+# Local utility script
+frontend/tmp-neon-check.cjs

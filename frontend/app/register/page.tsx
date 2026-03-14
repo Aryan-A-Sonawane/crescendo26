@@ -564,7 +564,7 @@ export default function RegisterPage() {
 
         {/* ── Page content ── */}
         {/* ── Page content ── */}
-        <div className="relative z-30 flex flex-col items-center justify-start min-h-screen px-4 pb-16">
+        <div className="relative z-30 flex flex-col items-center justify-start min-h-screen px-4 pb-0">
           {/* ── CRESCENDO LOGO — centered ── */}
           <Link href="/" className="relative z-10">
             <Image
@@ -576,31 +576,6 @@ export default function RegisterPage() {
               priority
             />
           </Link>
-
-          {/* ── register noow*/}
-          <div
-            className="relative flex flex-col items-center"
-            style={{ marginTop: "-280px", zIndex: 5, marginBottom: "-28px" }}
-          >
-            <div className="relative" style={{ width: 420, height: "auto" }}>
-              <Image
-                src="/sparkel.png"
-                alt="banner"
-                width={420}
-                height={150}
-                style={{ width: 420, height: "auto", display: "block" }}
-                priority
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <p
-                  className="font-taiganja text-3xl text-center tracking-widest font-bold pt-18"
-                  style={{ color: "#7B2D0E" }}
-                >
-                  REGISTRATION <br /> PAGE
-                </p>
-              </div>
-            </div>
-          </div>
 
           {/* ── FORM AREA — centered ── */}
           <div className="w-full flex justify-center">

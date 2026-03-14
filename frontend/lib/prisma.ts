@@ -1,5 +1,3 @@
-import { Pool } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 
@@ -9,10 +7,6 @@ declare global {
 }
 
 function createPrismaClient() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL! }) as any;
-  const adapter = new PrismaNeon(pool);
-function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
     throw new Error("[prisma] DATABASE_URL is not set. Check your .env.local or Vercel environment variables.");

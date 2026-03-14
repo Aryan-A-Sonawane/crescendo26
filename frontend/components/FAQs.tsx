@@ -43,99 +43,117 @@ export default function FAQs() {
   return (
     <section
       id="faqs"
-      className="py-12 md:py-20"
+      className="py-16 md:py-24 min-h-screen relative"
       style={{
-        backgroundColor: "#9f3026",
+        background: "var(--primary-maroon)",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <div className="text-center mb-10 md:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[rgba(139,21,56,0.08)] border border-[rgba(139,21,56,0.25)] mb-4">
-            <span className="w-2 h-2 rounded-full bg-[var(--primary-maroon)]" />
-            <span className="text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase text-[var(--primary-maroon)]">
-              Help Desk
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--secondary-burgundy)] text-nishtha mb-4">
-            Frequently Asked
-            <span className="block gradient-text text-decorative mt-1">Questions</span>
-          </h2>
-          <div className="flex justify-center mb-4">
-            <div className="h-[3px] w-24 sm:w-32 rounded-full bg-[var(--primary-gold)] shadow-[0_0_8px_rgba(212,160,23,0.8)]" />
-          </div>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-[var(--neutral-dark)] px-2">
-            Before you dive into the performances, workshops, and competitions of
-            <span className="font-semibold text-[var(--primary-maroon)]"> CRESCENDO&apos;26</span>, here&apos;s everything you need to know.
-          </p>
-        </div>
 
-        {/* FAQ list */}
-        <div className="space-y-3 md:space-y-4">
+      {/* Top image + text */}
+<div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between mb-16 ">
+
+  {/* Image */}
+  <div className="flex justify-center md:justify-start">
+    <img
+      src="/faqs.png"
+      alt="FAQ Illustration"
+      className="w-[320px] md:w-[420px] opacity-80"
+    />
+  </div>
+
+  {/* Text */}
+  <div className="text-center md:text-left max-w-md">
+    <h2
+      className="text-3xl md:text-4xl font-bold mb-4"
+      style={{ color: "var(--primary-gold)" }}
+    >
+      Sunna hai munne ke mummy
+    </h2>
+
+    <p
+      className="text-lg"
+      style={{ color: "var(--secondary-cream)" }}
+    >
+      Got questions? We've got answers! Explore the FAQs below to know everything about Crescendo'26.
+    </p>
+  </div>
+
+</div>
+
+
+      {/* FAQ grid + image */}
+      <div className="relative max-w-6xl mx-auto flex flex-col md:flex-row gap-10 md:gap-8 items-start min-h-[650px]">        {/* FAQ flex-wrap grid */}
+        <div className="grid md:grid-cols-2 gap-8 flex-1 z-10">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
               <div
                 key={index}
-                className="rounded-2xl md:rounded-3xl border-[3px] border-transparent border-indian bg-[rgba(255,248,240,0.96)] shadow-[0_8px_0_rgba(139,21,56,0.45)] overflow-hidden transition-transform duration-200 hover:-translate-y-1"
+                className="relative rounded-3xl overflow-hidden shadow-xl border-4 border-(--primary-maroon) bg-(--secondary-cream) hover:scale-[1.025] transition-transform duration-200 mb-2"
+                style={{
+                  boxShadow: isOpen ? "0 0 0 6px var(--primary-gold), 0 8px 32px 0 #d4a01755" : "0 8px 32px 0 #d4a01733",
+                  width: '100%',
+                  maxWidth: '540px',
+                  
+                  minWidth: '320px',
+                }}
               >
+                {/* Top motif bar */}
+                <div className="w-full h-4 bg-[repeating-linear-gradient(90deg,var(--primary-gold)_0_16px,var(--primary-maroon)_16px_32px)]" />
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full px-4 md:px-6 py-4 md:py-5 text-left flex justify-between items-center gap-3 md:gap-4 bg-[rgba(255,248,231,0.95)]"
+                  className="w-full px-6 py-6 text-left flex flex-col gap-2 bg-(--secondary-cream)"
+                  style={{ cursor: "pointer" }}
                 >
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <span className="mt-1 inline-flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full bg-[var(--primary-maroon)] text-[var(--primary-yellow)] text-sm md:text-base font-bold shadow-[0_3px_0_rgba(107,15,26,0.8)]">
+                  <span className="flex items-center gap-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-(--primary-maroon) text-(--primary-yellow) text-lg font-bold shadow-lg border-2 border-(--primary-gold)">
                       {index + 1}
                     </span>
-                    <span className="text-sm sm:text-base md:text-lg font-semibold text-[var(--neutral-black)] pr-2 md:pr-4">
+                    <span className="text-lg md:text-xl font-bold text-(--primary-maroon) tracking-wide" style={{ fontFamily: "'Poppins', 'Nishtha', serif" }}>
                       {faq.question}
                     </span>
-                  </div>
-                  <span
-                    className={`flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full border border-[var(--primary-maroon)] text-[var(--primary-maroon)] bg-[rgba(243,186,53,0.1)] transition-transform duration-200 ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                    aria-hidden="true"
-                  >
-                    <svg
-                      className="w-4 h-4 md:w-5 md:h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
+                  </span>
+                  <span className="absolute right-6 top-7 flex h-8 w-8 items-center justify-center rounded-full border-2 border-(--primary-gold) text-(--primary-gold) bg-(--secondary-cream) transition-transform duration-200" style={{ transform: isOpen ? "rotate(180deg)" : "none" }}>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>
                   </span>
                 </button>
-                {isOpen && (
-                  <div className="px-4 md:px-6 py-3 md:py-4 bg-[rgba(255,248,240,0.98)] border-t border-[rgba(139,21,56,0.15)]">
-                    <p className="text-sm md:text-base text-[var(--neutral-dark)] leading-relaxed">
+                <div
+                  className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                  style={{
+                    background: 'rgba(247, 176, 43, 0.92)',
+                    borderTop: isOpen ? '4px solid var(--primary-maroon)' : '4px solid transparent',
+                  }}
+                >
+                  <div className="px-6 py-5">
+                    <p className="text-base md:text-lg text-(--primary-maroon) font-semibold leading-relaxed" style={{ textShadow: "0 2px 8px #fff8e7" }}>
                       {faq.answer}
                     </p>
                   </div>
-                )}
+                </div>
+                {/* Bottom motif bar */}
+                <div className="w-full h-4 bg-[repeating-linear-gradient(90deg,var(--primary-gold)_0_16px,var(--primary-maroon)_16px_32px)]" />
               </div>
             );
           })}
         </div>
 
-        {/* Footer call-to-action */}
-        <div className="text-center mt-10 md:mt-14">
-          <p className="text-sm md:text-base text-[var(--neutral-dark)] mb-4 px-2">
-            Still have questions about events, registrations, or stay?
-          </p>
-          <button
-            className="inline-flex items-center justify-center w-full sm:w-auto px-7 md:px-9 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold text-[var(--neutral-white)] shadow-[0_10px_0_#6B0F1A] hover:translate-y-[2px] hover:shadow-[0_6px_0_#6B0F1A] transition-transform duration-150"
-            style={{ backgroundImage: "var(--gradient-festival)" }}
-          >
-            Contact the Crescendo Team
-          </button>
-        </div>
+      </div>
+
+      {/* Footer call-to-action */}
+      <div className="text-center mt-14">
+        <p className="text-base md:text-lg text-(--primary-maroon) mb-4 px-2" style={{ opacity: 0.8 }}>
+          Still have questions? DM us on Instagram or contact the team!
+        </p>
+        <button
+          className="inline-flex items-center justify-center w-full sm:w-auto px-8 md:px-12 py-4 rounded-full text-lg font-bold text-(--neutral-white) shadow-lg"
+          style={{ backgroundImage: "var(--gradient-festival)" }}
+        >
+          Contact the Crescendo Team
+        </button>
       </div>
     </section>
   );

@@ -473,9 +473,11 @@ export default function RegisterPage() {
           />
         </Link>
 
-        {/* ── register noow*/}
-            <div className="relative flex flex-col items-center" style={{ marginTop: "-280px", zIndex: 5, marginBottom: "-28px" }}>
-          <div className="relative" style={{ width: 420, height: "auto" }}>
+        {/* ── Page content ── */}
+        {/* ── Page content ── */}
+        <div className="relative z-30 flex flex-col items-center justify-start min-h-screen px-4 pb-0">
+          {/* ── CRESCENDO LOGO — centered ── */}
+          <Link href="/" className="relative z-10">
             <Image
               src="/sparkel.png"
               alt="banner"
@@ -484,28 +486,29 @@ export default function RegisterPage() {
               style={{ width: 420, height: "auto", display: "block" }}
               priority
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <p
-                className="font-taiganja text-3xl text-center tracking-widest font-bold pt-18"
-                style={{ color: "#7B2D0E" }}
-              >
-                REGISTRATION <br /> PAGE
-              </p>
-            </div>
-          </div>
-        </div>
+          </Link>
 
-        {/* ── FORM AREA — centered ── */}
-        <div className="w-full flex justify-center">
-          <div className="relative flex items-stretch justify-center" style={{ width: 480 }}>
-            <Image
-              src="/border-pink.png"
-              alt="decorative frame"
-              width={480}
-              height={620}
-              style={{ objectFit: "fill", width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}
-              className="pointer-events-none select-none"
-            />
+          {/* ── FORM AREA — centered ── */}
+          <div className="w-full flex justify-center">
+            <div
+              className="relative flex items-stretch justify-center"
+              style={{ width: 480 }}
+            >
+              <Image
+                src="/border-pink.png"
+                alt="decorative frame"
+                width={480}
+                height={620}
+                style={{
+                  objectFit: "fill",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                }}
+                className="pointer-events-none select-none"
+              />
 
             {/* Form — drives the height of the container */}
             <div className="relative z-10 flex flex-col items-center justify-center w-full px-16 pt-32 pb-8">

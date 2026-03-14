@@ -5,31 +5,19 @@ import { useState } from "react";
 const faqs = [
   {
     question: "When is CRESCENDO'26?",
-    answer: "CRESCENDO'26 will be held from March 15-17, 2026. The fest will run for three exciting days filled with various events and performances."
+    answer: "CRESCENDO'26 will be held from 6th to 9th April, 2026."
   },
   {
     question: "How do I register for events?",
-    answer: "You can register for events through our official website by clicking the 'Register Now' button. Fill in your details, select the events you want to participate in, and complete the payment process."
+    answer: "Click on Buy Tickets from the nav bar, sign in and then purchase yout tickets. Alternatively, click on the Register button, and add events of your interest. Our team will guide you on call."
   },
   {
     question: "Is there a registration fee?",
-    answer: "Yes, there is a nominal registration fee that varies depending on the events you choose. Individual event fees and combo packages are available. Check the Events section for detailed pricing."
+    answer: "Yes, there is a registration fee that varies depending on the events you choose. Check the Events section for detailed pricing."
   },
   {
     question: "Can I participate in multiple events?",
-    answer: "Absolutely! You can participate in as many events as you want, provided there are no time clashes. We offer special combo packages for multiple event registrations."
-  },
-  {
-    question: "Are there accommodation facilities?",
-    answer: "Yes, we provide accommodation facilities for outstation participants. You need to opt for accommodation during registration. Limited seats are available on a first-come, first-served basis."
-  },
-  {
-    question: "What prizes can I win?",
-    answer: "Winners in each event will receive cash prizes, certificates, and trophies. The prize pool varies by event, with total prizes worth over ₹5 lakhs up for grabs!"
-  },
-  {
-    question: "Is there a dress code?",
-    answer: "There is no specific dress code for general attendance. However, some events may have specific requirements (e.g., traditional wear for classical dance). Check individual event guidelines."
+    answer: "Absolutely! You can participate in as many events as you want, provided there are no time clashes."
   },
   {
     question: "Who can participate?",
@@ -45,14 +33,30 @@ export default function FAQs() {
   };
 
   return (
-    <section id="faqs" className="py-12 md:py-20 bg-white">
+    <section
+      id="faqs"
+      className="py-12 md:py-20"
+      style={{ background: "linear-gradient(180deg, #21070b 0%, #110206 100%)" }}
+    >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Frequently Asked <span className="text-purple-600">Questions</span>
+          <p
+            className="text-xs sm:text-sm tracking-[0.35em] uppercase mb-3"
+            style={{ color: "#FF6B35", fontFamily: "'Poppins', sans-serif" }}
+          >
+            Help Desk
+          </p>
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"
+            style={{ color: "#D4A017", fontFamily: "'Cinzel Decorative', serif" }}
+          >
+            Frequently Asked <span style={{ color: "#FF6B35" }}>Questions</span>
           </h2>
-          <div className="w-24 h-1 bg-purple-600 mx-auto mb-6"></div>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 px-2">
+          <div
+            className="w-24 h-1 mx-auto mb-6"
+            style={{ background: "linear-gradient(to right, #8B1538, #D4A017, #FF6B35)" }}
+          ></div>
+          <p className="text-base sm:text-lg md:text-xl px-2" style={{ color: "#f6d9ac" }}>
             Got questions? We&apos;ve got answers!
           </p>
         </div>
@@ -61,19 +65,29 @@ export default function FAQs() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="border border-gray-200 rounded-xl md:rounded-2xl overflow-hidden hover:border-purple-300 transition-colors"
+              className="rounded-xl md:rounded-2xl overflow-hidden transition-colors"
+              style={{
+                border: "1px solid rgba(212,160,23,0.45)",
+                background: "linear-gradient(145deg, #3a0f16 0%, #2a0a10 100%)",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+              }}
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-4 md:px-6 py-4 md:py-5 text-left flex justify-between items-center bg-white hover:bg-purple-50 transition-colors"
+                className="w-full px-4 md:px-6 py-4 md:py-5 text-left flex justify-between items-center transition-colors"
+                style={{ backgroundColor: openIndex === index ? "rgba(212,160,23,0.12)" : "transparent" }}
               >
-                <span className="text-base md:text-lg font-semibold text-gray-900 pr-3 md:pr-4">
+                <span
+                  className="text-base md:text-lg font-semibold pr-3 md:pr-4"
+                  style={{ color: "#FFF1D2", fontFamily: "'Poppins', sans-serif" }}
+                >
                   {faq.question}
                 </span>
                 <svg
-                  className={`w-5 h-5 md:w-6 md:h-6 text-purple-600 shrink-0 transition-transform ${
+                  className={`w-5 h-5 md:w-6 md:h-6 shrink-0 transition-transform ${
                     openIndex === index ? "rotate-180" : ""
                   }`}
+                  style={{ color: "#D4A017" }}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -87,8 +101,16 @@ export default function FAQs() {
                 </svg>
               </button>
               {openIndex === index && (
-                <div className="px-4 md:px-6 py-3 md:py-4 bg-purple-50 border-t border-purple-100">
-                  <p className="text-sm md:text-base text-gray-700 leading-relaxed">{faq.answer}</p>
+                <div
+                  className="px-4 md:px-6 py-3 md:py-4 border-t"
+                  style={{
+                    background: "rgba(212,160,23,0.09)",
+                    borderColor: "rgba(212,160,23,0.35)",
+                  }}
+                >
+                  <p className="text-sm md:text-base leading-relaxed" style={{ color: "#F6DFC0" }}>
+                    {faq.answer}
+                  </p>
                 </div>
               )}
             </div>
@@ -96,8 +118,16 @@ export default function FAQs() {
         </div>
 
         <div className="text-center mt-8 md:mt-12">
-          <p className="text-sm md:text-base text-gray-600 mb-4 px-2">Still have questions?</p>
-          <button className="w-full sm:w-auto bg-purple-600 text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors">
+          <p className="text-sm md:text-base mb-4 px-2" style={{ color: "#f6d9ac" }}>Still have questions?</p>
+          <button
+            className="w-full sm:w-auto px-6 md:px-8 py-3 rounded-full font-semibold transition-all hover:scale-105"
+            style={{
+              background: "linear-gradient(90deg, #8B1538 0%, #D4A017 100%)",
+              color: "#FFF8E7",
+              border: "1px solid rgba(212,160,23,0.7)",
+              fontFamily: "'Cinzel Decorative', serif",
+            }}
+          >
             Contact Us
           </button>
         </div>

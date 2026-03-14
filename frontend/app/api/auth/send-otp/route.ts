@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import "@/lib/neon-client"; // Initialize custom Neon fetch for WARP compatibility
+import { neon } from "@neondatabase/serverless";
 import { prisma } from "@/lib/prisma";
 import { sendOtpEmail } from "@/lib/mailer";
 import crypto from "crypto";
@@ -52,11 +54,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Invalidate any existing unused OTPs for this email
-    await prisma.otpCode.updateMany({
-      where: { email, used: false },
-      data: { used: true },
-    });
+    // Invalidate any existing unused OTPs for this email (raw SQL — PrismaNeonHttp can't wrap mutations in transactions)
+    const sql = neon(process.env.DATABASE_URL!);
+    await sql`UPDATE otp_codes SET used = true WHERE email = ${email} AND used = false`;
 
     // Generate a 6-digit OTP using crypto (secure)
     const otp = String(crypto.randomInt(100000, 999999));
@@ -70,7 +70,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "OTP sent successfully" }, { status: 200 });
   } catch (err) {
-    console.error("[send-otp]", err);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[send-otp] Error:", message);
     return NextResponse.json(
       { error: "Failed to send OTP. Please try again." },
       { status: 500 }

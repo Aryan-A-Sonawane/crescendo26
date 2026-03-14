@@ -168,7 +168,7 @@ export default function EventsPage() {
       {/* Hero banner */}
       <div
         style={{
-          backgroundImage: "url('/events-body.png')",
+          backgroundColor: "#f3ba35",
           backgroundSize: "auto",
           backgroundPosition: "top left",
           backgroundRepeat: "repeat",
@@ -194,7 +194,7 @@ export default function EventsPage() {
       {/* Body section — same events-body.png tiled */}
       <div
         style={{
-          backgroundImage: "url('/events-body.png')",
+          backgroundColor: "#f3ba35",
           backgroundSize: "auto",
           backgroundPosition: "top left",
           backgroundRepeat: "repeat",

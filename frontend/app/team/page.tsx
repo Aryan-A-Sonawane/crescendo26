@@ -596,19 +596,16 @@ export default function TeamPage() {
         {/* Gold sunburst glow */}
         <div style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", width: 340, height: 340, borderRadius: "50%", background: "radial-gradient(circle, rgba(212,160,23,0.18) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-        <p
-          style={{
-            fontFamily: "'Poppins', sans-serif",
-            fontSize: "0.7rem",
-            letterSpacing: "0.4em",
-            color: "#FF6B35",
-            textTransform: "uppercase",
-            marginBottom: 12,
-            position: "relative",
-          }}
-        >
-          Crescendo&apos;26
-        </p>
+        <div style={{ marginBottom: 12, position: "relative" }}>
+          <Image
+            src="/crescendo-pink.webp"
+            alt="CRESCENDO'26"
+            width={280}
+            height={60}
+            style={{ width: "clamp(170px, 28vw, 280px)", height: "auto", margin: "0 auto" }}
+            priority
+          />
+        </div>
         <h1
           className="font-nistha"
           style={{

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import EventsInterest from "@/components/EventsInterest";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ export default function RegisterPage() {
     college: "",
   });
 
-  const [step, setStep] = useState<"form" | "otp" | "success">("form");
+  const [step, setStep] = useState<"form" | "otp" | "events" | "success">("form");
   const [otpInput, setOtpInput] = useState("");
   const [otpError, setOtpError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,14 +22,24 @@ export default function RegisterPage() {
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [customCollege, setCustomCollege] = useState("");
   const [customColleges, setCustomColleges] = useState<string[]>([]);
+  const [registeredUser, setRegisteredUser] = useState<{ name: string; email: string } | null>(null);
 
-  // Load custom colleges from localStorage on mount
+  // Load custom colleges + check if already registered
   useEffect(() => {
     const stored = localStorage.getItem("customColleges");
-    if (stored) {
-      setCustomColleges(JSON.parse(stored));
+    if (stored) setCustomColleges(JSON.parse(stored));
+
+    const user = localStorage.getItem("crescendo_user");
+    if (user) {
+      try { setRegisteredUser(JSON.parse(user)); } catch { /* ignore */ }
     }
   }, []);
+
+  const openEventsForRegisteredUser = () => {
+    if (!registeredUser) return;
+    setFormData((prev) => ({ ...prev, name: registeredUser.name, email: registeredUser.email }));
+    setStep("events");
+  };
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -111,7 +122,10 @@ export default function RegisterPage() {
         }
         return;
       }
-      setStep("success");
+      // Save to localStorage so Navbar & select-events page can detect the user
+      localStorage.setItem("crescendo_user", JSON.stringify({ name: formData.name, email: formData.email }));
+      window.dispatchEvent(new Event("crescendo_user_updated"));
+      setStep("events");
     } catch {
       setOtpError("Network error. Please check your connection and try again.");
     } finally {
@@ -193,6 +207,31 @@ export default function RegisterPage() {
     <main className="relative min-h-screen w-full overflow-hidden">
 
       {/* ════════════════════════════════════════════════════
+          EVENTS INTEREST OVERLAY  (fixed — covers both layouts)
+      ════════════════════════════════════════════════════ */}
+      {step === "events" && (
+        <div
+          className="fixed inset-0 z-200 flex flex-col items-center justify-center overflow-auto py-8 px-4"
+          style={{ background: "rgba(243,186,53,0.97)", backdropFilter: "blur(8px)" }}
+        >
+          <div
+            className="w-full max-w-lg rounded-3xl border-4 p-6 shadow-2xl overflow-y-auto"
+            style={{
+              borderColor: "#a71d16",
+              backgroundColor: "rgba(255,248,231,0.97)",
+              maxHeight: "calc(100vh - 80px)",
+            }}
+          >
+            <EventsInterest
+              email={formData.email}
+              name={formData.name}
+              onComplete={() => setStep(registeredUser ? "form" : "success")}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════
           MOBILE LAYOUT  (shown only on screens < lg)
       ════════════════════════════════════════════════════ */}
       <div
@@ -231,7 +270,25 @@ export default function RegisterPage() {
         {/* Form — positioned absolutely so you can freely move it */}
         {step === "form" && (
         <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
-          <h2 className="text-center font-bold tracking-widest mb-3 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>REGISTRATION <br /> FORM</h2>
+          <h2 className="text-center font-bold tracking-widest mb-1 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>REGISTRATION <br /> FORM</h2>
+          {registeredUser ? (
+            <div className="flex flex-col items-center gap-1 mb-3">
+              <p className="text-center text-xs" style={{ color: "#7B2D0E" }}>Welcome back, <span className="font-bold">{registeredUser.name}</span>!</p>
+              <button
+                type="button"
+                onClick={openEventsForRegisteredUser}
+                className="text-xs font-bold px-4 py-1.5 rounded-full border-2 transition-all hover:scale-105 shadow"
+                style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
+              >
+                SELECT / EDIT YOUR EVENTS
+              </button>
+            </div>
+          ) : (
+            <p className="text-center text-xs mb-3" style={{ color: "#7B2D0E" }}>
+              Already registered?{" "}
+              <Link href="/login" className="font-bold underline" style={{ color: "#8B1538" }}>Login here</Link>
+            </p>
+          )}
           <form onSubmit={handleSubmit} className="space-y-3 w-full" noValidate>
               {/* NAME */}
               <div>
@@ -528,6 +585,26 @@ export default function RegisterPage() {
             ) : (
               /* Form */
               <form onSubmit={handleSubmit} className="w-full space-y-6" noValidate>
+
+                {/* Already registered prompt / manage events button */}
+                {registeredUser ? (
+                  <div className="flex flex-col items-center gap-1">
+                    <p className="text-center text-xs" style={{ color: "#7B2D0E" }}>Welcome back, <span className="font-bold">{registeredUser.name}</span>!</p>
+                    <button
+                      type="button"
+                      onClick={openEventsForRegisteredUser}
+                      className="text-sm font-bold px-5 py-2 rounded-full border-2 transition-all hover:scale-105 shadow"
+                      style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
+                    >
+                      SELECT / EDIT YOUR EVENTS
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-center text-xs" style={{ color: "#7B2D0E" }}>
+                    Already registered?{" "}
+                    <Link href="/login" className="font-bold underline" style={{ color: "#8B1538" }}>Login here</Link>
+                  </p>
+                )}
 
                 {/* NAME */}
                 <div>

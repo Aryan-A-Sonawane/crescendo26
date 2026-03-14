@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import "@/lib/neon-client"; // Initialize custom Neon fetch for WARP compatibility
+import { neon } from "@neondatabase/serverless";
 import { prisma } from "@/lib/prisma";
 
 const verifySchema = z.object({
@@ -38,11 +40,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Mark OTP as used
-    await prisma.otpCode.update({
-      where: { id: record.id },
-      data: { used: true },
-    });
+    // Mark OTP as used (raw SQL — PrismaNeonHttp can't wrap mutations in transactions)
+    const sql = neon(process.env.DATABASE_URL!);
+    await sql`UPDATE otp_codes SET used = true WHERE id = ${record.id}`;
 
     return NextResponse.json({ verified: true }, { status: 200 });
   } catch (err) {

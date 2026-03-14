@@ -115,7 +115,6 @@ function FlipCard({ event }: { event: Event }) {
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            borderRadius: 16,
             overflow: "hidden",
             background: "linear-gradient(160deg, #FF6B35 0%, #e87700 45%, #8B1538 100%)",
             boxShadow: "0 8px 32px rgba(232,119,0,0.35)",
@@ -169,12 +168,11 @@ export default function EventsPage() {
       {/* Hero banner */}
       <div
         style={{
-          backgroundImage: "url('/events-hero.png')",
+          backgroundImage: "url('/events-body.png')",
           backgroundSize: "auto",
           backgroundPosition: "top left",
           backgroundRepeat: "repeat",
           paddingTop: "clamp(90px, 16vw, 130px)",
-          paddingBottom: "clamp(40px, 8vw, 70px)",
           textAlign: "center",
           position: "relative",
           overflow: "hidden",
@@ -184,33 +182,29 @@ export default function EventsPage() {
         <div>
           <h1
             className="font-nistha"
-            style={{ color: "#000000", fontSize: "clamp(2.4rem, 9vw, 5.5rem)", margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.3)" }}
+            style={{ fontSize: "clamp(2.4rem, 9vw, 5.5rem)", marginTop: 40, textShadow: "0 2px 12px rgba(0,0,0,0.3)" }}
           >
             Events
           </h1>
-          <div style={{ height: 3, width: 80, background: "linear-gradient(to right, #8B1538, #000, #8B1538)", margin: "14px auto 0", borderRadius: 2 }} />
-          <p style={{ color: "#000000", fontFamily: "'Poppins',sans-serif", fontSize: "clamp(0.85rem,2.5vw,1.1rem)", marginTop: 14, marginBottom: 0 }}>
-            6th – 9th April 2026 &nbsp;·&nbsp; VIT Campus
-          </p>
         </div>
+
+
       </div>
 
-      {/* Body section — event-body.jpg background */}
+      {/* Body section — same events-body.png tiled */}
       <div
         style={{
           backgroundImage: "url('/events-body.png')",
           backgroundSize: "auto",
           backgroundPosition: "top left",
           backgroundRepeat: "repeat",
-          backgroundAttachment: "local",
           position: "relative",
         }}
       >
-        {/* Bright overlay so cards stay vibrant */}
-        <div style={{ position: "absolute", inset: 0, background: "rgba(243,186,53,0.55)", pointerEvents: "none", zIndex: 0 }} />
+       
 
         {/* Tab pills */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 10, padding: "32px 16px 0", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: 10, padding: "0px 16px 0", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
         {tabs.map((tab, i) => (
           <button
             key={tab.key}

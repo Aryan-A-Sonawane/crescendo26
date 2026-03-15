@@ -12,11 +12,18 @@
  */
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MusicVisualizer from "./MusicVisualizer";
 
 export default function Hero() {
   const sitarRef = useRef<HTMLDivElement>(null);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const equalizerBars = Array.from({ length: 56 }, (_, i) => {
+    const baseHeight = 50 + Math.round((Math.sin(i * 0.52) + 1) * 20) + (i % 5) * 4;
+    const duration = 1.2 + (i % 7) * 0.12;
+    const delay = (i % 9) * 0.08;
+    return { id: i, baseHeight, duration, delay };
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -199,8 +206,8 @@ export default function Hero() {
 
         {/* banner.webp — behind all decoratives and logo, centered — z-1 */}
         <div
-          className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
-          style={{ zIndex: 3, width: "min(95vw, 1300px)" }}
+          className="absolute top-[51%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+          style={{ zIndex: 3, width: "min(98vw, 1320px)" }}
         >
           <Image
             src="/banner.webp"
@@ -214,8 +221,8 @@ export default function Hero() {
 
         {/* Crescendo logo — centered, 40–50% width — z-3 */}
         <div
-          className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none hero-banner-wrapper"
-          style={{ zIndex: 3, width: "min(85vw, 650px)" }}
+          className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none hero-banner-wrapper"
+          style={{ zIndex: 4, width: "min(67.2vw, 624px)" }}
         >
           <Image
             src="/crescendo.png"
@@ -241,10 +248,44 @@ export default function Hero() {
           />
         </div>
 
-        {/* Music visualizer + audio player */}
-        <MusicVisualizer />
+        {/* Music controls — centered below crescendo logo */}
+        <MusicVisualizer onPlaybackChange={setIsMusicPlaying} />
 
-        {/* Truck driving strip — bottom of Hero, runs left → right */}
+        {/* Retro equalizer bars — desktop only, subtle and behind the truck */}
+        {isMusicPlaying && (
+          <div
+            className="absolute bottom-0 hidden md:flex items-end pointer-events-none select-none"
+            style={{
+              left: "clamp(90px, 11vw, 150px)",
+              right: "clamp(90px, 11vw, 150px)",
+              height: "clamp(170px, 26vh, 240px)",
+              zIndex: 1,
+              gap: 5,
+              opacity: 0.75,
+            }}
+            aria-hidden="true"
+          >
+            {equalizerBars.map((bar) => (
+              <div
+                key={bar.id}
+                style={{
+                  flex: 1,
+                  minWidth: 4,
+                  height: `${bar.baseHeight}px`,
+                  borderTopLeftRadius: 6,
+                  borderTopRightRadius: 6,
+                  background:
+                    "linear-gradient(180deg, rgba(212,160,23,0.55) 0%, rgba(139,21,56,0.42) 52%, rgba(107,15,26,0.32) 100%)",
+                  boxShadow: "0 0 10px rgba(212,160,23,0.22)",
+                  transformOrigin: "bottom",
+                  animation: `retro-eq-pulse ${bar.duration}s ease-in-out ${bar.delay}s infinite alternate`,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Truck lane — lowered so it runs right above the existing warli band */}
         <div
           className="absolute bottom-0 left-0 w-full pointer-events-none select-none"
           style={{ height: 180, zIndex: 5, overflow: "hidden" }}

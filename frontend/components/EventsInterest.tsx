@@ -1,20 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EVENT_CATEGORIES } from "@/lib/events";
 
 interface Props {
   email: string;
   name: string;
-  /** Called after successful save OR after the user skips */
   onComplete: (skipped?: boolean) => void;
 }
 
 export default function EventsInterest({ email, name, onComplete }: Props) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [initializing, setInitializing] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadInterests = async () => {
+      try {
+        const res = await fetch(`/api/register/interests?email=${encodeURIComponent(email)}`);
+        if (!res.ok) return;
+
+        const data = await res.json();
+        if (mounted && Array.isArray(data.interests)) {
+          setSelected(new Set(data.interests));
+        }
+      } catch {
+      } finally {
+        if (mounted) setInitializing(false);
+      }
+    };
+
+    loadInterests();
+    return () => {
+      mounted = false;
+    };
+  }, [email]);
 
   const toggle = (event: string) => {
     setSelected((prev) => {
@@ -26,7 +50,6 @@ export default function EventsInterest({ email, name, onComplete }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (selected.size === 0) return;
     setLoading(true);
     setError("");
     try {
@@ -56,7 +79,7 @@ export default function EventsInterest({ email, name, onComplete }: Props) {
           Interests Saved!
         </p>
         <p className="text-sm" style={{ color: "#7B2D0E" }}>
-          Our team will reach out to you with event updates.
+          Your updated event choices have been saved.
         </p>
       </div>
     );
@@ -64,7 +87,6 @@ export default function EventsInterest({ email, name, onComplete }: Props) {
 
   return (
     <div className="w-full max-w-lg mx-auto">
-      {/* Header */}
       <div className="text-center mb-5">
         <div className="text-3xl mb-2">🎊</div>
         <h2
@@ -76,11 +98,16 @@ export default function EventsInterest({ email, name, onComplete }: Props) {
         <p className="text-xs mt-2 leading-relaxed" style={{ color: "#7B2D0E" }}>
           Select events you&apos;d like to participate in.
           <br />
-          Our publicity team will reach out with details!
+          Reopen anytime to edit your choices.
         </p>
       </div>
 
-      {/* Category cards */}
+      {initializing && (
+        <p className="text-center text-xs font-bold mb-3" style={{ color: "#8B1538" }}>
+          Loading your previous selections...
+        </p>
+      )}
+
       <div className="space-y-4">
         {EVENT_CATEGORIES.map((cat) => (
           <div
@@ -125,23 +152,20 @@ export default function EventsInterest({ email, name, onComplete }: Props) {
         ))}
       </div>
 
-      {/* Selected count badge */}
-      {selected.size > 0 && (
+      {!initializing && (
         <p className="text-center text-xs font-bold mt-3" style={{ color: "#8B1538" }}>
           {selected.size} event{selected.size !== 1 ? "s" : ""} selected
         </p>
       )}
 
-      {/* Error */}
       {error && (
         <p className="text-red-700 text-xs font-bold text-center mt-2">{error}</p>
       )}
 
-      {/* Action buttons */}
       <div className="mt-5 space-y-2.5">
         <button
           onClick={handleSubmit}
-          disabled={loading || selected.size === 0}
+          disabled={loading || initializing}
           className="w-full font-bold text-sm py-3 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           style={{
             backgroundColor: "#8B1538",
@@ -150,7 +174,7 @@ export default function EventsInterest({ email, name, onComplete }: Props) {
             fontFamily: "'Cinzel Decorative', serif",
           }}
         >
-          {loading ? "SAVING..." : `CONFIRM SELECTION`}
+          {loading ? "SAVING..." : "SAVE SELECTION"}
         </button>
         <button
           onClick={() => onComplete(true)}

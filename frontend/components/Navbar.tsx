@@ -37,14 +37,6 @@ export default function Navbar() {
     return () => window.removeEventListener("crescendo_user_updated", checkUser);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("crescendo_user");
-    setRegisteredUser(null);
-    window.dispatchEvent(new Event("crescendo_user_updated"));
-    // Optionally redirect to home
-    window.location.href = "/";
-  };
-
   return (
     <nav className="fixed top-4 md:top-10 left-0 right-0 z-50 flex justify-center pt-2 md:pt-6 px-4">
       <div className="w-full max-w-5xl flex items-center gap-4 origin-top" style={{ transform: "scale(0.7)" }}>
@@ -143,13 +135,14 @@ export default function Navbar() {
                     )
                   ))}
                   {registeredUser ? (
-                    <button
-                      onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                    <Link
+                      href="/profile"
                       className="bg-[#8B1538] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#8B1538] transition-all mt-2"
+                      onClick={() => setIsMenuOpen(false)}
                       style={{ fontFamily: "'Cinzel Decorative', serif" }}
                     >
-                      LOGOUT
-                    </button>
+                      PROFILE
+                    </Link>
                   ) : (
                     <Link
                       href="/onboard"
@@ -166,15 +159,15 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Register/Logout Button — outside the pill, to the right */}
+        {/* Register/Profile Button — outside the pill, to the right */}
         {registeredUser ? (
-          <button
-            onClick={handleLogout}
+          <Link
+            href="/profile"
             className="hidden md:inline-flex items-center text-lg font-bold px-6 py-3 rounded-full border-4 shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
             style={{ backgroundColor: "#8B1538", color: "#ffb51d", borderColor: "#8B1538", fontFamily: "'Cinzel Decorative', serif" }}
           >
-            LOGOUT
-          </button>
+            PROFILE
+          </Link>
         ) : (
           <Link
             href="/onboard"

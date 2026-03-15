@@ -271,6 +271,15 @@ export default function RegisterPage() {
             <div className="text-6xl">🎉</div>
             <p className="font-bold text-xl" style={{ color: "#4a0e00" }}>Welcome, {formData.name}!</p>
             <p className="text-sm" style={{ color: "#7B2D0E" }}>Confirmation sent to <span className="font-bold">{formData.email}</span></p>
+            <a
+              href={TICKETS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-2 font-taiganja text-sm font-bold px-7 py-2.5 rounded-full border-2 transition-all hover:scale-105"
+              style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
+            >
+              BUY TICKETS
+            </a>
             <Link href="/" className="inline-block mt-2 font-taiganja text-sm font-bold px-7 py-2.5 rounded-full border-2 transition-all hover:scale-105"
               style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
               BACK TO HOME
@@ -543,6 +552,15 @@ export default function RegisterPage() {
                   Confirmation sent to{" "}
                   <span className="font-bold">{formData.email}</span>
                 </p>
+                <a
+                  href={TICKETS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-2 font-taiganja text-base font-bold px-8 py-2 rounded-full border-2 transition-all hover:scale-105"
+                  style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
+                >
+                  BUY TICKETS
+                </a>
                 <Link
                   href="/"
                   className="inline-block mt-4 font-taiganja text-base font-bold px-8 py-2 rounded-full border-2 transition-all hover:scale-105"

@@ -14,25 +14,25 @@ interface StoredUser {
 
 export default function SelectEventsPage() {
   const router = useRouter();
-  const [pageState, setPageState] = useState<{ user: StoredUser | null; checked: boolean }>({
-    user: null,
-    checked: false,
+  const [pageState] = useState<{ user: StoredUser | null; checked: boolean }>(() => {
+    if (typeof window === "undefined") {
+      return { user: null, checked: false };
+    }
+
+    const stored = localStorage.getItem("crescendo_user");
+    if (!stored) {
+      return { user: null, checked: true };
+    }
+
+    try {
+      return { user: JSON.parse(stored), checked: true };
+    } catch {
+      localStorage.removeItem("crescendo_user");
+      return { user: null, checked: true };
+    }
   });
   const { user, checked } = pageState;
   const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("crescendo_user");
-    let parsedUser: StoredUser | null = null;
-    if (stored) {
-      try {
-        parsedUser = JSON.parse(stored);
-      } catch {
-        localStorage.removeItem("crescendo_user");
-      }
-    }
-    setPageState({ user: parsedUser, checked: true });
-  }, []);
 
   // Redirect to login if not registered
   useEffect(() => {

@@ -24,10 +24,13 @@ export default function MusicVisualizer({ onPlaybackChange }: MusicVisualizerPro
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    const wasPlaying = !audio.paused;
     audio.src = TRACKS[trackIdx].src;
     audio.load();
-    if (isPlaying) audio.play().catch(() => {});
-  }, [trackIdx, isPlaying]);
+    if (wasPlaying) {
+      audio.play().catch(() => {});
+    }
+  }, [trackIdx]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -93,10 +96,8 @@ export default function MusicVisualizer({ onPlaybackChange }: MusicVisualizerPro
     if (!audio) return;
     if (audio.paused) {
       audio.play().catch(() => {});
-      setIsPlaying(true);
     } else {
       audio.pause();
-      setIsPlaying(false);
     }
   }, []);
 

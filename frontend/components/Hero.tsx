@@ -252,38 +252,37 @@ export default function Hero() {
         <MusicVisualizer onPlaybackChange={setIsMusicPlaying} />
 
         {/* Retro equalizer bars — desktop only, subtle and behind the truck */}
-        {isMusicPlaying && (
-          <div
-            className="absolute bottom-0 hidden md:flex items-end pointer-events-none select-none"
-            style={{
-              left: "clamp(90px, 11vw, 150px)",
-              right: "clamp(90px, 11vw, 150px)",
-              height: "clamp(170px, 26vh, 240px)",
-              zIndex: 1,
-              gap: 5,
-              opacity: 0.75,
-            }}
-            aria-hidden="true"
-          >
-            {equalizerBars.map((bar) => (
-              <div
-                key={bar.id}
-                style={{
-                  flex: 1,
-                  minWidth: 4,
-                  height: `${bar.baseHeight}px`,
-                  borderTopLeftRadius: 6,
-                  borderTopRightRadius: 6,
-                  background:
-                    "linear-gradient(180deg, rgba(212,160,23,0.55) 0%, rgba(139,21,56,0.42) 52%, rgba(107,15,26,0.32) 100%)",
-                  boxShadow: "0 0 10px rgba(212,160,23,0.22)",
-                  transformOrigin: "bottom",
-                  animation: `retro-eq-pulse ${bar.duration}s ease-in-out ${bar.delay}s infinite alternate`,
-                }}
-              />
-            ))}
-          </div>
-        )}
+        <div
+          className="absolute bottom-0 hidden md:flex items-end pointer-events-none select-none"
+          style={{
+            left: "clamp(90px, 11vw, 150px)",
+            right: "clamp(90px, 11vw, 150px)",
+            height: "clamp(170px, 26vh, 240px)",
+            zIndex: 1,
+            gap: 5,
+            opacity: 0.75,
+          }}
+          aria-hidden="true"
+        >
+          {equalizerBars.map((bar) => (
+            <div
+              key={bar.id}
+              style={{
+                flex: 1,
+                minWidth: 4,
+                height: `${bar.baseHeight}px`,
+                borderTopLeftRadius: 6,
+                borderTopRightRadius: 6,
+                background:
+                  "linear-gradient(180deg, rgba(212,160,23,0.55) 0%, rgba(139,21,56,0.42) 52%, rgba(107,15,26,0.32) 100%)",
+                boxShadow: "0 0 10px rgba(212,160,23,0.22)",
+                transformOrigin: "bottom",
+                animation: `retro-eq-pulse ${bar.duration}s ease-in-out ${bar.delay}s infinite alternate`,
+                animationPlayState: isMusicPlaying ? "running" : "paused",
+              }}
+            />
+          ))}
+        </div>
 
         {/* Truck lane — lowered so it runs right above the existing warli band */}
         <div

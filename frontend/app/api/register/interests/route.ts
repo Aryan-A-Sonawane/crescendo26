@@ -33,12 +33,13 @@ export async function GET(req: NextRequest) {
     }
 
     const sql = neon(process.env.DATABASE_URL!);
-    const registration = await sql<{ event_interests: string | null }>`
+    const registrationResult = await sql`
       SELECT event_interests
       FROM registrations
       WHERE lower(email) = lower(${parsed.data.email})
       LIMIT 1
     `;
+    const registration = registrationResult as Array<{ event_interests: string | null }>;
 
     if (registration.length === 0) {
       return NextResponse.json({ error: "Registration not found" }, { status: 404 });
@@ -64,12 +65,13 @@ export async function POST(req: NextRequest) {
     const interestsJson = JSON.stringify(interests);
 
     const sql = neon(process.env.DATABASE_URL!);
-    const updateResult = await sql<{ id: number }>`
+    const updateResultRaw = await sql`
       UPDATE registrations
       SET event_interests = ${interestsJson}
       WHERE lower(email) = lower(${email.toLowerCase().trim()})
       RETURNING id
     `;
+    const updateResult = updateResultRaw as Array<{ id: number }>;
 
     if (updateResult.length === 0) {
       return NextResponse.json({ error: "Registration not found" }, { status: 404 });

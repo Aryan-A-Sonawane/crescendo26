@@ -17,6 +17,12 @@ import MusicVisualizer from "./MusicVisualizer";
 
 export default function Hero() {
   const sitarRef = useRef<HTMLDivElement>(null);
+  const equalizerBars = Array.from({ length: 56 }, (_, i) => {
+    const baseHeight = 50 + Math.round((Math.sin(i * 0.52) + 1) * 20) + (i % 5) * 4;
+    const duration = 1.2 + (i % 7) * 0.12;
+    const delay = (i % 9) * 0.08;
+    return { id: i, baseHeight, duration, delay };
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,11 +40,11 @@ export default function Hero() {
 
   return (
     <>
-      {/* ── Hero section — 88vh gives enough room to separate decoratives ── */}
+      {/* Hero section: fixed desktop viewport so key elements stay visible in one frame */}
       <section
         id="home"
-        className="relative w-full overflow-hidden"
-        style={{ height: "88vh", backgroundColor: "#E7A92E" }}
+        className="relative w-full overflow-hidden h-screen md:h-[86vh]"
+        style={{ backgroundColor: "#E7A92E" }}
       >
 
         {/* Border Corner — top-left — desktop only */}
@@ -122,7 +128,7 @@ export default function Hero() {
         {/* Auto — top-left, where truck used to be — z-2 — hidden on mobile */}
         <div
           className="absolute hidden md:block pointer-events-none select-none"
-          style={{ top: "16vh", left: "-12px", zIndex: 2, width: "clamp(320px, 20vw, 300px)" }}
+          style={{ top: "12vh", left: "-12px", zIndex: 2, width: "clamp(320px, 20vw, 300px)" }}
         >
           <div style={{ animation: "slide-in-left 1s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}>
             <Image
@@ -138,7 +144,7 @@ export default function Hero() {
         {/* Mandala — top-right corner — desktop only */}
         <div
           className="absolute pointer-events-none select-none hidden md:block"
-          style={{ top: "18vh", right: "0%", zIndex: 2, width: "clamp(360px, 14vw, 240px)", opacity: 0.45 }}
+          style={{ top: "14vh", right: "0%", zIndex: 2, width: "clamp(360px, 14vw, 240px)", opacity: 0.45 }}
         >
           <Image
             src="/mandala.webp"
@@ -155,7 +161,7 @@ export default function Hero() {
         {/* Camel — bottom-left, flush with section bottom — z-2 — hidden on mobile */}
         <div
           className="absolute hidden md:block pointer-events-none select-none"
-          style={{ bottom: 0, left: "-12px", zIndex: 4, width: "clamp(380px, 24vw, 360px)", animation: "slide-in-left 1.2s cubic-bezier(0.22,1,0.36,1) 0.55s both" }}
+          style={{ bottom: 0, left: "-8px", zIndex: 4, width: "clamp(380px, 24vw, 360px)", animation: "slide-in-left 1.2s cubic-bezier(0.22,1,0.36,1) 0.55s both" }}
         >
           <Image
             src="/camel.webp"
@@ -170,7 +176,7 @@ export default function Hero() {
         <div
           ref={sitarRef}
           className="absolute pointer-events-none select-none hidden md:block"
-          style={{ top: "18vh", right: "-100px", zIndex: 2, width: "clamp(440px, 22vw, 320px)", willChange: "transform" }}
+          style={{ top: "13vh", right: "-100px", zIndex: 2, width: "clamp(440px, 22vw, 320px)", willChange: "transform" }}
         >
           <div style={{ animation: "slide-in-right 1s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}>
             <Image
@@ -197,10 +203,10 @@ export default function Hero() {
           />
         </div>
 
-        {/* banner.webp — behind all decoratives and logo, centered — z-1 */}
+        {/* banner.webp — shifted up for better first-load desktop composition */}
         <div
-          className="absolute top-[57%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
-          style={{ zIndex: 3, width: "min(95vw, 1300px)" }}
+          className="absolute top-[51%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+          style={{ zIndex: 3, width: "min(78vw, 950px)" }}
         >
           <Image
             src="/banner.webp"
@@ -212,10 +218,10 @@ export default function Hero() {
           />
         </div>
 
-        {/* Crescendo logo — centered, 40–50% width — z-3 */}
+        {/* Crescendo logo — shifted up to maintain navbar gap and reveal lower lane */}
         <div
-          className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none hero-banner-wrapper"
-          style={{ zIndex: 3, width: "min(85vw, 650px)" }}
+          className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none hero-banner-wrapper"
+          style={{ zIndex: 4, width: "min(62vw, 500px)" }}
         >
           <Image
             src="/crescendo.png"
@@ -231,7 +237,7 @@ export default function Hero() {
               cursor: "pointer",
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLImageElement).style.transform = "scale(1.26)";
+              (e.currentTarget as HTMLImageElement).style.transform = "scale(1.12)";
               (e.currentTarget as HTMLImageElement).style.filter = "drop-shadow(0 16px 35px rgba(0,0,0,0.35))";
             }}
             onMouseLeave={e => {
@@ -241,18 +247,50 @@ export default function Hero() {
           />
         </div>
 
-        {/* Music visualizer + audio player */}
+        {/* Music controls — centered below crescendo logo */}
         <MusicVisualizer />
 
-        {/* Truck driving strip — bottom of Hero, runs left → right */}
+        {/* Retro equalizer bars — desktop only, subtle and behind the truck */}
+        <div
+          className="absolute bottom-0 hidden md:flex items-end pointer-events-none select-none"
+          style={{
+            left: "clamp(90px, 11vw, 150px)",
+            right: "clamp(90px, 11vw, 150px)",
+            height: "clamp(170px, 26vh, 240px)",
+            zIndex: 1,
+            gap: 5,
+            opacity: 0.75,
+          }}
+          aria-hidden="true"
+        >
+          {equalizerBars.map((bar) => (
+            <div
+              key={bar.id}
+              style={{
+                flex: 1,
+                minWidth: 4,
+                height: `${bar.baseHeight}px`,
+                borderTopLeftRadius: 6,
+                borderTopRightRadius: 6,
+                background:
+                  "linear-gradient(180deg, rgba(212,160,23,0.55) 0%, rgba(139,21,56,0.42) 52%, rgba(107,15,26,0.32) 100%)",
+                boxShadow: "0 0 10px rgba(212,160,23,0.22)",
+                transformOrigin: "bottom",
+                animation: `retro-eq-pulse ${bar.duration}s ease-in-out ${bar.delay}s infinite alternate`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Truck lane — lowered so it runs right above the existing warli band */}
         <div
           className="absolute bottom-0 left-0 w-full pointer-events-none select-none"
-          style={{ height: 180, zIndex: 5, overflow: "hidden" }}
+          style={{ height: 180, zIndex: 2, overflow: "visible" }}
         >
           <div
             style={{
               position: "absolute",
-              bottom: -70,
+              bottom: -55,
               left: 0,
               width: "100%",
               height: "100%",
@@ -265,16 +303,16 @@ export default function Hero() {
                 bottom: 0,
                 left: 0,
                 animation: "truck-drive 10s linear infinite",
-                width: 280,
+                width: 210,
                 
               }}
             >
               <Image
                 src="/truck.webp"
                 alt="Decorated Indian Truck"
-                width={280}
-                height={280}
-                style={{ width: 280, height: "280", display: "block" }}
+                width={210}
+                height={210}
+                style={{ width: 210, height: "210", display: "block" }}
               />
               {/* Date label on the truck */}
               <div
@@ -286,7 +324,7 @@ export default function Hero() {
                   backgroundColor: "rgba(139,21,56,0.88)",
                   border: "2px solid #D4A017",
                   borderRadius: 6,
-                  padding: "16px 8px",
+                  padding: "16px 6px",
                   whiteSpace: "nowrap",
                   color: "#F7B32B",
                   fontFamily: "'Poppins', sans-serif",

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const navLinks = [
   { href: "/", label: "HOME" },
-  { href: "#events", label: "EVENTS" },
+  { href: "/#events", label: "EVENTS" },
   { href: "https://learner.vierp.in/events", label: "BUY TICKETS", external: true },
   { href: "/competitions", label: "COMPETITIONS" },
   { href: "#partner", label: "PARTNERS" },
@@ -46,7 +46,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-4 md:top-10 left-0 right-0 z-50 flex justify-center pt-2 md:pt-6 px-4">
+    <nav className="fixed top-4 md:top-7 left-0 right-0 z-50 flex justify-center pt-2 md:pt-6 px-4">
       <div className="w-full max-w-5xl flex items-center gap-4 origin-top" style={{ transform: "scale(0.7)" }}>
 
         {/* Main Navigation Pill */}

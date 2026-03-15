@@ -15,7 +15,7 @@ export default function About() {
           position: "relative",
           zIndex: 10,
           backgroundColor: "#5a1a0e",
-          height: 160,
+          height: 100,
           display: "flex",
           alignItems: "center",
         }}
@@ -33,10 +33,10 @@ export default function About() {
               key={i}
               src="/warli-painting.jpg"
               alt="warli dancers"
-              width={566}
-              height={164}
-              className="object-cover"
-              style={{ flexShrink: 0, opacity: 0.92 }}
+              width={350}
+              height={100}
+              className="object-contain"
+              style={{ flexShrink: 0, opacity: 0.92, height: 100, width: "auto" }}
               priority={i === 0}
             />
           ))}

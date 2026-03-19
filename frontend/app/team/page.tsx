@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -233,6 +233,21 @@ const SABHAS: Sabha[] = [
 type Member = { name: string; role: string; initial: string; color: string; photo?: string };
 type Sabha = { id: string; name: string; icon: string; accent: string; members: Member[] };
 
+const TEAM_IMAGE_EXTENSIONS = ["JPG", "jpg", "JPEG", "jpeg", "PNG", "png", "WEBP", "webp", "AVIF", "avif"];
+
+function slugifyName(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getPhotoCandidates(member: Member) {
+  const base = `/team-images/${slugifyName(member.name)}`;
+  const generated = TEAM_IMAGE_EXTENSIONS.map((ext) => `${base}.${ext}`);
+  return member.photo ? [member.photo, ...generated] : generated;
+}
+
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
 function useTilt(ref: React.RefObject<HTMLDivElement | null>) {
@@ -271,7 +286,15 @@ function PaisleyDivider({ accent }: { accent: string }) {
 /** Core leadership card — large, tilt-enabled */
 function CoreCard({ member, index }: { member: Member; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
+  const photoCandidates = useMemo(() => getPhotoCandidates(member), [member]);
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const photoSrc = photoCandidates[photoIndex];
   useTilt(ref);
+
+  useEffect(() => {
+    setPhotoIndex(0);
+  }, [member.name]);
+
   return (
     <div
       ref={ref}
@@ -335,10 +358,18 @@ function CoreCard({ member, index }: { member: Member; index: number }) {
               position: "relative", zIndex: 1,
             }}
           >
-            {member.photo
-              ? <Image src={member.photo} alt={member.name} width={90} height={90} style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }} />
-              : member.initial
-            }
+            {photoSrc
+              ? (
+                <Image
+                  src={photoSrc}
+                  alt={member.name}
+                  width={90}
+                  height={90}
+                  style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }}
+                  onError={() => setPhotoIndex((prev) => prev + 1)}
+                />
+              )
+              : member.initial}
           </div>
 
           {/* Name */}
@@ -385,6 +416,9 @@ function MemberCard({ member, accent, delay }: { member: Member; accent: string;
   const ref = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const photoCandidates = useMemo(() => getPhotoCandidates(member), [member]);
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const photoSrc = photoCandidates[photoIndex];
   useTilt(tiltRef);
 
   useEffect(() => {
@@ -394,6 +428,10 @@ function MemberCard({ member, accent, delay }: { member: Member; accent: string;
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+
+  useEffect(() => {
+    setPhotoIndex(0);
+  }, [member.name]);
 
   return (
     <div
@@ -443,10 +481,18 @@ function MemberCard({ member, accent, delay }: { member: Member; accent: string;
                 position: "relative", zIndex: 1,
               }}
             >
-              {member.photo
-                ? <Image src={member.photo} alt={member.name} width={56} height={56} style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }} />
-                : member.initial
-              }
+              {photoSrc
+                ? (
+                  <Image
+                    src={photoSrc}
+                    alt={member.name}
+                    width={56}
+                    height={56}
+                    style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }}
+                    onError={() => setPhotoIndex((prev) => prev + 1)}
+                  />
+                )
+                : member.initial}
             </div>
 
             <p
@@ -570,7 +616,100 @@ export default function TeamPage() {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#110206", position: "relative", overflowX: "hidden" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "radial-gradient(1200px 500px at 50% -10%, rgba(212,160,23,0.14), transparent 60%), radial-gradient(900px 420px at 10% 30%, rgba(139,21,56,0.22), transparent 65%), radial-gradient(900px 420px at 90% 55%, rgba(27,73,101,0.2), transparent 65%), linear-gradient(180deg, #130308 0%, #110206 45%, #140409 100%)",
+        position: "relative",
+        overflowX: "hidden",
+      }}
+    >
+
+      {/* Ambient thematic background layers */}
+      <div aria-hidden style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: 0.2,
+            backgroundImage:
+              "repeating-linear-gradient(0deg, rgba(212,160,23,0.06) 0px, rgba(212,160,23,0.06) 1px, transparent 1px, transparent 26px), repeating-linear-gradient(90deg, rgba(212,160,23,0.05) 0px, rgba(212,160,23,0.05) 1px, transparent 1px, transparent 34px)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: -170,
+            left: -130,
+            width: 470,
+            height: 470,
+            backgroundImage: "url('/mandala.webp')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            opacity: 0.08,
+            transform: "rotate(-10deg)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: -170,
+            right: -120,
+            width: 500,
+            height: 500,
+            backgroundImage: "url('/mandala.webp')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            opacity: 0.07,
+            transform: "rotate(14deg)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(650px 280px at 18% 72%, rgba(255,107,53,0.13), transparent 70%), radial-gradient(750px 320px at 82% 20%, rgba(212,160,23,0.12), transparent 72%)",
+          }}
+        />
+
+        {/* Extra mobile ambience so background does not feel empty on phones */}
+        <div
+          className="md:hidden"
+          style={{
+            position: "absolute",
+            top: 88,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "min(78vw, 340px)",
+            height: "min(78vw, 340px)",
+            backgroundImage: "url('/mandala.webp')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            opacity: 0.12,
+            filter: "saturate(1.1)",
+          }}
+        />
+        <div
+          className="md:hidden"
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 22,
+            height: 120,
+            backgroundImage: "url('/warli-painting.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.18,
+            maskImage: "linear-gradient(to top, black, transparent)",
+            WebkitMaskImage: "linear-gradient(to top, black, transparent)",
+          }}
+        />
+      </div>
+
+      <div style={{ position: "relative", zIndex: 1 }}>
 
       {/* Left / Right border strips — matches main layout */}
       <div className="pointer-events-none hidden md:block" style={{ position: "fixed", left: -1, top: 0, bottom: 0, width: 120, zIndex: 9998, backgroundImage: "url(/border_1.png)", backgroundRepeat: "repeat-y", backgroundSize: "100% auto" }} />
@@ -712,6 +851,7 @@ export default function TeamPage() {
       </main>
 
       <Footer />
+      </div>
     </div>
   );
 }

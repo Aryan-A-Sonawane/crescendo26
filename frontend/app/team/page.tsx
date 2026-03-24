@@ -9,76 +9,222 @@ import Footer from "@/components/Footer";
 // Replace initials / names with real data. Photos optional — initials shown if no src.
 
 const CORE: Member[] = [
-  { name: "Dr. Priya Sharma", role: "Faculty Advisor", initial: "P", color: "#D4A017" },
-  { name: "Aryan Sonawane", role: "President", initial: "A", color: "#FF6B35" },
-  { name: "Sneha Kulkarni", role: "Vice President", initial: "S", color: "#F72585" },
+  { name: "Aryan Mundra", role: "General Secretary", initial: "A", color: "#D4A017" },
+  { name: "Anish Gawande", role: "President", initial: "A", color: "#FF6B35" },
+  { name: "Sanket Palkar", role: "Joint Secretary", initial: "S", color: "#F72585" },
+  { name: "Rajwardhan Rokade", role: "University Representative", initial: "R", color: "#3AAFA9" },
+  { name: "Girish Bagul", role: "Treasurer", initial: "G", color: "#D4A017" },
+  { name: "Pranav Patil", role: "Assistant University Representative", initial: "P", color: "#FF6B35" },
+  { name: "Kaustubh Singh", role: "Sport Secretary", initial: "K", color: "#3AAFA9" },
 ];
 
 const SABHAS: Sabha[] = [
   {
-    id: "technical",
-    name: "Technical Sabha",
-    icon: "⚙️",
+    id: "function-execution",
+    name: "Function Execution Team",
+    icon: "🎯",
     accent: "#1B4965",
     members: [
-      { name: "Rohan Mehta", role: "Head", initial: "R", color: "#3AAFA9" },
-      { name: "Aisha Patil", role: "Co-Head", initial: "A", color: "#3AAFA9" },
-      { name: "Dev Joshi", role: "Lead", initial: "D", color: "#3AAFA9" },
-      { name: "Priya Nair", role: "Lead", initial: "P", color: "#3AAFA9" },
-      { name: "Karan Shah", role: "Member", initial: "K", color: "#3AAFA9" },
-      { name: "Simran Kaur", role: "Member", initial: "S", color: "#3AAFA9" },
+      { name: "Ayush Gupta", role: "Function Execution Secretary", initial: "A", color: "#3AAFA9" },
+      { name: "Shruti Raina", role: "Function Execution Secretary", initial: "S", color: "#3AAFA9" },
+      { name: "Shripad Kanakdande", role: "Function Execution Secretary", initial: "S", color: "#3AAFA9" },
     ],
   },
   {
-    id: "cultural",
-    name: "Cultural Sabha",
+    id: "pr-branding",
+    name: "PR and Branding Team",
+    icon: "📢",
+    accent: "#8B1538",
+    members: [
+      { name: "Ameya Badge", role: "Head PR and Branding", initial: "A", color: "#F72585" },
+      { name: "Krishna Ardhapurkar", role: "Head PR and Branding", initial: "K", color: "#F72585" },
+    ],
+  },
+  {
+    id: "finance",
+    name: "Finance Team",
+    icon: "💰",
+    accent: "#2D6A4F",
+    members: [
+      { name: "Tanvi Gudekar", role: "Finance Secretary", initial: "T", color: "#3AAFA9" },
+      { name: "Tejas Runwal", role: "Finance Secretary", initial: "T", color: "#3AAFA9" },
+    ],
+  },
+  {
+    id: "aesthetics",
+    name: "Aesthetics Team",
+    icon: "🎨",
+    accent: "#6B0F1A",
+    members: [
+      { name: "Arya Gaikwad", role: "Aesthetics Secretary", initial: "A", color: "#D4A017" },
+      { name: "Sejal Band", role: "Aesthetics Secretary", initial: "S", color: "#D4A017" },
+      { name: "Surabhi Bhalerao", role: "Aesthetics Secretary", initial: "S", color: "#D4A017" },
+    ],
+  },
+  {
+    id: "database",
+    name: "Database Team",
+    icon: "🗄️",
+    accent: "#B85042",
+    members: [
+      { name: "Soham Tawari", role: "Database Secretary", initial: "S", color: "#FF6B35" },
+      { name: "Amogh Nikumb", role: "Database Secretary", initial: "A", color: "#FF6B35" },
+    ],
+  },
+  {
+    id: "extra-curricular",
+    name: "Extra Curricular Team",
     icon: "🎭",
     accent: "#8B1538",
     members: [
-      { name: "Nisha Iyer", role: "Head", initial: "N", color: "#F72585" },
-      { name: "Vikram Desai", role: "Co-Head", initial: "V", color: "#F72585" },
-      { name: "Pooja Rao", role: "Lead", initial: "P", color: "#F72585" },
-      { name: "Aman Verma", role: "Lead", initial: "A", color: "#F72585" },
-      { name: "Riya Gupta", role: "Member", initial: "R", color: "#F72585" },
-      { name: "Mihir Jain", role: "Member", initial: "M", color: "#F72585" },
+      { name: "Anush Nair", role: "Extra Curricular Secretary", initial: "A", color: "#F72585" },
+      { name: "Palak Mahajan", role: "Extra Curricular Secretary", initial: "P", color: "#F72585" },
+    ],
+  },
+  {
+    id: "sponsorship",
+    name: "Sponsorship Team",
+    icon: "🤝",
+    accent: "#2D6A4F",
+    members: [
+      { name: "Yash Chougale", role: "Sponsorship Secretary", initial: "Y", color: "#3AAFA9" },
+    ],
+  },
+  {
+    id: "light-sound",
+    name: "Light & Sound Team",
+    icon: "🔊",
+    accent: "#1B4965",
+    members: [
+      { name: "Ayush Singh", role: "Light & Sound Secretary", initial: "A", color: "#3AAFA9" },
+      { name: "Padmanabh Khairnar", role: "Light & Sound Secretary", initial: "P", color: "#3AAFA9" },
+    ],
+  },
+  {
+    id: "publicity-outreach",
+    name: "Publicity & Outreach Team",
+    icon: "📣",
+    accent: "#6B0F1A",
+    members: [
+      { name: "Nitya Munshi", role: "Publicity & Outreach Secretary", initial: "N", color: "#D4A017" },
+      { name: "Sahil Datrange", role: "Publicity & Outreach Secretary", initial: "S", color: "#D4A017" },
+      { name: "Yashowardhan Lengare", role: "Publicity & Outreach Secretary", initial: "Y", color: "#D4A017" },
+    ],
+  },
+  {
+    id: "resource-refreshment",
+    name: "Resource & Refreshment Team",
+    icon: "🍽️",
+    accent: "#B85042",
+    members: [
+      { name: "Shruti Jaiswal", role: "Resource & Refreshment Secretary", initial: "S", color: "#FF6B35" },
+      { name: "Atharva Joshi", role: "Resource & Refreshment Secretary", initial: "A", color: "#FF6B35" },
+      { name: "Tanishq Chunamuri", role: "Resource & Refreshment Secretary", initial: "T", color: "#FF6B35" },
     ],
   },
   {
     id: "sports",
-    name: "Sports Sabha",
+    name: "Sports Team",
     icon: "🏆",
     accent: "#2D6A4F",
     members: [
-      { name: "Aditya Kumar", role: "Head", initial: "A", color: "#3AAFA9" },
-      { name: "Tanvi Bhat", role: "Co-Head", initial: "T", color: "#3AAFA9" },
-      { name: "Suresh Pillai", role: "Lead", initial: "S", color: "#3AAFA9" },
-      { name: "Megha Reddy", role: "Member", initial: "M", color: "#3AAFA9" },
+      { name: "Shravan Malwade", role: "Sports Secretary", initial: "S", color: "#3AAFA9" },
+      { name: "Vedant Kambale", role: "Sports Secretary", initial: "V", color: "#3AAFA9" },
+      { name: "Aditri Iyer", role: "Sports Secretary", initial: "A", color: "#3AAFA9" },
+      { name: "Shlok Raskar", role: "Sports Secretary", initial: "S", color: "#3AAFA9" },
     ],
   },
   {
-    id: "media",
-    name: "Media & PR Sabha",
+    id: "technical",
+    name: "Technical Team",
+    icon: "⚙️",
+    accent: "#1B4965",
+    members: [
+      { name: "Aditya Chougule", role: "Technical Secretary", initial: "A", color: "#3AAFA9" },
+      { name: "Arnav Phadke", role: "Technical Secretary", initial: "A", color: "#3AAFA9" },
+      { name: "Yug Jain", role: "Technical Secretary", initial: "Y", color: "#3AAFA9" },
+    ],
+  },
+  {
+    id: "venue",
+    name: "Venue Team",
+    icon: "📍",
+    accent: "#8B1538",
+    members: [
+      { name: "Arnav Jadhav", role: "Venue Secretary", initial: "A", color: "#F72585" },
+      { name: "Ansh Rathod", role: "Venue Secretary", initial: "A", color: "#F72585" },
+      { name: "Mayur Sabale", role: "Venue Secretary", initial: "M", color: "#F72585" },
+    ],
+  },
+  {
+    id: "content-social",
+    name: "Content and Social Media Team",
+    icon: "📝",
+    accent: "#6B0F1A",
+    members: [
+      { name: "Nishika Jain", role: "Content and Social Media Secretary", initial: "N", color: "#D4A017" },
+      { name: "Amber Rathi", role: "Content and Social Media Secretary", initial: "A", color: "#D4A017" },
+      { name: "Rudraksh Adhane", role: "Content and Social Media Secretary", initial: "R", color: "#D4A017" },
+    ],
+  },
+  {
+    id: "communications",
+    name: "Communications Team",
+    icon: "💬",
+    accent: "#B85042",
+    members: [
+      { name: "Sanyukta Kakade", role: "Communications Secretary", initial: "S", color: "#FF6B35" },
+      { name: "Soham Kadam", role: "Communications Secretary", initial: "S", color: "#FF6B35" },
+    ],
+  },
+  {
+    id: "editorial",
+    name: "Editorial Team",
+    icon: "📚",
+    accent: "#8B1538",
+    members: [
+      { name: "Monali Bhujbal", role: "Editorial Secretary", initial: "M", color: "#F72585" },
+    ],
+  },
+  {
+    id: "multimedia",
+    name: "Multimedia Team",
+    icon: "🎬",
+    accent: "#1B4965",
+    members: [
+      { name: "Pratham Hindocha", role: "Multimedia Secretary", initial: "P", color: "#3AAFA9" },
+      { name: "Uday Deshmukh", role: "Multimedia Secretary", initial: "U", color: "#3AAFA9" },
+      { name: "Vihaan Dhanapune", role: "Multimedia Secretary", initial: "V", color: "#3AAFA9" },
+    ],
+  },
+  {
+    id: "photography",
+    name: "Photography Team",
     icon: "📸",
     accent: "#6B0F1A",
     members: [
-      { name: "Zara Khan", role: "Head", initial: "Z", color: "#D4A017" },
-      { name: "Parth Modi", role: "Co-Head", initial: "P", color: "#D4A017" },
-      { name: "Ananya Singh", role: "Photographer", initial: "A", color: "#D4A017" },
-      { name: "Rahul Tiwari", role: "Designer", initial: "R", color: "#D4A017" },
-      { name: "Shreya Verma", role: "Social Media", initial: "S", color: "#D4A017" },
+      { name: "Atharva Nikam", role: "Photography Secretary", initial: "A", color: "#D4A017" },
+      { name: "Mrugank Ghaisas", role: "Photography Secretary", initial: "M", color: "#D4A017" },
     ],
   },
   {
-    id: "logistics",
-    name: "Logistics Sabha",
-    icon: "🗂️",
+    id: "vaatchal",
+    name: "Vaatchal Team",
+    icon: "🛤️",
     accent: "#B85042",
     members: [
-      { name: "Nikhil Pawar", role: "Head", initial: "N", color: "#FF6B35" },
-      { name: "Kavya Menon", role: "Co-Head", initial: "K", color: "#FF6B35" },
-      { name: "Jay Patel", role: "Lead", initial: "J", color: "#FF6B35" },
-      { name: "Neha Chavan", role: "Member", initial: "N", color: "#FF6B35" },
-      { name: "Sameer Ali", role: "Member", initial: "S", color: "#FF6B35" },
+      { name: "Pranish Belsare", role: "Vaatchal Secretary", initial: "P", color: "#FF6B35" },
+      { name: "Soham Suvarna", role: "Vaatchal Secretary", initial: "S", color: "#FF6B35" },
+    ],
+  },
+  {
+    id: "website",
+    name: "Website Team",
+    icon: "💻",
+    accent: "#2D6A4F",
+    members: [
+      { name: "Anushka Bhalerao", role: "Website Secretary", initial: "A", color: "#3AAFA9" },
+      { name: "Aryan Sonawane", role: "Website Secretary", initial: "A", color: "#3AAFA9" },
     ],
   },
 ];
@@ -393,8 +539,9 @@ function SabhaSection({ s }: { s: Sabha }) {
       {/* Members grid */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
           gap: 14,
           maxWidth: 900,
           margin: "0 auto",
@@ -449,19 +596,16 @@ export default function TeamPage() {
         {/* Gold sunburst glow */}
         <div style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", width: 340, height: 340, borderRadius: "50%", background: "radial-gradient(circle, rgba(212,160,23,0.18) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-        <p
-          style={{
-            fontFamily: "'Poppins', sans-serif",
-            fontSize: "0.7rem",
-            letterSpacing: "0.4em",
-            color: "#FF6B35",
-            textTransform: "uppercase",
-            marginBottom: 12,
-            position: "relative",
-          }}
-        >
-          Crescendo&apos;26
-        </p>
+        <div style={{ marginBottom: 12, position: "relative" }}>
+          <Image
+            src="/crescendo-pink.webp"
+            alt="CRESCENDO'26"
+            width={280}
+            height={60}
+            style={{ width: "clamp(170px, 28vw, 280px)", height: "auto", margin: "0 auto" }}
+            priority
+          />
+        </div>
         <h1
           className="font-nistha"
           style={{
@@ -524,8 +668,9 @@ export default function TeamPage() {
         <div
           ref={coreRef}
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
             gap: 20,
             maxWidth: 740,
             margin: "0 auto 80px",

@@ -38,7 +38,10 @@ export async function POST(req: NextRequest) {
     const { email, name } = parsed.data;
 
     // Check if email is already registered and verified
-    const existing = await prisma.registration.findUnique({ where: { email } });
+    const existing = await prisma.registration.findUnique({
+      where: { email },
+      select: { verified: true },
+    });
     if (existing?.verified) {
       return NextResponse.json(
         { error: "This email is already registered for Crescendo'26." },
@@ -70,8 +73,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "OTP sent successfully" }, { status: 200 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("[send-otp] Error:", message);
+    console.error("[send-otp] Error:", {
+      message: err instanceof Error ? err.message : String(err),
+      hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
+      hasEmailUser: Boolean(process.env.EMAIL_USER),
+      hasEmailPass: Boolean(process.env.EMAIL_PASS),
+    });
     return NextResponse.json(
       { error: "Failed to send OTP. Please try again." },
       { status: 500 }

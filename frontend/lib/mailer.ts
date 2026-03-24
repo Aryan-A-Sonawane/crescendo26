@@ -1,16 +1,36 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+function getMailerConfig() {
+  const user = process.env.EMAIL_USER;
+  const pass = process.env.EMAIL_PASS;
+
+  if (!user || !pass) {
+    throw new Error("[mailer] EMAIL_USER or EMAIL_PASS is not configured.");
+  }
+
+  return { user, pass };
+}
+
+function createTransporter() {
+  const { user, pass } = getMailerConfig();
+
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user,
+      pass,
+    },
+  });
+}
 
 export async function sendOtpEmail(email: string, otp: string, name: string) {
+  const transporter = createTransporter();
+  const { user } = getMailerConfig();
+
   await transporter.sendMail({
-    from: `"Crescendo'26 Official" <${process.env.EMAIL_USER}>`,
+    from: `"Crescendo'26 Official" <${user}>`,
     to: email,
     subject: "Your OTP for Crescendo'26 Registration",
     html: `

@@ -5,27 +5,19 @@ import { useState } from "react";
 const faqs = [
   {
     question: "When is CRESCENDO'26?",
-    answer: "CRESCENDO'26 will be held from March 15-17, 2026. The fest will run for three exciting days filled with various events and performances."
+    answer: "CRESCENDO'26 will be held from 6th to 9th April, 2026."
   },
   {
     question: "How do I register for events?",
-    answer: "You can register for events through our official website by clicking the 'Register Now' button. Fill in your details, select the events you want to participate in, and complete the payment process."
+    answer: "Click on Buy Tickets from the nav bar, sign in and then purchase yout tickets. Alternatively, click on the Register button, and add events of your interest. Our team will guide you on call."
   },
   {
     question: "Is there a registration fee?",
-    answer: "Yes, there is a nominal registration fee that varies depending on the events you choose. Individual event fees and combo packages are available. Check the Events section for detailed pricing."
+    answer: "Yes, there is a registration fee that varies depending on the events you choose. Check the Events section for detailed pricing."
   },
   {
     question: "Can I participate in multiple events?",
-    answer: "Absolutely! You can participate in as many events as you want, provided there are no time clashes. We offer special combo packages for multiple event registrations."
-  },
-  {
-    question: "What prizes can I win?",
-    answer: "Winners in each event will receive cash prizes, certificates, and trophies. The prize pool varies by event, with total prizes worth over ₹5 lakhs up for grabs!"
-  },
-  {
-    question: "Is there a dress code?",
-    answer: "There is no specific dress code for general attendance. However, some events may have specific requirements (e.g., traditional wear for classical dance). Check individual event guidelines."
+    answer: "Absolutely! You can participate in as many events as you want, provided there are no time clashes."
   },
   {
     question: "Who can participate?",
@@ -43,96 +35,82 @@ export default function FAQs() {
   return (
     <section
       id="faqs"
-      className="py-16 md:py-24 min-h-screen relative"
-      style={{
-        background: "var(--primary-maroon)",
-        position: "relative",
-        overflow: "hidden",
-      }}
+      className="py-12 md:py-20"
+      style={{ background: "linear-gradient(180deg, #21070b 0%, #110206 100%)" }}
     >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 md:mb-16">
+          <p
+            className="text-xs sm:text-sm tracking-[0.35em] uppercase mb-3"
+            style={{ color: "#FF6B35", fontFamily: "'Poppins', sans-serif" }}
+          >
+            Help Desk
+          </p>
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"
+            style={{ color: "#D4A017", fontFamily: "'Cinzel Decorative', serif" }}
+          >
+            Frequently Asked <span style={{ color: "#FF6B35" }}>Questions</span>
+          </h2>
+          <div
+            className="w-24 h-1 mx-auto mb-6"
+            style={{ background: "linear-gradient(to right, #8B1538, #D4A017, #FF6B35)" }}
+          ></div>
+          <p className="text-base sm:text-lg md:text-xl px-2" style={{ color: "#f6d9ac" }}>
+            Got questions? We&apos;ve got answers!
+          </p>
+        </div>
 
-      {/* Top image + text */}
-<div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between mb-16 ">
-
-  {/* Image */}
-  <div className="flex justify-center md:justify-start">
-    <img
-      src="/faqs.png"
-      alt="FAQ Illustration"
-      className="w-[320px] md:w-[420px] opacity-80"
-    />
-  </div>
-
-  {/* Text */}
-  <div className="text-center md:text-left max-w-md">
-    <h2
-      className="text-3xl md:text-4xl font-bold mb-4"
-      style={{ color: "var(--primary-gold)" }}
-    >
-      Sunna hai munne ke mummy
-    </h2>
-
-    <p
-      className="text-lg"
-      style={{ color: "var(--secondary-cream)" }}
-    >
-      Got questions? We've got answers! Explore the FAQs below to know everything about Crescendo'26.
-    </p>
-  </div>
-
-</div>
-
-
-      {/* FAQ grid + image */}
-      <div className="relative max-w-6xl mx-auto flex flex-col md:flex-row gap-10 md:gap-8 items-start min-h-[650px]">        {/* FAQ flex-wrap grid */}
-        <div className="grid md:grid-cols-2 gap-8 flex-1 z-10">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-            return (
-              <div
-                key={index}
-                className="relative rounded-3xl overflow-hidden shadow-xl border-4 border-(--primary-maroon) bg-(--secondary-cream) hover:scale-[1.025] transition-transform duration-200 mb-2"
-                style={{
-                  boxShadow: isOpen ? "0 0 0 6px var(--primary-gold), 0 8px 32px 0 #d4a01755" : "0 8px 32px 0 #d4a01733",
-                  width: '100%',
-                  maxWidth: '540px',
-                  
-                  minWidth: '320px',
-                }}
+        <div className="space-y-3 md:space-y-4">
+          {faqs.map((faq, index) => (
+            <div
+              key={index}
+              className="rounded-xl md:rounded-2xl overflow-hidden transition-colors"
+              style={{
+                border: "1px solid rgba(212,160,23,0.45)",
+                background: "linear-gradient(145deg, #3a0f16 0%, #2a0a10 100%)",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+              }}
+            >
+              <button
+                onClick={() => toggleFAQ(index)}
+                className="w-full px-4 md:px-6 py-4 md:py-5 text-left flex justify-between items-center transition-colors"
+                style={{ backgroundColor: openIndex === index ? "rgba(212,160,23,0.12)" : "transparent" }}
               >
-                {/* Top motif bar */}
-                <div className="w-full h-4 bg-[repeating-linear-gradient(90deg,var(--primary-gold)_0_16px,var(--primary-maroon)_16px_32px)]" />
-                <button
-                  onClick={() => toggleFAQ(index)}
-                  className="w-full px-6 py-6 text-left flex flex-col gap-2 bg-(--secondary-cream)"
-                  style={{ cursor: "pointer" }}
+                <span
+                  className="text-base md:text-lg font-semibold pr-3 md:pr-4"
+                  style={{ color: "#FFF1D2", fontFamily: "'Poppins', sans-serif" }}
                 >
-                  <span className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-(--primary-maroon) text-(--primary-yellow) text-lg font-bold shadow-lg border-2 border-(--primary-gold)">
-                      {index + 1}
-                    </span>
-                    <span className="text-lg md:text-xl font-bold text-(--primary-maroon) tracking-wide" style={{ fontFamily: "'Poppins', 'Nishtha', serif" }}>
-                      {faq.question}
-                    </span>
-                  </span>
-                  <span className="absolute right-6 top-7 flex h-8 w-8 items-center justify-center rounded-full border-2 border-(--primary-gold) text-(--primary-gold) bg-(--secondary-cream) transition-transform duration-200" style={{ transform: isOpen ? "rotate(180deg)" : "none" }}>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </span>
-                </button>
+                  {faq.question}
+                </span>
+                <svg
+                  className={`w-5 h-5 md:w-6 md:h-6 shrink-0 transition-transform ${
+                    openIndex === index ? "rotate-180" : ""
+                  }`}
+                  style={{ color: "#D4A017" }}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              {openIndex === index && (
                 <div
-                  className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                  className="px-4 md:px-6 py-3 md:py-4 border-t"
                   style={{
-                    background: 'rgba(247, 176, 43, 0.92)',
-                    borderTop: isOpen ? '4px solid var(--primary-maroon)' : '4px solid transparent',
+                    background: "rgba(212,160,23,0.09)",
+                    borderColor: "rgba(212,160,23,0.35)",
                   }}
                 >
-                  <div className="px-6 py-5">
-                    <p className="text-base md:text-lg text-(--primary-maroon) font-semibold leading-relaxed" style={{ textShadow: "0 2px 8px #fff8e7" }}>
-                      {faq.answer}
-                    </p>
-                  </div>
+                  <p className="text-sm md:text-base leading-relaxed" style={{ color: "#F6DFC0" }}>
+                    {faq.answer}
+                  </p>
                 </div>
                 {/* Bottom motif bar */}
                 <div className="w-full h-4 bg-[repeating-linear-gradient(90deg,var(--primary-gold)_0_16px,var(--primary-maroon)_16px_32px)]" />
@@ -141,19 +119,20 @@ export default function FAQs() {
           })}
         </div>
 
-      </div>
-
-      {/* Footer call-to-action */}
-      <div className="text-center mt-14">
-        <p className="text-base md:text-lg text-(--primary-maroon) mb-4 px-2" style={{ opacity: 0.8 }}>
-          Still have questions? DM us on Instagram or contact the team!
-        </p>
-        <button
-          className="inline-flex items-center justify-center w-full sm:w-auto px-8 md:px-12 py-4 rounded-full text-lg font-bold text-(--neutral-white) shadow-lg"
-          style={{ backgroundImage: "var(--gradient-festival)" }}
-        >
-          Contact the Crescendo Team
-        </button>
+        <div className="text-center mt-8 md:mt-12">
+          <p className="text-sm md:text-base mb-4 px-2" style={{ color: "#f6d9ac" }}>Still have questions?</p>
+          <button
+            className="w-full sm:w-auto px-6 md:px-8 py-3 rounded-full font-semibold transition-all hover:scale-105"
+            style={{
+              background: "linear-gradient(90deg, #8B1538 0%, #D4A017 100%)",
+              color: "#FFF8E7",
+              border: "1px solid rgba(212,160,23,0.7)",
+              fontFamily: "'Cinzel Decorative', serif",
+            }}
+          >
+            Contact Us
+          </button>
+        </div>
       </div>
     </section>
   );

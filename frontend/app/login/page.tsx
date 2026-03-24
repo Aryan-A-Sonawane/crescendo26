@@ -196,7 +196,7 @@ function LoginContent() {
                     </p>
                     <p className="mt-1" style={{ color: "#7B2D0E" }}>
                       Want to join?{" "}
-                      <Link href="/register" className="font-bold underline" style={{ color: "#8B1538" }}>
+                      <Link href="/onboard" className="font-bold underline" style={{ color: "#8B1538" }}>
                         Register here
                       </Link>
                     </p>
@@ -223,7 +223,7 @@ function LoginContent() {
               <div className="mt-5 text-center">
                 <p className="text-xs" style={{ color: "#7B2D0E" }}>
                   Not registered yet?{" "}
-                  <Link href="/register" className="font-bold underline" style={{ color: "#8B1538" }}>
+                  <Link href="/onboard" className="font-bold underline" style={{ color: "#8B1538" }}>
                     Register here
                   </Link>
                 </p>

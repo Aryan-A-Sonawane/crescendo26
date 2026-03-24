@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EventsInterest from "@/components/EventsInterest";
 
+const TICKETS_URL = "https://learner.vierp.in/events";
+
 interface StoredUser {
   name: string;
   email: string;
@@ -12,25 +14,25 @@ interface StoredUser {
 
 export default function SelectEventsPage() {
   const router = useRouter();
-  const [pageState, setPageState] = useState<{ user: StoredUser | null; checked: boolean }>({
-    user: null,
-    checked: false,
+  const [pageState] = useState<{ user: StoredUser | null; checked: boolean }>(() => {
+    if (typeof window === "undefined") {
+      return { user: null, checked: false };
+    }
+
+    const stored = localStorage.getItem("crescendo_user");
+    if (!stored) {
+      return { user: null, checked: true };
+    }
+
+    try {
+      return { user: JSON.parse(stored), checked: true };
+    } catch {
+      localStorage.removeItem("crescendo_user");
+      return { user: null, checked: true };
+    }
   });
   const { user, checked } = pageState;
   const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("crescendo_user");
-    let parsedUser: StoredUser | null = null;
-    if (stored) {
-      try {
-        parsedUser = JSON.parse(stored);
-      } catch {
-        localStorage.removeItem("crescendo_user");
-      }
-    }
-    setPageState({ user: parsedUser, checked: true });
-  }, []);
 
   // Redirect to login if not registered
   useEffect(() => {
@@ -63,6 +65,20 @@ export default function SelectEventsPage() {
         <p className="text-sm mb-6" style={{ color: "#7B2D0E" }}>
           Your event interests have been saved. Our team will reach out!
         </p>
+        <a
+          href={TICKETS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
+          style={{
+            backgroundColor: "#D4A017",
+            color: "#4a0e00",
+            borderColor: "#8B1538",
+            fontFamily: "'Cinzel Decorative', serif",
+          }}
+        >
+          BUY TICKETS
+        </a>
         <Link
           href="/"
           className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest"

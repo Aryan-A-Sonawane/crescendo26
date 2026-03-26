@@ -135,14 +135,6 @@ export default function Footer() {
         <Image src="/mandala.webp" alt="" width={560} height={560} style={{ width: "100%", height: "auto" }} />
       </div>
 
-      {/* ── Sitar — floats left on large screens ── */}
-      <div
-        className="pointer-events-none select-none hidden lg:block"
-        style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-46%)", width: 260, opacity: 0.28, zIndex: 2, animation: "truck-bob 4.5s ease-in-out infinite" }}
-      >
-        <Image src="/sitar.webp" alt="" width={360} height={500} style={{ width: "100%", height: "auto" }} />
-      </div>
-
       {/* ── Mandala — spins slowly on right ── */}
       <div
         className="pointer-events-none select-none hidden lg:block"
@@ -291,6 +283,6 @@ export default function Footer() {
       </div>
 
 
-    </footer>
+      </footer>
   );
 }

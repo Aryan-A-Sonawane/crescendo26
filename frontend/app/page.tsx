@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import Partners from "@/components/Partners";
 import FAQs from "@/components/FAQs";
 import Footer from "@/components/Footer";
 import Image from "next/image";
@@ -53,6 +54,7 @@ export default function Home() {
         <main>
           <Hero />
           <About />
+          <Partners />
           <FAQs />
         </main>
         <Footer />

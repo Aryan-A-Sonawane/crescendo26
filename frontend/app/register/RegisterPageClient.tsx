@@ -464,30 +464,6 @@ export default function RegisterPage() {
         className="fixed bottom-10 left-10 z-9999 pointer-events-none"
         style={{ transform: "scale(-1)" }} />
 
-      {/* ── Left side: Camel + Truck ── */}
-      <div className="fixed left-0 bottom-0 z-20 pointer-events-none hidden lg:block">
-        {/* Truck — slides in first, then bobs */}
-        <Image src="/truck.webp" alt="truck" width={340} height={480}
-          style={{
-            objectFit: "contain",
-            display: "block",
-            marginTop: "-120px",
-            animation:
-              "slide-in-left 1s cubic-bezier(0.22,1,0.36,1) 0.2s both",
-          }} />
-        {/* Camel — slides in slightly after */}
-        <Image src="/camel-blue.webp" alt="camel" width={410} height={410}
-          style={{
-            objectFit: "contain",
-            display: "block",
-            marginTop: "-220px",
-            animation:
-              "slide-in-left 1.2s cubic-bezier(0.22,1,0.36,1) 0.55s both",
-          }} />
-      </div>
-
-      {/* ── Page content ── */}
-      {/* ── Page content ── */}
       <div className="relative z-30 flex flex-col items-center justify-start min-h-screen px-4 pb-16">
 
         {/* ── CRESCENDO LOGO — centered ── */}
@@ -502,42 +478,17 @@ export default function RegisterPage() {
           />
         </Link>
 
-        {/* ── register noow*/}
-            <div className="relative flex flex-col items-center" style={{ marginTop: "-280px", zIndex: 5, marginBottom: "-28px" }}>
-          <div className="relative" style={{ width: 420, height: "auto" }}>
-            <Image
-              src="/sparkel.png"
-              alt="banner"
-              width={420}
-              height={150}
-              style={{ width: 420, height: "auto", display: "block" }}
-              priority
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <p
-                className="font-taiganja text-3xl text-center tracking-widest font-bold pt-18"
-                style={{ color: "#7B2D0E" }}
-              >
-                REGISTRATION <br /> PAGE
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* ── FORM AREA — centered ── */}
-        <div className="w-full flex justify-center">
-          <div className="relative flex items-stretch justify-center" style={{ width: 480 }}>
-            <Image
-              src="/border-pink.png"
-              alt="decorative frame"
-              width={480}
-              height={620}
-              style={{ objectFit: "fill", width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}
-              className="pointer-events-none select-none"
-            />
-
-            {/* Form — drives the height of the container */}
-            <div className="relative z-10 flex flex-col items-center justify-center w-full px-16 pt-32 pb-8">
+        <div className="w-full flex justify-center -mt-22">
+          <div
+            className="relative w-full max-w-125 flex items-center justify-center bg-no-repeat bg-center"
+            style={{
+              minHeight: 740,
+              backgroundImage: "url('/border-pink.png')",
+              backgroundSize: "100% 100%",
+            }}
+          >
+            <div className="relative z-10 -translate-y-8 flex flex-col items-center justify-center w-full px-16 pt-36 pb-16">
             {step === "success" ? (
               /* Success State */
               <div className="text-center space-y-4">

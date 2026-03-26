@@ -54,6 +54,227 @@ const sports = [
   { name: "Football (Girls 7-a-side)", fee: "₹2,500", prize: "₹12,000", desc: "Women's seven-a-side football. Pace, precision, and passion on the pitch.", img: "/events/sports/FOOTBALL(GIRLS).png" },
 ];
 
+// ─── Rulebook PDF paths (place your PDFs in /public/rulebooks/) ───────────────
+// Update these paths to match your actual PDF file names.
+
+const rulebooks: Record<string, { label: string; path: string }[]> = {
+  technical: [
+    { label: "Technical Rulebook", path: "/rulebooks/technical.pdf" },
+  ],
+  ec: [
+    { label: "EC Rulebook", path: "/rulebooks/Extra-Curriular.pdf" },
+
+  ],
+  sports: [
+    { label: "Sports Rulebook", path: "/rulebooks/Sports.pdf" },
+  ],
+};
+
+// ─── PDF Modal ───────────────────────────────────────────────────────────────
+
+function PdfModal({ pdfPath, label, onClose }: { pdfPath: string; label: string; onClose: () => void }) {
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 1000,
+        background: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(6px)",
+        WebkitBackdropFilter: "blur(6px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+        animation: "fadeIn 0.2s ease",
+      }}
+    >
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(32px) scale(0.97) } to { opacity: 1; transform: translateY(0) scale(1) } }
+      `}</style>
+
+      {/* Modal box — stop propagation so clicks inside don't close */}
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "linear-gradient(160deg, #1a0a00 0%, #2d1200 100%)",
+          border: "1px solid rgba(232,119,0,0.4)",
+          borderRadius: 20,
+          width: "min(860px, 100%)",
+          height: "min(90vh, 720px)",
+          display: "flex",
+          flexDirection: "column",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(232,119,0,0.15)",
+          animation: "slideUp 0.28s cubic-bezier(0.34,1.56,0.64,1)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Header bar */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "14px 20px",
+            background: "linear-gradient(90deg, #e87700 0%, #8B1538 100%)",
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 20 }}>📋</span>
+            <span
+              style={{
+                color: "#fff",
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(0.85rem, 2.5vw, 1rem)",
+                letterSpacing: "0.01em",
+              }}
+            >
+              {label}
+            </span>
+          </div>
+
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            {/* Download button */}
+            <a
+              href={pdfPath}
+              download
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                background: "rgba(255,255,255,0.2)",
+                border: "1px solid rgba(255,255,255,0.5)",
+                borderRadius: 8,
+                padding: "6px 14px",
+                color: "#fff",
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                textDecoration: "none",
+                cursor: "pointer",
+                transition: "background 0.2s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.35)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.2)")}
+            >
+              ⬇ Download
+            </a>
+
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.4)",
+                borderRadius: 8,
+                width: 34,
+                height: 34,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: "#fff",
+                fontSize: 18,
+                lineHeight: 1,
+                transition: "background 0.2s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.3)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")}
+              aria-label="Close rulebook"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        {/* PDF iframe */}
+        <iframe
+          src={`${pdfPath}#toolbar=1&navpanes=0&scrollbar=1`}
+          title={label}
+          style={{
+            flex: 1,
+            border: "none",
+            width: "100%",
+            background: "#1a0a00",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ─── Rulebook Buttons Strip ───────────────────────────────────────────────────
+
+function RulebookStrip({ tabKey }: { tabKey: string }) {
+  const [openPdf, setOpenPdf] = useState<{ path: string; label: string } | null>(null);
+  const books = rulebooks[tabKey] ?? [];
+
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: 10,
+          padding: "18px 16px 0",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        {books.map(book => (
+          <button
+            key={book.path}
+            onClick={() => setOpenPdf({ path: book.path, label: book.label })}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 7,
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 600,
+              fontSize: "clamp(0.74rem, 2.2vw, 0.84rem)",
+              padding: "9px 18px",
+              borderRadius: 999,
+              border: "2px solid #8B1538",
+              background: "rgba(139,21,56,0.08)",
+              color: "#8B1538",
+              cursor: "pointer",
+              transition: "all 0.22s",
+              boxShadow: "0 2px 10px rgba(139,21,56,0.08)",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "linear-gradient(135deg,#FF6B35,#8B1538)";
+              e.currentTarget.style.color = "#fff";
+              e.currentTarget.style.borderColor = "#FF6B35";
+              e.currentTarget.style.boxShadow = "0 6px 20px rgba(139,21,56,0.3)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "rgba(139,21,56,0.08)";
+              e.currentTarget.style.color = "#8B1538";
+              e.currentTarget.style.borderColor = "#8B1538";
+              e.currentTarget.style.boxShadow = "0 2px 10px rgba(139,21,56,0.08)";
+            }}
+          >
+            📋 {book.label}
+          </button>
+        ))}
+      </div>
+
+      {openPdf && (
+        <PdfModal
+          pdfPath={openPdf.path}
+          label={openPdf.label}
+          onClose={() => setOpenPdf(null)}
+        />
+      )}
+    </>
+  );
+}
+
 // ─── Flip Card ───────────────────────────────────────────────────────────────
 
 type Event = { name: string; fee: string; prize: string; desc: string; img: string };
@@ -126,7 +347,6 @@ function FlipCard({ event }: { event: Event }) {
             textAlign: "center",
           }}
         >
-          {/* Decorative ring */}
           <div style={{ width: 50, height: 50, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.7)", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
             <span style={{ fontSize: 22 }}>🎯</span>
           </div>
@@ -178,7 +398,6 @@ export default function EventsPage() {
           overflow: "hidden",
         }}
       >
-
         <div>
           <h1
             className="font-nistha"
@@ -187,11 +406,9 @@ export default function EventsPage() {
             Events
           </h1>
         </div>
-
-
       </div>
 
-      {/* Body section — same events-body.png tiled */}
+      {/* Body section */}
       <div
         style={{
           backgroundColor: "#f3ba35",
@@ -201,54 +418,55 @@ export default function EventsPage() {
           position: "relative",
         }}
       >
-       
-
         {/* Tab pills */}
         <div style={{ display: "flex", justifyContent: "center", gap: 10, padding: "0px 16px 0", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
-        {tabs.map((tab, i) => (
-          <button
-            key={tab.key}
-            onClick={() => setActive(i)}
-            style={{
-              fontFamily: "'Poppins',sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(0.8rem, 3vw, 0.95rem)",
-              padding: "12px 24px",
-              borderRadius: 999,
-              border: `2px solid ${i === active ? "#8B1538" : "#e87700"}`,
-              background: i === active
-                ? "linear-gradient(135deg,#FF6B35 0%,#8B1538 100%)"
-                : "#fff",
-              color: i === active ? "#fff" : "#8B1538",
-              cursor: "pointer",
-              transition: "all 0.25s",
-              boxShadow: i === active ? "0 6px 20px rgba(139,21,56,0.3)" : "0 2px 8px rgba(0,0,0,0.08)",
-              minWidth: 110,
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+          {tabs.map((tab, i) => (
+            <button
+              key={tab.key}
+              onClick={() => setActive(i)}
+              style={{
+                fontFamily: "'Poppins',sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(0.8rem, 3vw, 0.95rem)",
+                padding: "12px 24px",
+                borderRadius: 999,
+                border: `2px solid ${i === active ? "#8B1538" : "#e87700"}`,
+                background: i === active
+                  ? "linear-gradient(135deg,#FF6B35 0%,#8B1538 100%)"
+                  : "#fff",
+                color: i === active ? "#fff" : "#8B1538",
+                cursor: "pointer",
+                transition: "all 0.25s",
+                boxShadow: i === active ? "0 6px 20px rgba(139,21,56,0.3)" : "0 2px 8px rgba(0,0,0,0.08)",
+                minWidth: 110,
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-      {/* Cards grid */}
-      <div
-        style={{
-          maxWidth: 1280,
-          margin: "0 auto",
-          padding: "clamp(24px, 5vw, 48px) clamp(12px, 4vw, 24px) 80px",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
-          gap: "clamp(14px, 3vw, 24px)",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        {tabs[active].events.map(event => (
-          <FlipCard key={event.name} event={event} />
-        ))}
+        {/* ── Rulebook buttons — rendered per active tab ── */}
+        <RulebookStrip tabKey={tabs[active].key} />
+
+        {/* Cards grid */}
+        <div
+          style={{
+            maxWidth: 1280,
+            margin: "0 auto",
+            padding: "clamp(24px, 5vw, 48px) clamp(12px, 4vw, 24px) 80px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
+            gap: "clamp(14px, 3vw, 24px)",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          {tabs[active].events.map(event => (
+            <FlipCard key={event.name} event={event} />
+          ))}
+        </div>
       </div>
-      </div> {/* end body bg section */}
 
       <Footer />
     </div>

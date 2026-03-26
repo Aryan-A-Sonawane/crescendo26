@@ -101,22 +101,23 @@ export default function FAQs() {
                 </svg>
               </button>
               {openIndex === index && (
-                <div
-                  className="px-4 md:px-6 py-3 md:py-4 border-t"
-                  style={{
-                    background: "rgba(212,160,23,0.09)",
-                    borderColor: "rgba(212,160,23,0.35)",
-                  }}
-                >
-                  <p className="text-sm md:text-base leading-relaxed" style={{ color: "#F6DFC0" }}>
-                    {faq.answer}
-                  </p>
-                </div>
-                {/* Bottom motif bar */}
-                <div className="w-full h-4 bg-[repeating-linear-gradient(90deg,var(--primary-gold)_0_16px,var(--primary-maroon)_16px_32px)]" />
-              </div>
-            );
-          })}
+                <>
+                  <div
+                    className="px-4 md:px-6 py-3 md:py-4 border-t"
+                    style={{
+                      background: "rgba(212,160,23,0.09)",
+                      borderColor: "rgba(212,160,23,0.35)",
+                    }}
+                  >
+                    <p className="text-sm md:text-base leading-relaxed" style={{ color: "#F6DFC0" }}>
+                      {faq.answer}
+                    </p>
+                  </div>
+                  <div className="w-full h-4 bg-[repeating-linear-gradient(90deg,var(--primary-gold)_0_16px,var(--primary-maroon)_16px_32px)]" />
+                </>
+              )}
+            </div>
+          ))}
         </div>
 
         <div className="text-center mt-8 md:mt-12">

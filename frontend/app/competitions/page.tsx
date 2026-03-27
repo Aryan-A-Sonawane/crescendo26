@@ -59,7 +59,7 @@ const sports = [
 
 const rulebooks: Record<string, { label: string; path: string }[]> = {
   technical: [
-    { label: "Technical Rulebook", path: "/rulebooks/technical.pdf" },
+    { label: "Technical Rulebook", path: "/rulebooks/Technical.pdf" },
   ],
   ec: [
     { label: "EC Rulebook", path: "/rulebooks/Extra-Curriular.pdf" },

@@ -5,10 +5,10 @@ import Link from "next/link";
 
 const navLinks = [
   { href: "/", label: "HOME" },
-  { href: "#events", label: "EVENTS" },
+  { href: "/rulebooks", label: "RULEBOOKS" },
   { href: "https://learner.vierp.in/events", label: "BUY TICKETS", external: true },
   { href: "/competitions", label: "COMPETITIONS" },
-  { href: "#partner", label: "PARTNERS" },
+  { href: "/#partner", label: "PARTNERS" },
   { href: "/team", label: "TEAM" },
 ];
 

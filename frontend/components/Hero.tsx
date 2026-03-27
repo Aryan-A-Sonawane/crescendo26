@@ -44,8 +44,8 @@ export default function Hero() {
       {/* ── Hero section — 88vh gives enough room to separate decoratives ── */}
       <section
         id="home"
-        className="relative w-full overflow-hidden"
-        style={{ height: "88vh", backgroundColor: "#E7A92E" }}
+        className="relative w-full overflow-hidden h-[78vh] md:h-[88vh]"
+        style={{ backgroundColor: "#E7A92E" }}
       >
 
         {/* Border Corner — top-left — desktop only */}
@@ -79,6 +79,35 @@ export default function Hero() {
           />
         </div>
 
+        {/* Border corners — mobile */}
+        <div
+          className="absolute pointer-events-none select-none md:hidden"
+          style={{ top: -6, left: -12, zIndex: 9999, width: 110 }}
+        >
+          <Image
+            src="/border-corner.png"
+            alt=""
+            width={160}
+            height={160}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
+        <div
+          className="absolute pointer-events-none select-none md:hidden"
+          style={{ top: -6, right: -12, zIndex: 9999, width: 110, transform: "scaleX(-1)" }}
+        >
+          <Image
+            src="/border-corner.png"
+            alt=""
+            width={160}
+            height={160}
+            aria-hidden="true"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+
         {/* Top Border Strip — desktop only */}
         <div
           className="absolute pointer-events-none select-none overflow-hidden hidden md:flex"
@@ -88,7 +117,6 @@ export default function Hero() {
             right: "clamp(120px, 14vw, 200px)",
             height: 105,
             zIndex: 9999,
-            display: "flex",
             flexDirection: "row",
             alignItems: "flex-start",
           }}
@@ -157,6 +185,88 @@ export default function Hero() {
           />
         </div>
 
+        {/* Mobile decorative fillers */}
+        <div
+          className="absolute md:hidden pointer-events-none select-none"
+          style={{ top: "18vh", left: "-26px", zIndex: 2, width: 180, opacity: 0.8 }}
+        >
+          <div style={{ animation: "slide-in-left 1s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}>
+            <Image
+              src="/auto.webp"
+              alt=""
+              width={180}
+              height={140}
+              aria-hidden="true"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </div>
+        </div>
+
+
+        <div
+          className="absolute md:hidden pointer-events-none select-none"
+          style={{ top: "17vh", right: "-36px", zIndex: 2, width: 200, opacity: 0.8 }}
+        >
+          <div style={{ animation: "slide-in-right 1s cubic-bezier(0.22,1,0.36,1) 0.24s both" }}>
+            <Image
+              src="/sitar.webp"
+              alt=""
+              width={200}
+              height={140}
+              aria-hidden="true"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </div>
+        </div>
+
+        <div
+          className="absolute md:hidden pointer-events-none select-none"
+          style={{ bottom: "13vh", left: "-26px", zIndex: 2, width: 180, opacity: 0.8 }}
+        >
+          <div style={{ animation: "slide-in-left 1.2s cubic-bezier(0.22,1,0.36,1) 0.34s both" }}>
+            <Image
+              src="/camel.webp"
+              alt=""
+              width={180}
+              height={200}
+              aria-hidden="true"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </div>
+        </div>
+
+        <div
+          className="absolute md:hidden pointer-events-none select-none"
+          style={{ bottom: "12vh", right: "-50px", zIndex: 2, width: 200, opacity: 0.8 }}
+        >
+          <div style={{ animation: "slide-in-right 1.2s cubic-bezier(0.22,1,0.36,1) 0.38s both" }}>
+            <Image
+              src="/music_driver.webp"
+              alt=""
+              width={200}
+              height={140}
+              aria-hidden="true"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </div>
+        </div>
+
+        <div
+          className="absolute md:hidden pointer-events-none select-none"
+          style={{ top: "14vh", right: "-24px", zIndex: 2, width: 120, opacity: 0.32 }}
+        >
+          <div style={{ animation: "slide-in-right 1s cubic-bezier(0.22,1,0.36,1) 0.16s both" }}>
+            <Image
+              src="/mandala.webp"
+              alt=""
+              width={150}
+              height={150}
+              aria-hidden="true"
+              style={{ width: "100%", height: "auto", animation: "spin-slow 14s linear infinite" }}
+            />
+          </div>
+        </div>
+
 
 
         {/* Camel — bottom-left, flush with section bottom — z-2 — hidden on mobile */}
@@ -204,10 +314,10 @@ export default function Hero() {
           />
         </div>
 
-        {/* banner.webp — behind all decoratives and logo, centered — z-1 */}
+        {/* Banner + logo stack — shared center so logo stays aligned with banner */}
         <div
-          className="absolute top-[51%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
-          style={{ zIndex: 3, width: "min(98vw, 1320px)" }}
+          className="absolute top-[54%] md:top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+          style={{ zIndex: 3, width: "clamp(360px, 108vw, 1320px)" }}
         >
           <Image
             src="/banner.webp"
@@ -217,35 +327,36 @@ export default function Hero() {
             aria-hidden="true"
             style={{ width: "100%", height: "auto" }}
           />
-        </div>
 
-        {/* Crescendo logo — centered, 40–50% width — z-3 */}
-        <div
-          className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none hero-banner-wrapper"
-          style={{ zIndex: 4, width: "min(67.2vw, 624px)" }}
-        >
-          <Image
-            src="/crescendo.png"
-            alt="Crescendo: The Indian Odyssey"
-            width={900}
-            height={450}
-            priority
-            style={{
-              width: "100%",
-              height: "auto",
-              filter: "drop-shadow(0 10px 25px rgba(0,0,0,0.25))",
-              transition: "transform 0.3s ease-in-out, filter 0.3s ease-in-out",
-              cursor: "pointer",
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLImageElement).style.transform = "scale(1.26)";
-              (e.currentTarget as HTMLImageElement).style.filter = "drop-shadow(0 16px 35px rgba(0,0,0,0.35))";
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLImageElement).style.transform = "scale(1)";
-              (e.currentTarget as HTMLImageElement).style.filter = "drop-shadow(0 10px 25px rgba(0,0,0,0.25))";
-            }}
-          />
+          <div
+            className="absolute inset-0 -translate-y-5 md:-translate-y-10 flex items-center justify-center select-none hero-banner-wrapper"
+            style={{ zIndex: 4 }}
+          >
+            <div className="scale-90 md:scale-100" style={{ width: "clamp(270px, 74vw, 624px)" }}>
+              <Image
+                src="/crescendo.png"
+                alt="Crescendo: The Indian Odyssey"
+                width={900}
+                height={450}
+                priority
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  filter: "drop-shadow(0 10px 25px rgba(0,0,0,0.25))",
+                  transition: "transform 0.3s ease-in-out, filter 0.3s ease-in-out",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLImageElement).style.transform = "scale(1.26)";
+                  (e.currentTarget as HTMLImageElement).style.filter = "drop-shadow(0 16px 35px rgba(0,0,0,0.35))";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLImageElement).style.transform = "scale(1)";
+                  (e.currentTarget as HTMLImageElement).style.filter = "drop-shadow(0 10px 25px rgba(0,0,0,0.25))";
+                }}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Music controls — centered below crescendo logo */}
@@ -287,26 +398,22 @@ export default function Hero() {
         {/* Truck lane — lowered so it runs right above the existing warli band */}
         <div
           className="absolute bottom-0 left-0 w-full pointer-events-none select-none"
-          style={{ height: 180, zIndex: 5, overflow: "hidden" }}
+          style={{ height: "clamp(130px, 23vh, 180px)", zIndex: 5, overflow: "hidden" }}
         >
           <div
+            className="absolute left-0 w-full h-full -bottom-13 md:-bottom-19"
             style={{
               position: "absolute",
-              bottom: -70,
-              left: 0,
-              width: "100%",
-              height: "100%",
             }}
           >
             {/* Truck image */}
             <div
+              className="w-50 md:w-70"
               style={{
                 position: "absolute",
                 bottom: 0,
                 left: 0,
                 animation: "truck-drive 10s linear infinite",
-                width: 280,
-                
               }}
             >
               <Image
@@ -314,10 +421,11 @@ export default function Hero() {
                 alt="Decorated Indian Truck"
                 width={280}
                 height={280}
-                style={{ width: 280, height: "280", display: "block" }}
+                style={{ width: "100%", height: "auto", display: "block" }}
               />
               {/* Date label on the truck */}
               <div
+                className="block px-1.5 py-2.5 text-[11px] md:px-2 md:py-4 md:text-base"
                 style={{
                   position: "absolute",
                   top: "38%",
@@ -326,12 +434,10 @@ export default function Hero() {
                   backgroundColor: "rgba(139,21,56,0.88)",
                   border: "2px solid #D4A017",
                   borderRadius: 6,
-                  padding: "16px 8px",
                   whiteSpace: "nowrap",
                   color: "#F7B32B",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: 700,
-                  fontSize: 16,
                   letterSpacing: "0.04em",
                   textShadow: "0 1px 4px rgba(0,0,0,0.5)",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.3)",

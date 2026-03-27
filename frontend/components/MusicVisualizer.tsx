@@ -10,7 +10,7 @@ interface MusicVisualizerProps {
 
 const TRACKS: Track[] = [
   {
-    src: "/music/Run Down The City Monica Dhurandhar 320 Kbps.mp3",
+    src: "/music/Master-Master-the-Blaster-Lyric-Thalapathy-Vijay-AnirudhRavichander-LokeshKanagaraj.mp3",
   },
 ];
 

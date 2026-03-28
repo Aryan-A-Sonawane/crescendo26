@@ -36,7 +36,7 @@ export default function FAQs() {
     <section
       id="faqs"
       className="py-12 md:py-20"
-      style={{ background: "linear-gradient(180deg, #9f3026 0%, #110206 100%)" }}
+      style={{ background: "linear-gradient(180deg, #000 0%, #9f3026 50%, #000 100%)" }}
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 md:mb-16">

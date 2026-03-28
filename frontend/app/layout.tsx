@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { Poppins, Cinzel_Decorative } from "next/font/google";
+import { Poppins, Cinzel_Decorative, Geist } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 // Crescendo'26 Theme Fonts
 const poppins = Poppins({
@@ -28,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Nishtha:wght@400;500;600;700&display=swap"

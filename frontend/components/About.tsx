@@ -159,7 +159,7 @@ export default function About() {
       <section
         id="about"
         className="relative w-full overflow-hidden"
-        style={{ backgroundColor: "#9f3026", minHeight: "100vh", padding: 0, margin: 0 }}
+        style={{ background: "linear-gradient(180deg, #9f3026 0%, #110206 100%)", minHeight: "100vh", padding: 0, margin: 0 }}
       >
 
         {/* ══════════════════════════════════════════════

@@ -5,6 +5,7 @@ import Partners from "@/components/Partners";
 import FAQs from "@/components/FAQs";
 import Footer from "@/components/Footer";
 import Image from "next/image";
+import EventGallery from "@/components/EventGallery";
 
 export default function Home() {
   return (
@@ -100,7 +101,8 @@ export default function Home() {
         <main>
           <Hero />
           <About />
-          <Partners />
+          {/* <Partners /> */}
+          <EventGallery/>
           <FAQs />
         </main>
         <Footer />

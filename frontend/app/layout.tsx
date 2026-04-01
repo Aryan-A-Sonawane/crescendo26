@@ -21,9 +21,62 @@ const cinzelDecorative = Cinzel_Decorative({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://crsc.studentcouncilvitpune.in";
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "CRESCENDO'26",
+  alternateName: "Crescendo 2026",
+  url: siteUrl,
+  description:
+    "Intercollege technical, cultural, and sports festival by VIT Pune.",
+  inLanguage: "en-IN",
+};
+
 export const metadata: Metadata = {
-  title: "CRESCENDO'26 - Inter College Cultural Fest",
-  description: "The ultimate inter-college cultural fest celebrating creativity, talent, and innovation. Join us for three days of music, dance, drama, and more!",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "CRESCENDO'26 - Inter College Cultural Fest",
+    template: "%s | CRESCENDO'26",
+  },
+  description:
+    "The ultimate inter-college cultural fest celebrating creativity, talent, and innovation. Join us for three days of music, dance, drama, and more!",
+  keywords: [
+    "Crescendo 2026",
+    "Crescendo VIT Pune",
+    "Inter college fest",
+    "Technical events",
+    "Cultural events",
+    "Sports competitions",
+    "VIT Pune",
+    "College competitions",
+  ],
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "CRESCENDO'26 - Inter College Cultural Fest",
+    description:
+      "The ultimate inter-college cultural fest celebrating creativity, talent, and innovation. Join us for three days of music, dance, drama, and more!",
+    siteName: "CRESCENDO'26",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CRESCENDO'26 - Inter College Cultural Fest",
+    description:
+      "The ultimate inter-college cultural fest celebrating creativity, talent, and innovation.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -37,6 +90,10 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Nishtha:wght@400;500;600;700&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
       <body

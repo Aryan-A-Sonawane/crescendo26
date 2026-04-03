@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://crsc.studentcouncilvitpune.in/sitemap.xml
+Host: https://crsc.studentcouncilvitpune.in

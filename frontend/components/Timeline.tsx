@@ -59,7 +59,7 @@ const scheduleData = [
         events: [{ name: "Fake Wedding" }],
       },
       {
-        title: "Day 3 - Kondhwa (12 April)",
+        title: "Day 3 (12 April)",
         events: [{ name: "Western Day" }, { name: "Band Performance" }],
       },
     ],

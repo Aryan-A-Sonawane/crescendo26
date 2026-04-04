@@ -25,8 +25,6 @@ export const CORE: Member[] = [
   { name: "Aryan Mundra", role: "General Secretary", initial: "A", color: "#D4A017", photo: photoPath("Aryan Mundra") },
   { name: "Sanket Palkar", role: "Joint Secretary", initial: "S", color: "#F72585", photo: photoPath("Sanket Palkar") },
   { name: "Girish Bagul", role: "Treasurer", initial: "G", color: "#D4A017", photo: photoPath("Girish Bagul") },
-  { name: "Rajwardhan Rokade", role: "University Representative", initial: "R", color: "#3AAFA9", photo: photoPath("Rajwardhan Rokade") },
-  { name: "Pranav Patil", role: "Assistant University Representative", initial: "P", color: "#FF6B35", photo: photoPath("Pranav Patil") },
   { name: "Kaustubh Singh", role: "Sport Secretary", initial: "K", color: "#3AAFA9", photo: photoPath("Kaustubh Singh") },
 ];
 

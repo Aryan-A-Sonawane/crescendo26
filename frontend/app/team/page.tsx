@@ -98,8 +98,8 @@ export default function TeamPage() {
           </div>
           
           {/* GRID: Core Members - Spotlight Style */}
-          <div className="hidden lg:flex justify-center">
-            <div className="grid grid-cols-3 xl:grid-cols-4  gap-4 auto-rows-[400px]">
+          <div className="hidden lg:block w-full">
+            <div className="grid grid-cols-3 xl:grid-cols-5 gap-4 auto-rows-[350px] w-full">
               {CORE.map((m, index) => (
                 <motion.div 
                   key={m.name}

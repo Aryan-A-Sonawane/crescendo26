@@ -14,14 +14,18 @@ export type Sabha = {
   members: Member[];
 };
 
+// Helper function to generate photo path
+const photoPath = (memberName: string): string => {
+  const slug = memberName.toLowerCase().replace(/\s+/g, '-');
+  return `/team/${slug}.jpg`;
+};
+
 export const CORE: Member[] = [
-  { name: "Aryan Mundra", role: "General Secretary", initial: "A", color: "#D4A017" },
-  { name: "Anish Gawande", role: "President", initial: "A", color: "#FF6B35" },
-  { name: "Sanket Palkar", role: "Joint Secretary", initial: "S", color: "#F72585" },
-  { name: "Rajwardhan Rokade", role: "University Representative", initial: "R", color: "#3AAFA9" },
-  { name: "Girish Bagul", role: "Treasurer", initial: "G", color: "#D4A017" },
-  { name: "Pranav Patil", role: "Assistant University Representative", initial: "P", color: "#FF6B35" },
-  { name: "Kaustubh Singh", role: "Sport Secretary", initial: "K", color: "#3AAFA9" },
+  { name: "Anish Gawande", role: "President", initial: "A", color: "#FF6B35", photo: photoPath("Anish Gawande") },
+  { name: "Aryan Mundra", role: "General Secretary", initial: "A", color: "#D4A017", photo: photoPath("Aryan Mundra") },
+  { name: "Sanket Palkar", role: "Joint Secretary", initial: "S", color: "#F72585", photo: photoPath("Sanket Palkar") },
+  { name: "Girish Bagul", role: "Treasurer", initial: "G", color: "#D4A017", photo: photoPath("Girish Bagul") },
+  { name: "Kaustubh Singh", role: "Sport Secretary", initial: "K", color: "#3AAFA9", photo: photoPath("Kaustubh Singh") },
 ];
 
 export const SABHAS: Sabha[] = [
@@ -31,9 +35,9 @@ export const SABHAS: Sabha[] = [
     icon: "target",
     accent: "#1B4965",
     members: [
-      { name: "Ayush Gupta", role: "Function Execution Secretary", initial: "A", color: "#3AAFA9" },
-      { name: "Shruti Raina", role: "Function Execution Secretary", initial: "S", color: "#3AAFA9" },
-      { name: "Shripad Kanakdande", role: "Function Execution Secretary", initial: "S", color: "#3AAFA9" },
+      { name: "Ayush Gupta", role: "Function Execution Secretary", initial: "A", color: "#3AAFA9", photo: photoPath("Ayush Gupta") },
+      { name: "Shruti Raina", role: "Function Execution Secretary", initial: "S", color: "#3AAFA9", photo: photoPath("Shruti Raina") },
+      { name: "Shripad Kanakdande", role: "Function Execution Secretary", initial: "S", color: "#3AAFA9", photo: photoPath("Shripad Kanakdande") },
     ],
   },
   {
@@ -42,8 +46,8 @@ export const SABHAS: Sabha[] = [
     icon: "megaphone",
     accent: "#8B1538",
     members: [
-      { name: "Ameya Badge", role: "Head PR and Branding", initial: "A", color: "#F72585" },
-      { name: "Krishna Ardhapurkar", role: "Head PR and Branding", initial: "K", color: "#F72585" },
+      { name: "Ameya Badge", role: "Head PR and Branding", initial: "A", color: "#F72585", photo: photoPath("Ameya Badge") },
+      { name: "Krishna Ardhapurkar", role: "Head PR and Branding", initial: "K", color: "#F72585", photo: photoPath("Krishna Ardhapurkar") },
     ],
   },
   {
@@ -52,8 +56,8 @@ export const SABHAS: Sabha[] = [
     icon: "currency-dollar",
     accent: "#2D6A4F",
     members: [
-      { name: "Tanvi Gudekar", role: "Finance Secretary", initial: "T", color: "#3AAFA9" },
-      { name: "Tejas Runwal", role: "Finance Secretary", initial: "T", color: "#3AAFA9" },
+      { name: "Tanvi Gudekar", role: "Finance Secretary", initial: "T", color: "#3AAFA9", photo: photoPath("Tanvi Gudekar") },
+      { name: "Tejas Runwal", role: "Finance Secretary", initial: "T", color: "#3AAFA9", photo: photoPath("Tejas Runwal") },
     ],
   },
   {
@@ -62,9 +66,9 @@ export const SABHAS: Sabha[] = [
     icon: "palette",
     accent: "#6B0F1A",
     members: [
-      { name: "Arya Gaikwad", role: "Aesthetics Secretary", initial: "A", color: "#D4A017" },
-      { name: "Sejal Band", role: "Aesthetics Secretary", initial: "S", color: "#D4A017" },
-      { name: "Surabhi Bhalerao", role: "Aesthetics Secretary", initial: "S", color: "#D4A017" },
+      { name: "Arya Gaikwad", role: "Aesthetics Secretary", initial: "A", color: "#D4A017", photo: photoPath("Arya Gaikwad") },
+      { name: "Sejal Band", role: "Aesthetics Secretary", initial: "S", color: "#D4A017", photo: photoPath("Sejal Band") },
+      { name: "Surabhi Bhalerao", role: "Aesthetics Secretary", initial: "S", color: "#D4A017", photo: photoPath("Surabhi Bhalerao") },
     ],
   },
   {
@@ -73,8 +77,8 @@ export const SABHAS: Sabha[] = [
     icon: "database",
     accent: "#B85042",
     members: [
-      { name: "Soham Tawari", role: "Database Secretary", initial: "S", color: "#FF6B35" },
-      { name: "Amogh Nikumb", role: "Database Secretary", initial: "A", color: "#FF6B35" },
+      { name: "Soham Tawari", role: "Database Secretary", initial: "S", color: "#FF6B35", photo: photoPath("Soham Tawari") },
+      { name: "Amogh Nikumb", role: "Database Secretary", initial: "A", color: "#FF6B35", photo: photoPath("Amogh Nikumb") },
     ],
   },
   {
@@ -83,8 +87,8 @@ export const SABHAS: Sabha[] = [
     icon: "theater",
     accent: "#8B1538",
     members: [
-      { name: "Anush Nair", role: "Extra Curricular Secretary", initial: "A", color: "#F72585" },
-      { name: "Palak Mahajan", role: "Extra Curricular Secretary", initial: "P", color: "#F72585" },
+      { name: "Anush Nair", role: "Extra Curricular Secretary", initial: "A", color: "#F72585", photo: photoPath("Anush Nair") },
+      { name: "Palak Mahajan", role: "Extra Curricular Secretary", initial: "P", color: "#F72585", photo: photoPath("Palak Mahajan") },
     ],
   },
   {
@@ -93,7 +97,7 @@ export const SABHAS: Sabha[] = [
     icon: "handshake",
     accent: "#2D6A4F",
     members: [
-      { name: "Yash Chougale", role: "Sponsorship Secretary", initial: "Y", color: "#3AAFA9" },
+      { name: "Yash Chougale", role: "Sponsorship Secretary", initial: "Y", color: "#3AAFA9", photo: photoPath("Yash Chougale") },
     ],
   },
   {
@@ -102,8 +106,8 @@ export const SABHAS: Sabha[] = [
     icon: "volume-high",
     accent: "#1B4965",
     members: [
-      { name: "Ayush Singh", role: "Light & Sound Secretary", initial: "A", color: "#3AAFA9" },
-      { name: "Padmanabh Khairnar", role: "Light & Sound Secretary", initial: "P", color: "#3AAFA9" },
+      { name: "Ayush Singh", role: "Light & Sound Secretary", initial: "A", color: "#3AAFA9", photo: photoPath("Ayush Singh") },
+      { name: "Padmanabh Khairnar", role: "Light & Sound Secretary", initial: "P", color: "#3AAFA9", photo: photoPath("Padmanabh Khairnar") },
     ],
   },
   {
@@ -112,9 +116,9 @@ export const SABHAS: Sabha[] = [
     icon: "bullhorn",
     accent: "#6B0F1A",
     members: [
-      { name: "Nitya Munshi", role: "Publicity & Outreach Secretary", initial: "N", color: "#D4A017" },
-      { name: "Sahil Datrange", role: "Publicity & Outreach Secretary", initial: "S", color: "#D4A017" },
-      { name: "Yashowardhan Lengare", role: "Publicity & Outreach Secretary", initial: "Y", color: "#D4A017" },
+      { name: "Nitya Munshi", role: "Publicity & Outreach Secretary", initial: "N", color: "#D4A017", photo: photoPath("Nitya Munshi") },
+      { name: "Sahil Datrange", role: "Publicity & Outreach Secretary", initial: "S", color: "#D4A017", photo: photoPath("Sahil Datrange") },
+      { name: "Yashowardhan Lengare", role: "Publicity & Outreach Secretary", initial: "Y", color: "#D4A017", photo: photoPath("Yashowardhan Lengare") },
     ],
   },
   {
@@ -123,9 +127,9 @@ export const SABHAS: Sabha[] = [
     icon: "utensils",
     accent: "#B85042",
     members: [
-      { name: "Shruti Jaiswal", role: "Resource & Refreshment Secretary", initial: "S", color: "#FF6B35" },
-      { name: "Atharva Joshi", role: "Resource & Refreshment Secretary", initial: "A", color: "#FF6B35" },
-      { name: "Tanishq Chunamuri", role: "Resource & Refreshment Secretary", initial: "T", color: "#FF6B35" },
+      { name: "Shruti Jaiswal", role: "Resource & Refreshment Secretary", initial: "S", color: "#FF6B35", photo: photoPath("Shruti Jaiswal") },
+      { name: "Atharva Joshi", role: "Resource & Refreshment Secretary", initial: "A", color: "#FF6B35", photo: photoPath("Atharva Joshi") },
+      { name: "Tanishq Chunamuri", role: "Resource & Refreshment Secretary", initial: "T", color: "#FF6B35", photo: photoPath("Tanishq Chunamuri") },
     ],
   },
   {
@@ -134,10 +138,10 @@ export const SABHAS: Sabha[] = [
     icon: "trophy",
     accent: "#2D6A4F",
     members: [
-      { name: "Shravan Malwade", role: "Sports Secretary", initial: "S", color: "#3AAFA9" },
-      { name: "Vedant Kambale", role: "Sports Secretary", initial: "V", color: "#3AAFA9" },
-      { name: "Aditri Iyer", role: "Sports Secretary", initial: "A", color: "#3AAFA9" },
-      { name: "Shlok Raskar", role: "Sports Secretary", initial: "S", color: "#3AAFA9" },
+      { name: "Shravan Malwade", role: "Sports Secretary", initial: "S", color: "#3AAFA9", photo: photoPath("Shravan Malwade") },
+      { name: "Vedant Kambale", role: "Sports Secretary", initial: "V", color: "#3AAFA9", photo: photoPath("Vedant Kambale") },
+      { name: "Aditri Iyer", role: "Sports Secretary", initial: "A", color: "#3AAFA9", photo: photoPath("Aditri Iyer") },
+      { name: "Shlok Raskar", role: "Sports Secretary", initial: "S", color: "#3AAFA9", photo: photoPath("Shlok Raskar") },
     ],
   },
   {
@@ -146,9 +150,9 @@ export const SABHAS: Sabha[] = [
     icon: "settings",
     accent: "#1B4965",
     members: [
-      { name: "Aditya Chougule", role: "Technical Secretary", initial: "A", color: "#3AAFA9" },
-      { name: "Arnav Phadke", role: "Technical Secretary", initial: "A", color: "#3AAFA9" },
-      { name: "Yug Jain", role: "Technical Secretary", initial: "Y", color: "#3AAFA9" },
+      { name: "Aditya Chougule", role: "Technical Secretary", initial: "A", color: "#3AAFA9", photo: photoPath("Aditya Chougule") },
+      { name: "Arnav Phadke", role: "Technical Secretary", initial: "A", color: "#3AAFA9", photo: photoPath("Arnav Phadke") },
+      { name: "Yug Jain", role: "Technical Secretary", initial: "Y", color: "#3AAFA9", photo: photoPath("Yug Jain") },
     ],
   },
   {
@@ -157,9 +161,9 @@ export const SABHAS: Sabha[] = [
     icon: "map-pin",
     accent: "#8B1538",
     members: [
-      { name: "Arnav Jadhav", role: "Venue Secretary", initial: "A", color: "#F72585" },
-      { name: "Ansh Rathod", role: "Venue Secretary", initial: "A", color: "#F72585" },
-      { name: "Mayur Sabale", role: "Venue Secretary", initial: "M", color: "#F72585" },
+      { name: "Arnav Jadhav", role: "Venue Secretary", initial: "A", color: "#F72585", photo: photoPath("Arnav Jadhav") },
+      { name: "Ansh Rathod", role: "Venue Secretary", initial: "A", color: "#F72585", photo: photoPath("Ansh Rathod") },
+      { name: "Mayur Sabale", role: "Venue Secretary", initial: "M", color: "#F72585", photo: photoPath("Mayur Sabale") },
     ],
   },
   {
@@ -168,9 +172,9 @@ export const SABHAS: Sabha[] = [
     icon: "pencil-square",
     accent: "#6B0F1A",
     members: [
-      { name: "Nishika Jain", role: "Content and Social Media Secretary", initial: "N", color: "#D4A017" },
-      { name: "Amber Rathi", role: "Content and Social Media Secretary", initial: "A", color: "#D4A017" },
-      { name: "Rudraksh Adhane", role: "Content and Social Media Secretary", initial: "R", color: "#D4A017" },
+      { name: "Nishika Jain", role: "Content and Social Media Secretary", initial: "N", color: "#D4A017", photo: photoPath("Nishika Jain") },
+      { name: "Amber Rathi", role: "Content and Social Media Secretary", initial: "A", color: "#D4A017", photo: photoPath("Amber Rathi") },
+      { name: "Rudraksh Adhane", role: "Content and Social Media Secretary", initial: "R", color: "#D4A017", photo: photoPath("Rudraksh Adhane") },
     ],
   },
   {
@@ -179,8 +183,8 @@ export const SABHAS: Sabha[] = [
     icon: "chat-bubble",
     accent: "#B85042",
     members: [
-      { name: "Sanyukta Kakade", role: "Communications Secretary", initial: "S", color: "#FF6B35" },
-      { name: "Soham Kadam", role: "Communications Secretary", initial: "S", color: "#FF6B35" },
+      { name: "Sanyukta Kakade", role: "Communications Secretary", initial: "S", color: "#FF6B35", photo: photoPath("Sanyukta Kakade") },
+      { name: "Soham Kadam", role: "Communications Secretary", initial: "S", color: "#FF6B35", photo: photoPath("Soham Kadam") },
     ],
   },
   {
@@ -189,7 +193,7 @@ export const SABHAS: Sabha[] = [
     icon: "book",
     accent: "#8B1538",
     members: [
-      { name: "Monali Bhujbal", role: "Editorial Secretary", initial: "M", color: "#F72585" },
+      { name: "Monali Bhujbal", role: "Editorial Secretary", initial: "M", color: "#F72585", photo: photoPath("Monali Bhujbal") },
     ],
   },
   {
@@ -198,9 +202,9 @@ export const SABHAS: Sabha[] = [
     icon: "film",
     accent: "#1B4965",
     members: [
-      { name: "Pratham Hindocha", role: "Multimedia Secretary", initial: "P", color: "#3AAFA9" },
-      { name: "Uday Deshmukh", role: "Multimedia Secretary", initial: "U", color: "#3AAFA9" },
-      { name: "Vihaan Dhanapune", role: "Multimedia Secretary", initial: "V", color: "#3AAFA9" },
+      { name: "Pratham Hindocha", role: "Multimedia Secretary", initial: "P", color: "#3AAFA9", photo: photoPath("Pratham Hindocha") },
+      { name: "Uday Deshmukh", role: "Multimedia Secretary", initial: "U", color: "#3AAFA9", photo: photoPath("Uday Deshmukh") },
+      { name: "Vihaan Dhanapune", role: "Multimedia Secretary", initial: "V", color: "#3AAFA9", photo: photoPath("Vihaan Dhanapune") },
     ],
   },
   {
@@ -209,8 +213,8 @@ export const SABHAS: Sabha[] = [
     icon: "camera",
     accent: "#6B0F1A",
     members: [
-      { name: "Atharva Nikam", role: "Photography Secretary", initial: "A", color: "#D4A017" },
-      { name: "Mrugank Ghaisas", role: "Photography Secretary", initial: "M", color: "#D4A017" },
+      { name: "Atharva Nikam", role: "Photography Secretary", initial: "A", color: "#D4A017", photo: photoPath("Atharva Nikam") },
+      { name: "Mrugank Ghaisas", role: "Photography Secretary", initial: "M", color: "#D4A017", photo: photoPath("Mrugank Ghaisas") },
     ],
   },
   {
@@ -219,8 +223,8 @@ export const SABHAS: Sabha[] = [
     icon: "road",
     accent: "#B85042",
     members: [
-      { name: "Pranish Belsare", role: "Vaatchal Secretary", initial: "P", color: "#FF6B35" },
-      { name: "Soham Suvarna", role: "Vaatchal Secretary", initial: "S", color: "#FF6B35" },
+      { name: "Pranish Belsare", role: "Vaatchal Secretary", initial: "P", color: "#FF6B35", photo: photoPath("Pranish Belsare") },
+      { name: "Soham Suvarna", role: "Vaatchal Secretary", initial: "S", color: "#FF6B35", photo: photoPath("Soham Suvarna") },
     ],
   },
   {
@@ -229,8 +233,8 @@ export const SABHAS: Sabha[] = [
     icon: "computer-desktop",
     accent: "#2D6A4F",
     members: [
-      { name: "Anushka Bhalerao", role: "Website Secretary", initial: "A", color: "#3AAFA9" },
-      { name: "Aryan Sonawane", role: "Website Secretary", initial: "A", color: "#3AAFA9" },
+      { name: "Anushka Bhalerao", role: "Website Secretary", initial: "A", color: "#3AAFA9", photo: photoPath("Anushka Bhalerao") },
+      { name: "Aryan Sonawane", role: "Website Secretary", initial: "A", color: "#3AAFA9", photo: photoPath("Aryan Sonawane") },
     ],
   },
 ];

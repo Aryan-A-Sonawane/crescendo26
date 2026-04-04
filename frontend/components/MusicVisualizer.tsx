@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 
+const MUSIC_ENABLED_KEY = "crescendo_music_enabled";
+
 interface Track { src: string; }
 
 interface MusicVisualizerProps {
@@ -60,30 +62,20 @@ export default function MusicVisualizer({ onPlaybackChange }: MusicVisualizerPro
     const audio = audioRef.current;
     if (!audio) return;
 
-    const tryPlay = () => {
-      audio.play().then(() => {
-        setIsPlaying(true);
-      }).catch(() => {
-        const wasMuted = audio.muted;
-        audio.muted = true;
-        audio.play().then(() => {
-          audio.muted = wasMuted;
-          setIsPlaying(true);
-        }).catch(() => {
-          audio.muted = wasMuted;
-        });
-      });
+    const startAfterEntry = () => {
+      localStorage.setItem(MUSIC_ENABLED_KEY, "1");
+      audio.play().catch(() => {});
     };
 
-    tryPlay();
+    const shouldStart = localStorage.getItem(MUSIC_ENABLED_KEY) === "1";
+    if (shouldStart) {
+      audio.play().catch(() => {});
+    }
 
-    const resumeOnGesture = () => tryPlay();
-    window.addEventListener("pointerdown", resumeOnGesture, { once: true });
-    window.addEventListener("keydown", resumeOnGesture, { once: true });
+    window.addEventListener("crescendo-enter", startAfterEntry);
 
     return () => {
-      window.removeEventListener("pointerdown", resumeOnGesture);
-      window.removeEventListener("keydown", resumeOnGesture);
+      window.removeEventListener("crescendo-enter", startAfterEntry);
     };
   }, []);
 

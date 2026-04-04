@@ -6,10 +6,12 @@ import FAQs from "@/components/FAQs";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import EventGallery from "@/components/EventGallery";
+import EntryLoader from "@/components/EntryLoader";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#f3ba35] relative overflow-x-hidden">
+    <EntryLoader>
+      <div className="min-h-screen bg-[#f3ba35] relative overflow-x-hidden">
       {/* Left Border — responsive */}
       <div 
         className="pointer-events-none" 
@@ -96,18 +98,19 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="relative">
-        <Navbar />
-        <main>
-          <Hero />
-          <About />
-          {/* <Partners /> */}
-          <EventGallery/>
-          <FAQs />
-        </main>
-        <Footer />
+        <div className="relative">
+          <Navbar />
+          <main>
+            <Hero />
+            <About />
+            {/* <Partners /> */}
+            <EventGallery/>
+            <FAQs />
+          </main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </EntryLoader>
   );
 }
 

@@ -17,7 +17,7 @@ export type Sabha = {
 // Helper function to generate photo path
 const photoPath = (memberName: string): string => {
   const slug = memberName.toLowerCase().replace(/\s+/g, '-');
-  return `/team/${slug}.jpg`;
+  return `/team/${slug}.webp`;
 };
 
 export const CORE: Member[] = [

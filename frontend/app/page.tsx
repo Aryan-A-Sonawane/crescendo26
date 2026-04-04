@@ -22,7 +22,7 @@ export default function Home() {
           bottom: 0,
           width: 'clamp(28px, 7.5vw, 120px)',
           zIndex: 9998,
-          backgroundImage: 'url(/border_1.png)',
+          backgroundImage: 'url(/border_1.webp)',
           backgroundRepeat: 'repeat-y',
           backgroundSize: '100% auto',
           backgroundPosition: '0 0',
@@ -41,7 +41,7 @@ export default function Home() {
           bottom: 0,
           width: 'clamp(28px, 7.5vw, 120px)',
           zIndex: 9998,
-          backgroundImage: 'url(/border_1.png)',
+          backgroundImage: 'url(/border_1.webp)',
           backgroundRepeat: 'repeat-y',
           backgroundSize: '100% auto',
           backgroundPosition: '0 0',
@@ -78,7 +78,7 @@ export default function Home() {
             }}
           >
             <Image
-              src="/border_1.png"
+              src="/border_1.webp"
               alt=""
               width={214}
               height={1076}

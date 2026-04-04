@@ -48,7 +48,7 @@ export default function ProfilePage() {
       <div
         className="min-h-screen flex items-center justify-center"
         style={{
-          backgroundImage: "url('/blue-background.jpeg')",
+          backgroundImage: "url('/blue-background.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -63,7 +63,7 @@ export default function ProfilePage() {
     <div
       className="min-h-screen relative overflow-x-hidden"
       style={{
-        backgroundImage: "url('/blue-background.jpeg')",
+        backgroundImage: "url('/blue-background.webp')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -77,7 +77,7 @@ export default function ProfilePage() {
         className="fixed top-0 left-0 right-0 h-10 z-40 pointer-events-none"
         style={{
           backgroundColor: "#D4A017",
-          backgroundImage: "url('/border-blue.png')",
+          backgroundImage: "url('/border-blue.webp')",
           backgroundSize: "auto 100%",
           backgroundRepeat: "repeat-x",
         }}
@@ -86,7 +86,7 @@ export default function ProfilePage() {
         className="fixed bottom-0 left-0 right-0 h-10 z-40 pointer-events-none"
         style={{
           backgroundColor: "#D4A017",
-          backgroundImage: "url('/border-blue.png')",
+          backgroundImage: "url('/border-blue.webp')",
           backgroundSize: "auto 100%",
           backgroundRepeat: "repeat-x",
           transform: "scaleY(-1)",
@@ -103,7 +103,7 @@ export default function ProfilePage() {
             transformOrigin: "top left",
             transform: "rotate(90deg) translateY(-100%)",
             backgroundColor: "#D4A017",
-            backgroundImage: "url('/border-blue.png')",
+            backgroundImage: "url('/border-blue.webp')",
             backgroundSize: "auto 100%",
             backgroundRepeat: "repeat-x",
           }}
@@ -120,7 +120,7 @@ export default function ProfilePage() {
             transformOrigin: "top right",
             transform: "rotate(-90deg) translateY(-100%)",
             backgroundColor: "#D4A017",
-            backgroundImage: "url('/border-blue.png')",
+            backgroundImage: "url('/border-blue.webp')",
             backgroundSize: "auto 100%",
             backgroundRepeat: "repeat-x",
           }}
@@ -128,14 +128,14 @@ export default function ProfilePage() {
       </div>
 
       <Image
-        src="/corner-triangle.png"
+        src="/corner-triangle.webp"
         alt=""
         width={250}
         height={250}
         className="fixed top-10 right-10 z-40 pointer-events-none hidden lg:block"
       />
       <Image
-        src="/corner-triangle.png"
+        src="/corner-triangle.webp"
         alt=""
         width={250}
         height={250}
@@ -143,7 +143,7 @@ export default function ProfilePage() {
         style={{ transform: "scaleX(-1)" }}
       />
       <Image
-        src="/corner-triangle.png"
+        src="/corner-triangle.webp"
         alt=""
         width={250}
         height={250}
@@ -151,7 +151,7 @@ export default function ProfilePage() {
         style={{ transform: "scaleY(-1)" }}
       />
       <Image
-        src="/corner-triangle.png"
+        src="/corner-triangle.webp"
         alt=""
         width={250}
         height={250}

@@ -4,11 +4,11 @@
  * Slide-in keyframes (slideInLeft / slideInRight) are defined in app/globals.css.
  * Z-index layers:
  *   css bg → background color #E7A92E (behind everything)
- *   0 → border_left-removebg-preview.png decorative border frame
+ *   0 → border_left-removebg-preview.webp decorative border frame
  *   1 → banner.webp (centered, behind decoratives)
  *   2 → decorative elements (mandala, truck, camel, sitar, gramophone)
- *   3 → crescendo.png (primary focus)
- *   10 → Border_top-removebg-preview.png (top strip, above all)
+ *   3 → crescendo.webp (primary focus)
+ *   10 → Border_top-removebg-preview.webp (top strip, above all)
  */
 
 import Image from "next/image";
@@ -54,7 +54,7 @@ export default function Hero() {
           style={{ top: -10, left: -16, zIndex: 9999, width: "clamp(220px, 14vw, 200px)" }}
         >
           <Image
-            src="/border-corner.png"
+            src="/border-corner.webp"
             alt=""
             width={300}
             height={300}
@@ -70,7 +70,7 @@ export default function Hero() {
           style={{ top: -10, right: -16, zIndex: 9999, width: "clamp(225px, 14vw, 200px)", transform: "scaleX(-1)" }}
         >
           <Image
-            src="/border-corner.png"
+            src="/border-corner.webp"
             alt=""
             width={500}
             height={300}
@@ -85,7 +85,7 @@ export default function Hero() {
           style={{ top: -6, left: -12, zIndex: 9999, width: 110 }}
         >
           <Image
-            src="/border-corner.png"
+            src="/border-corner.webp"
             alt=""
             width={160}
             height={160}
@@ -99,7 +99,7 @@ export default function Hero() {
           style={{ top: -6, right: -12, zIndex: 9999, width: 110, transform: "scaleX(-1)" }}
         >
           <Image
-            src="/border-corner.png"
+            src="/border-corner.webp"
             alt=""
             width={160}
             height={160}
@@ -134,7 +134,7 @@ export default function Hero() {
               }}
             >
               <Image
-                src="/border_1.png"
+                src="/border_1.webp"
                 alt=""
                 width={214}
                 height={1076}
@@ -334,7 +334,7 @@ export default function Hero() {
           >
             <div className="scale-90 md:scale-100" style={{ width: "clamp(270px, 74vw, 624px)" }}>
               <Image
-                src="/crescendo.png"
+                src="/crescendo.webp"
                 alt="Crescendo: The Indian Odyssey"
                 width={900}
                 height={450}

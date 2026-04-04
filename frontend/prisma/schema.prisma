@@ -13,6 +13,9 @@ model Registration {
   phone          String   @unique
   college        String
   verified       Boolean  @default(false)
+  authProvider   String   @default("otp") @map("auth_provider")
+  googleId       String?  @unique @map("google_id")
+  passwordHash   String?  @map("password_hash")
   eventInterests String?  @map("event_interests")
   createdAt      DateTime @default(now())
 

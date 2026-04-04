@@ -48,6 +48,50 @@ const BASE_COLLEGES = [
   "Shri Chhatrapati Shivajiraje College of Engineering",
 ];
 
+function GoogleIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#EA4335"
+        d="M12 10.2v3.9h5.4c-.23 1.25-.94 2.3-2 3.01l3.24 2.51c1.89-1.74 2.98-4.29 2.98-7.32 0-.7-.06-1.37-.18-2.02H12z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 22c2.7 0 4.96-.9 6.61-2.44l-3.24-2.51c-.9.6-2.05.95-3.37.95-2.59 0-4.79-1.75-5.57-4.1l-3.35 2.58A9.99 9.99 0 0 0 12 22z"
+      />
+      <path
+        fill="#4A90E2"
+        d="M6.43 13.9a5.99 5.99 0 0 1 0-3.8L3.08 7.52a9.99 9.99 0 0 0 0 8.96l3.35-2.58z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M12 5.98c1.47 0 2.8.5 3.84 1.5l2.88-2.88A9.57 9.57 0 0 0 12 2a9.99 9.99 0 0 0-8.92 5.52l3.35 2.58c.78-2.35 2.98-4.12 5.57-4.12z"
+      />
+    </svg>
+  );
+}
+
+function GoogleAuthButton({ href, googleVerified, compact = false }: { href: string; googleVerified: boolean; compact?: boolean }) {
+  return (
+    <a
+      href={href}
+      className={`group block w-full rounded-xl border-2 transition-all hover:scale-[1.01] ${compact ? "px-3 py-2" : "px-4 py-2.5"}`}
+      style={{
+        backgroundColor: "#FFFFFF",
+        borderColor: "#DADCE0",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+      }}
+    >
+      <span className={`flex items-center justify-center gap-2 ${compact ? "text-xs" : "text-sm"} font-semibold`} style={{ color: "#3C4043" }}>
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full" style={{ backgroundColor: "#fff" }}>
+          <GoogleIcon size={18} />
+        </span>
+        {googleVerified ? "Continue with another Google account" : "Sign in with Google"}
+      </span>
+    </a>
+  );
+}
+
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -358,13 +402,7 @@ export default function RegisterPage() {
             </p>
           )}
           <form onSubmit={handleSubmit} className="space-y-3 w-full" noValidate>
-              <a
-                href={GOOGLE_SIGNIN_URL}
-                className="block w-full text-center text-xs font-bold px-3 py-2 rounded-lg border-2 transition-all hover:scale-[1.02]"
-                style={{ backgroundColor: "#FFF8E7", color: "#4a0e00", borderColor: "#8B1538" }}
-              >
-                {googleVerified ? "GOOGLE CONNECTED - SWITCH ACCOUNT" : "CONTINUE WITH GOOGLE"}
-              </a>
+              <GoogleAuthButton href={GOOGLE_SIGNIN_URL} googleVerified={googleVerified} compact />
               <p className="text-center text-[10px]" style={{ color: "#7B2D0E" }}>
                 {googleVerified ? "Google verified your email. OTP will be skipped." : "Google sign-in can auto-verify your email."}
               </p>
@@ -655,13 +693,7 @@ export default function RegisterPage() {
                 )}
 
                 <div className="space-y-2">
-                  <a
-                    href={GOOGLE_SIGNIN_URL}
-                    className="block w-full text-center text-sm font-bold px-4 py-2 rounded-lg border-2 transition-all hover:scale-[1.01]"
-                    style={{ backgroundColor: "#FFF8E7", color: "#4a0e00", borderColor: "#8B1538" }}
-                  >
-                    {googleVerified ? "GOOGLE CONNECTED - SWITCH ACCOUNT" : "CONTINUE WITH GOOGLE"}
-                  </a>
+                  <GoogleAuthButton href={GOOGLE_SIGNIN_URL} googleVerified={googleVerified} />
                   <p className="text-center text-xs" style={{ color: "#7B2D0E" }}>
                     {googleVerified ? "Google verified your email. OTP will be skipped." : "Google sign-in can auto-verify your email."}
                   </p>

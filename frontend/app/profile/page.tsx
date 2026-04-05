@@ -5,10 +5,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
+import QRCode from "qrcode";
 
 interface StoredUser {
   name: string;
   email: string;
+}
+
+interface ProfileTicket {
+  id: number;
+  eventName: string;
+  participantName: string;
+  phone: string | null;
+  qrToken: string;
+  isPlayed: boolean;
+  playedAt: string | null;
+  playedByEmail: string | null;
 }
 
 export default function ProfilePage() {
@@ -30,12 +42,63 @@ export default function ProfilePage() {
       return { user: null, checked: true };
     }
   });
+  const [tickets, setTickets] = useState<ProfileTicket[]>([]);
+  const [ticketQrMap, setTicketQrMap] = useState<Record<number, string>>({});
+  const [showDashboardAccess, setShowDashboardAccess] = useState(false);
+  const [dashboardRoute, setDashboardRoute] = useState("/event-dashboard");
+  const [dashboardLabel, setDashboardLabel] = useState("ACCESS EVENT DASHBOARD");
 
   useEffect(() => {
     if (state.checked && !state.user) {
       router.replace("/login");
     }
   }, [state.checked, state.user, router]);
+
+  useEffect(() => {
+    if (!state.user) return;
+
+    (async () => {
+      try {
+        const [accessRes, ticketsRes] = await Promise.all([
+          fetch(`/api/dashboard/me?email=${encodeURIComponent(state.user!.email)}`),
+          fetch(`/api/profile/tickets?email=${encodeURIComponent(state.user!.email)}`),
+        ]);
+
+        const accessData = await accessRes.json();
+        const ticketsData = await ticketsRes.json();
+
+        if (accessRes.ok) {
+          setShowDashboardAccess(Boolean(accessData.showDashboardAccess));
+          if (accessData.isSuperAdmin) {
+            setDashboardRoute("/event-dashboard");
+            setDashboardLabel("ACCESS SUPER ADMIN DASHBOARD");
+          } else {
+            setDashboardRoute("/coordinator-dashboard");
+            setDashboardLabel("ACCESS COORDINATOR DASHBOARD");
+          }
+        }
+
+        if (ticketsRes.ok && Array.isArray(ticketsData.tickets)) {
+          const loadedTickets = ticketsData.tickets as ProfileTicket[];
+          setTickets(loadedTickets);
+
+          const qrEntries = await Promise.all(
+            loadedTickets.map(async (ticket) => {
+              const dataUrl = await QRCode.toDataURL(ticket.qrToken, {
+                width: 164,
+                margin: 1,
+              });
+              return [ticket.id, dataUrl] as const;
+            })
+          );
+
+          setTicketQrMap(Object.fromEntries(qrEntries));
+        }
+      } catch (error) {
+        console.error("[profile:load]", error);
+      }
+    })();
+  }, [state.user]);
 
   const handleLogout = () => {
     localStorage.removeItem("crescendo_user");
@@ -184,13 +247,48 @@ export default function ProfilePage() {
               >
                 YOUR TICKETS
               </h2>
-              <div className="rounded-2xl border-2 p-4" style={{ borderColor: "#D4A017", backgroundColor: "rgba(255,255,255,0.65)" }}>
-                <p className="text-xs uppercase tracking-widest font-bold" style={{ color: "#8B1538" }}>
-                  Upcoming
-                </p>
-                <p className="text-sm mt-2" style={{ color: "#7B2D0E" }}>
-                  Purchased tickets will be shown here.
-                </p>
+              <div className="space-y-3 max-h-[55vh] overflow-auto pr-1">
+                {tickets.length === 0 ? (
+                  <div className="rounded-2xl border-2 p-4" style={{ borderColor: "#D4A017", backgroundColor: "rgba(255,255,255,0.65)" }}>
+                    <p className="text-sm" style={{ color: "#7B2D0E" }}>
+                      No event tickets mapped to your email yet.
+                    </p>
+                  </div>
+                ) : (
+                  tickets.map((ticket) => (
+                    <div
+                      key={ticket.id}
+                      className="rounded-2xl border-2 p-4"
+                      style={{
+                        borderColor: ticket.isPlayed ? "#8B8680" : "#D4A017",
+                        backgroundColor: "rgba(255,255,255,0.7)",
+                      }}
+                    >
+                      <p className="text-xs uppercase tracking-widest font-bold" style={{ color: "#8B1538" }}>
+                        {ticket.eventName}
+                      </p>
+                      <p className="text-sm mt-1 font-semibold" style={{ color: "#4a0e00" }}>
+                        {ticket.participantName}
+                      </p>
+                      <p className="text-xs mt-1" style={{ color: "#7B2D0E" }}>
+                        {ticket.phone || "Phone not available"}
+                      </p>
+                      {!ticket.isPlayed && ticketQrMap[ticket.id] && (
+                        <Image
+                          src={ticketQrMap[ticket.id]}
+                          alt={`QR for ${ticket.eventName}`}
+                          width={160}
+                          height={160}
+                          unoptimized
+                          className="mt-2 h-40 w-40 rounded border"
+                        />
+                      )}
+                      <p className="text-xs mt-2" style={{ color: ticket.isPlayed ? "#8B1538" : "#2D6A4F" }}>
+                        {ticket.isPlayed ? "Status: Played (ticket locked)" : "Status: Active"}
+                      </p>
+                    </div>
+                  ))
+                )}
               </div>
             </section>
 
@@ -218,6 +316,21 @@ export default function ProfilePage() {
                 >
                   SELECT / EDIT YOUR EVENTS
                 </Link>
+
+                {showDashboardAccess && (
+                  <Link
+                    href={dashboardRoute}
+                    className="block w-full font-bold text-sm py-3 rounded-xl border-2 text-center transition-all hover:scale-105 tracking-widest shadow-lg"
+                    style={{
+                      backgroundColor: "#1B4965",
+                      color: "#FFF8E7",
+                      borderColor: "#D4A017",
+                      fontFamily: "'Cinzel Decorative', serif",
+                    }}
+                  >
+                    {dashboardLabel}
+                  </Link>
+                )}
 
                 <button
                   onClick={handleLogout}

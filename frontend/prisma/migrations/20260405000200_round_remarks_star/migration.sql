@@ -1,0 +1,4 @@
+ALTER TABLE event_rounds
+  ADD COLUMN remarks TEXT,
+  ADD COLUMN is_starred BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN starred_at TIMESTAMPTZ;

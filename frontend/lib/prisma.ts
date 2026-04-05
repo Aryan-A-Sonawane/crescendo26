@@ -2,7 +2,6 @@ import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 
 declare global {
-  // eslint-disable-next-line no-var
   var __prisma: PrismaClient | undefined;
 }
 
@@ -29,6 +28,18 @@ const prismaClient: PrismaClient | null =
             globalThis.__prisma = client;
           }
         }
+        return globalThis.__prisma ?? null;
+      })();
+
+// Delay throwing until the first actual DB operation.
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop, receiver) {
+    if (!prismaClient) {
+      throw new Error("[prisma] DATABASE_URL is not set. Check your .env.local or Vercel environment variables.");
+    }
+    return Reflect.get(prismaClient, prop, receiver);
+  },
+});
         return globalThis.__prisma ?? null;
       })();
 

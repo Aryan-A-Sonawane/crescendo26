@@ -10,22 +10,62 @@ import { CORE, SABHAS, Member, Sabha } from "@/lib/team";
 export default function TeamPage() {
   const [activeMember, setActiveMember] = useState<Member | null>(null);
   const memberRefsDesktop = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const topMostMember = useRef<Member | null>(null);
+  const bottomMostMember = useRef<Member | null>(null);
 
   // Use Intersection Observer for reliable member tracking (no lag during fast scroll)
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find the first visible member
-        const visibleEntry = entries.find((entry) => entry.isIntersecting);
-        
-        if (visibleEntry) {
-          const memberName = visibleEntry.target.getAttribute("data-member-name");
-          if (memberName) {
-            // Find the member object from SABHAS
-            const allSabhasMembers = SABHAS.flatMap((s) => s.members);
-            const member = allSabhasMembers.find((m) => m.name === memberName);
-            if (member) {
-              setActiveMember(member);
+        // Track topmost and bottommost visible members
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        const allSabhasMembers = SABHAS.flatMap((s) => s.members);
+
+        if (visibleEntries.length > 0) {
+          // Sort visible entries by their position on screen
+          visibleEntries.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          
+          // Get topmost and bottommost visible members
+          const topEntry = visibleEntries[0];
+          const bottomEntry = visibleEntries[visibleEntries.length - 1];
+
+          const topMemberName = topEntry.target.getAttribute("data-member-name");
+          const bottomMemberName = bottomEntry.target.getAttribute("data-member-name");
+
+          if (topMemberName) {
+            const member = allSabhasMembers.find((m) => m.name === topMemberName);
+            if (member) topMostMember.current = member;
+          }
+
+          if (bottomMemberName) {
+            const member = allSabhasMembers.find((m) => m.name === bottomMemberName);
+            if (member) bottomMostMember.current = member;
+          }
+
+          // Set the first visible member from center of viewport
+          const centerMemberName = entries
+            .find((e) => e.isIntersecting)
+            ?.target.getAttribute("data-member-name");
+          
+          if (centerMemberName) {
+            const centerMember = allSabhasMembers.find((m) => m.name === centerMemberName);
+            if (centerMember) {
+              setActiveMember(centerMember);
+            }
+          }
+        } else {
+          // Out of bounds: use topmost or bottommost accordingly
+          const scrollDirection = entries[0]?.boundingClientRect.top ?? 0;
+          
+          if (scrollDirection < 0) {
+            // Scrolled past bottom - use bottommost member
+            if (bottomMostMember.current) {
+              setActiveMember(bottomMostMember.current);
+            }
+          } else {
+            // Scrolled past top - use topmost member
+            if (topMostMember.current) {
+              setActiveMember(topMostMember.current);
             }
           }
         }

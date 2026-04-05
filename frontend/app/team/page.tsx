@@ -10,57 +10,80 @@ import { CORE, SABHAS, Member, Sabha } from "@/lib/team";
 export default function TeamPage() {
   const [activeMember, setActiveMember] = useState<Member | null>(null);
   const memberRefsDesktop = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const topMostMember = useRef<Member | null>(null);
+  const bottomMostMember = useRef<Member | null>(null);
 
-  // Scroll-based member highlighting with RAF for smooth 60fps tracking
+  // Use Intersection Observer for reliable member tracking (no lag during fast scroll)
   useEffect(() => {
-    let rafId: number | null = null;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Track topmost and bottommost visible members
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        const allSabhasMembers = SABHAS.flatMap((s) => s.members);
 
-    const handleScroll = () => {
-      const viewportCenter = window.innerHeight / 2;
-      let closestMember: Member | null = null;
-      let closestDistance = Infinity;
+        if (visibleEntries.length > 0) {
+          // Sort visible entries by their position on screen
+          visibleEntries.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          
+          // Get topmost and bottommost visible members
+          const topEntry = visibleEntries[0];
+          const bottomEntry = visibleEntries[visibleEntries.length - 1];
 
-      // Check all member elements - ONLY from SABHAS (not CORE)
-      Object.entries(memberRefsDesktop.current).forEach(([memberName, ref]) => {
-        if (ref) {
-          const rect = ref.getBoundingClientRect();
-          const elementCenter = rect.top + rect.height / 2;
-          const distance = Math.abs(elementCenter - viewportCenter);
+          const topMemberName = topEntry.target.getAttribute("data-member-name");
+          const bottomMemberName = bottomEntry.target.getAttribute("data-member-name");
 
-          // Find member closest to viewport center (from SABHAS only)
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            // Only search in SABHAS members, not CORE
-            const allSabhasMembers = SABHAS.flatMap((s) => s.members);
-            const member = allSabhasMembers.find((m) => m.name === memberName);
-            if (member) {
-              closestMember = member;
+          if (topMemberName) {
+            const member = allSabhasMembers.find((m) => m.name === topMemberName);
+            if (member) topMostMember.current = member;
+          }
+
+          if (bottomMemberName) {
+            const member = allSabhasMembers.find((m) => m.name === bottomMemberName);
+            if (member) bottomMostMember.current = member;
+          }
+
+          // Set the first visible member from center of viewport
+          const centerMemberName = entries
+            .find((e) => e.isIntersecting)
+            ?.target.getAttribute("data-member-name");
+          
+          if (centerMemberName) {
+            const centerMember = allSabhasMembers.find((m) => m.name === centerMemberName);
+            if (centerMember) {
+              setActiveMember(centerMember);
+            }
+          }
+        } else {
+          // Out of bounds: use topmost or bottommost accordingly
+          const scrollDirection = entries[0]?.boundingClientRect.top ?? 0;
+          
+          if (scrollDirection < 0) {
+            // Scrolled past bottom - use bottommost member
+            if (bottomMostMember.current) {
+              setActiveMember(bottomMostMember.current);
+            }
+          } else {
+            // Scrolled past top - use topmost member
+            if (topMostMember.current) {
+              setActiveMember(topMostMember.current);
             }
           }
         }
-      });
-
-      if (closestMember) {
-        setActiveMember(closestMember);
+      },
+      {
+        root: null,
+        rootMargin: "-50% 0px -50% 0px", // Trigger when element crosses vertical center
+        threshold: 0,
       }
-    };
+    );
 
-    // Use RequestAnimationFrame for smooth 60fps updates
-    const onScroll = () => {
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
-      rafId = requestAnimationFrame(handleScroll);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    handleScroll(); // Call once on mount
+    // Observe all member elements
+    Object.values(memberRefsDesktop.current).forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
+      observer.disconnect();
     };
   }, []);
 

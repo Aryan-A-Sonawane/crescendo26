@@ -12,22 +12,22 @@ import {
 } from "framer-motion";
 
 const ROW_1 = [
-  { src: "/showcase/classical_dance.JPG", title: "Classical Dance" },
-  { src: "/showcase/car.JPG",             title: "Vintage Expo"    },
-  { src: "/showcase/0D1A1196.JPG",        title: "Main Stage"      },
-  { src: "/showcase/code.JPG",            title: "Debug Session"   },
+  { src: "/showcase/classical_dance.webp", title: "Classical Dance" },
+  { src: "/showcase/car.webp",             title: "Vintage Expo"    },
+  { src: "/showcase/0D1A1196.webp",        title: "Main Stage"      },
+  { src: "/showcase/code.webp",            title: "Debug Session"   },
 ];
 const ROW_2 = [
-  { src: "/showcase/tt.JPG",        title: "Tournament"  },
-  { src: "/showcase/table.JPG",     title: "Setup"       },
-  { src: "/showcase/mr.ms.vit.JPG", title: "Grand Finale"},
-  { src: "/showcase/football.JPG",  title: "Match Day"   },
+  { src: "/showcase/tt.webp",        title: "Tournament"  },
+  { src: "/showcase/table.webp",     title: "Setup"       },
+  { src: "/showcase/mr.ms.vit.webp", title: "Grand Finale"},
+  { src: "/showcase/football.webp",  title: "Match Day"   },
 ];
 const ROW_3 = [
-  { src: "/showcase/dance_solo.JPG",  title: "Solo Act"    },
-  { src: "/showcase/dance_group.JPG", title: "Group Sync"  },
-  { src: "/showcase/dance.JPG",       title: "Street Dance"},
-  { src: "/showcase/codenseek.JPG",   title: "Hackathon"   },
+  { src: "/showcase/dance_solo.webp",  title: "Solo Act"    },
+  { src: "/showcase/dance_group.webp", title: "Group Sync"  },
+  { src: "/showcase/dance.webp",       title: "Street Dance"},
+  { src: "/showcase/codenseek.webp",   title: "Hackathon"   },
 ];
 
 

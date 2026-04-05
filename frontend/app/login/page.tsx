@@ -83,23 +83,23 @@ function LoginContent() {
       style={{ background: "#f3ba35" }}
     >
       {/* Background decoration: corner triangles */}
-      <Image src="/corner-triangle.png" alt="" width={180} height={180}
+      <Image src="/corner-triangle.webp" alt="" width={180} height={180}
         className="fixed top-10 right-10 z-0 pointer-events-none hidden lg:block" />
-      <Image src="/corner-triangle.png" alt="" width={180} height={180}
+      <Image src="/corner-triangle.webp" alt="" width={180} height={180}
         className="fixed top-10 left-10 z-0 pointer-events-none hidden lg:block"
         style={{ transform: "scaleX(-1)" }} />
-      <Image src="/corner-triangle.png" alt="" width={180} height={180}
+      <Image src="/corner-triangle.webp" alt="" width={180} height={180}
         className="fixed bottom-10 right-10 z-0 pointer-events-none hidden lg:block"
         style={{ transform: "scaleY(-1)" }} />
-      <Image src="/corner-triangle.png" alt="" width={180} height={180}
+      <Image src="/corner-triangle.webp" alt="" width={180} height={180}
         className="fixed bottom-10 left-10 z-0 pointer-events-none hidden lg:block"
         style={{ transform: "scale(-1)" }} />
 
       {/* Decorative borders */}
       <div className="fixed top-0 left-0 right-0 h-10 z-9998 pointer-events-none"
-        style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x" }} />
+        style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.webp')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x" }} />
       <div className="fixed bottom-0 left-0 right-0 h-10 z-9998 pointer-events-none"
-        style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.png')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x", transform: "scaleY(-1)" }} />
+        style={{ backgroundColor: "#D4A017", backgroundImage: "url('/border-blue.webp')", backgroundSize: "auto 100%", backgroundRepeat: "repeat-x", transform: "scaleY(-1)" }} />
 
       {/* Card */}
       <div

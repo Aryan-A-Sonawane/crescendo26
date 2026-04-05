@@ -26,7 +26,7 @@ const scheduleData: PhaseData[] = [
           {
             name: "Natki",
             time: "11:00 AM onwards",
-            icon: "/nataki.png",
+            icon: "/nataki.webp",
             iconPosition: "top",
           },
           { name: "Bike & Car Show" },
@@ -36,14 +36,14 @@ const scheduleData: PhaseData[] = [
         title: "Day 2 (7 April)",
         events: [
           { name: "Met Gala (Ms. & Mr. Crescendo)", time: "1:00 PM onwards" },
-          { name: "DJ Night", location: "Ground", icon: "/djnight.png" },
+          { name: "DJ Night", location: "Ground", icon: "/djnight.webp" },
           { name: "Flea Market" },
         ],
       },
       {
         title: "Day 3 (8 April)",
         events: [
-          { name: "Footloose", location: "Audi", icon: "/footloose.png" },
+          { name: "Footloose", location: "Audi", icon: "/footloose.webp" },
           {
             name: "Screen Display",
             time: "Morning & 4:00 PM",
@@ -55,7 +55,7 @@ const scheduleData: PhaseData[] = [
       {
         title: "Day 4 (9 April)",
         events: [
-          { name: "Vrock", location: "Open Ground Stage", icon: "/vrock.png" },
+          { name: "Vrock", location: "Open Ground Stage", icon: "/vrock.webp" },
           { name: "Screen Display", time: "2:00 PM to 8:30 PM" },
           { name: "Flea Market" },
         ],
@@ -71,7 +71,7 @@ const scheduleData: PhaseData[] = [
           {
             name: "Cosplay + Movie Night",
             location: "Ground Stage",
-            icon: "/movienight.png",
+            icon: "/movienight.webp",
           },
         ],
       },
@@ -80,7 +80,7 @@ const scheduleData: PhaseData[] = [
         events: [
           {
             name: "Fake Wedding",
-            icon: "/fakewedding.png",
+            icon: "/fakewedding.webp",
             iconPosition: "top",
           },
         ],
@@ -92,7 +92,7 @@ const scheduleData: PhaseData[] = [
           {
             name: "Band Performance",
             location: "Main Ground",
-            icon: "/bandperformance.png",
+            icon: "/bandperformance.webp",
           },
         ],
       },
@@ -459,7 +459,7 @@ export default function Timeline() {
           >
             <div className="relative w-full animate-[truck-bob_2s_ease-in-out_infinite]">
               <Image
-                src="/rickshaw.png"
+                src="/rickshaw.webp"
                 alt="Moving Rickshaw"
                 width={400}
                 height={400}

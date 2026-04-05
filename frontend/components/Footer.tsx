@@ -110,8 +110,8 @@ export default function Footer() {
       {/* Warli art frieze */}
       <div style={{ position: "relative", height: 56, overflow: "hidden", zIndex: 3 }}>
         <div style={{ display: "flex", width: "200vw", height: "100%", animation: "warli-scroll 32s linear infinite" }}>
-          <div style={{ width: "100vw", height: "100%", backgroundImage: "url('/warli-painting.jpg')", backgroundSize: "cover", backgroundPosition: "top center", opacity: 0.55, flexShrink: 0 }} />
-          <div style={{ width: "100vw", height: "100%", backgroundImage: "url('/warli-painting.jpg')", backgroundSize: "cover", backgroundPosition: "top center", opacity: 0.55, flexShrink: 0 }} />
+          <div style={{ width: "100vw", height: "100%", backgroundImage: "url('/warli-painting.webp')", backgroundSize: "cover", backgroundPosition: "top center", opacity: 0.55, flexShrink: 0 }} />
+          <div style={{ width: "100vw", height: "100%", backgroundImage: "url('/warli-painting.webp')", backgroundSize: "cover", backgroundPosition: "top center", opacity: 0.55, flexShrink: 0 }} />
         </div>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(17,5,5,0) 0%, rgba(17,5,5,0.55) 100%)", pointerEvents: "none" }} />
       </div>

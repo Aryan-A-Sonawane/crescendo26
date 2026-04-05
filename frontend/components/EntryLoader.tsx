@@ -91,7 +91,7 @@ export default function EntryLoader({ children }: EntryLoaderProps) {
                     style={{ animation: "spin-slow 10s linear infinite" }}
                   />
                   <div className="absolute inset-3 md:inset-4">
-                    <Image src="/crescendo.png" alt="Crescendo logo" fill className="object-contain" priority />
+                    <Image src="/crescendo.webp" alt="Crescendo logo" fill className="object-contain" priority />
                   </div>
                 </motion.div>
 

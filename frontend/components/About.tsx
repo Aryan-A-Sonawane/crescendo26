@@ -171,7 +171,7 @@ export default function About() {
         >
           <div style={{ display: "flex", width: "max-content", animation: "warli-scroll 18s linear infinite" }}>
             {[...Array(8)].map((_, i) => (
-              <Image key={i} src="/warli-painting.jpg" alt="warli dancers" width={566} height={164}
+              <Image key={i} src="/warli-painting.webp" alt="warli dancers" width={566} height={164}
                 className="object-cover" style={{ flexShrink: 0, opacity: 0.92 }} priority={i === 0} />
             ))}
           </div>

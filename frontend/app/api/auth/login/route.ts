@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     const registration = await prisma.registration.findUnique({
       where: { email: email.toLowerCase().trim() },
-      select: { name: true, email: true, college: true, verified: true },
+      select: { name: true, email: true, phone: true, college: true, verified: true },
     });
 
     if (!registration || !registration.verified) {
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
         found: true,
         name: registration.name,
         email: registration.email,
+        phone: registration.phone,
         college: registration.college,
       },
       { status: 200 }

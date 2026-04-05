@@ -98,7 +98,7 @@ export default function EventsInterest({ email, name, onComplete }: Props) {
         <p className="text-xs mt-2 leading-relaxed" style={{ color: "#7B2D0E" }}>
           Select events you&apos;d like to participate in.
           <br />
-          Reopen anytime to edit your choices.
+          Our publicity team will contact you and help with registrations for events of your interest.
         </p>
       </div>
 

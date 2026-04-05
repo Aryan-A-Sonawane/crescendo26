@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAccess, getRequestEmail, normalizeEmail } from "@/lib/dashboard-auth";
 import { prisma } from "@/lib/prisma";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = prisma as any;
+const db = prisma;
 
 export async function GET(req: NextRequest) {
   try {

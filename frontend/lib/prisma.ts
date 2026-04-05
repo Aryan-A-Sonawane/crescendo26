@@ -40,16 +40,4 @@ export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
     return Reflect.get(prismaClient, prop, receiver);
   },
 });
-        return globalThis.__prisma ?? null;
-      })();
-
-// Delay throwing until the first actual DB operation.
-export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
-  get(_target, prop, receiver) {
-    if (!prismaClient) {
-      throw new Error("[prisma] DATABASE_URL is not set. Check your .env.local or Vercel environment variables.");
-    }
-    return Reflect.get(prismaClient, prop, receiver);
-  },
-});
 

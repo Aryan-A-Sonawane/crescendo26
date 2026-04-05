@@ -98,6 +98,33 @@ export default function RegisterPage() {
       setGoogleId(googleIdentity);
       setGoogleVerified(true);
       setServerError("");
+
+      void (async () => {
+        try {
+          const loginRes = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: googleEmail.toLowerCase().trim() }),
+          });
+
+          const loginData = await loginRes.json();
+          if (loginRes.ok && loginData?.found) {
+            localStorage.setItem(
+              "crescendo_user",
+              JSON.stringify({
+                name: loginData.name || googleName,
+                email: loginData.email || googleEmail,
+                college: loginData.college || "",
+                phone: loginData.phone || "",
+              })
+            );
+            window.dispatchEvent(new Event("crescendo_user_updated"));
+            window.location.replace("/select-events");
+          }
+        } catch {
+          // Keep the registration form flow available if auto-login check fails.
+        }
+      })();
     }
 
     if (googleIdentity || googleEmail || googleName || googleError) {
@@ -159,7 +186,15 @@ export default function RegisterPage() {
     }
 
     // Save to localStorage so Navbar & select-events page can detect the user
-    localStorage.setItem("crescendo_user", JSON.stringify({ name: formData.name, email: formData.email }));
+    localStorage.setItem(
+      "crescendo_user",
+      JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        college: formData.college,
+        phone: formData.phone,
+      })
+    );
     window.dispatchEvent(new Event("crescendo_user_updated"));
     setStep("events");
     return true;

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { canCoordinateEvent, getRequestEmail, normalizeEmail } from "@/lib/dashboard-auth";
 import { prisma } from "@/lib/prisma";
+import { parseParticipantQrToken } from "@/lib/participant-qr";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     const event = await db.managedEvent.findUnique({
       where: { id: eventId },
-      select: { id: true, status: true },
+      select: { id: true, name: true, category: true, status: true },
     });
 
     if (!event) {
@@ -57,18 +58,120 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Event is not started. Start the event to allow queue operations." }, { status: 409 });
     }
 
-    const ticket = await db.ticket.findUnique({
-      where: ticketId ? { id: ticketId } : { qrToken },
-      select: {
-        id: true,
-        eventId: true,
-        eventName: true,
-        participantName: true,
-        email: true,
-        phone: true,
-        isPlayed: true,
-      },
-    });
+    const categoryMatches: Array<Record<string, unknown>> = [];
+    const category = (event.category || "").toLowerCase();
+    if (category.includes("technical")) {
+      categoryMatches.push({ eventName: { contains: "technical", mode: "insensitive" } });
+    }
+    if (category.includes("sports")) {
+      categoryMatches.push({ eventName: { contains: "sports", mode: "insensitive" } });
+    }
+    const isEcCategory =
+      category.includes("cultural") ||
+      category.startsWith("ec") ||
+      category.includes(" ec ") ||
+      category.includes("ec and");
+
+    if (isEcCategory) {
+      categoryMatches.push({ eventName: { contains: "-ec", mode: "insensitive" } });
+      categoryMatches.push({ eventName: { contains: " ec", mode: "insensitive" } });
+      categoryMatches.push({ eventName: { contains: "cultural", mode: "insensitive" } });
+    }
+
+    const eventScopeFilter = {
+      OR: [
+        { eventId: event.id },
+        { eventName: { equals: event.name, mode: "insensitive" } },
+        ...categoryMatches,
+      ],
+    };
+
+    let ticket: {
+      id: number;
+      eventId: number | null;
+      eventName: string;
+      participantName: string;
+      email: string;
+      phone: string | null;
+      isPlayed: boolean;
+    } | null = null;
+
+    if (ticketId) {
+      ticket = await db.ticket.findUnique({
+        where: { id: ticketId },
+        select: {
+          id: true,
+          eventId: true,
+          eventName: true,
+          participantName: true,
+          email: true,
+          phone: true,
+          isPlayed: true,
+        },
+      });
+    } else if (qrToken) {
+      const participantEmail = parseParticipantQrToken(qrToken);
+      if (!participantEmail) {
+        return NextResponse.json(
+          { error: "Invalid participant QR. Please use the latest QR from Profile." },
+          { status: 409 }
+        );
+      }
+
+      const alreadyPlayedForEvent = await db.ticket.findFirst({
+        where: {
+          email: participantEmail,
+          isPlayed: true,
+          ...eventScopeFilter,
+        },
+        select: { id: true },
+      });
+
+      if (alreadyPlayedForEvent) {
+        return NextResponse.json(
+          { error: "Participant has already played this event." },
+          { status: 409 }
+        );
+      }
+
+      // Single QR per participant email: resolve event ticket by email + selected event.
+      ticket = await db.ticket.findFirst({
+        where: {
+          email: participantEmail,
+          isPlayed: false,
+          ...eventScopeFilter,
+        },
+        orderBy: [{ createdAt: "desc" }],
+        select: {
+          id: true,
+          eventId: true,
+          eventName: true,
+          participantName: true,
+          email: true,
+          phone: true,
+          isPlayed: true,
+        },
+      });
+
+      if (!ticket) {
+        ticket = await db.ticket.findFirst({
+          where: {
+            email: participantEmail,
+            ...eventScopeFilter,
+          },
+          orderBy: [{ createdAt: "desc" }],
+          select: {
+            id: true,
+            eventId: true,
+            eventName: true,
+            participantName: true,
+            email: true,
+            phone: true,
+            isPlayed: true,
+          },
+        });
+      }
+    }
 
     if (!ticket) {
       return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
@@ -80,6 +183,21 @@ export async function POST(req: NextRequest) {
 
     if (ticket.eventId && ticket.eventId !== eventId) {
       return NextResponse.json({ error: "Ticket belongs to another event" }, { status: 409 });
+    }
+
+    const ticketEventName = (ticket.eventName || "").toLowerCase();
+    const eventName = (event.name || "").toLowerCase();
+
+    const ticketMatchesEventScope =
+      ticket.eventId === event.id ||
+      (eventName ? ticketEventName === eventName : false) ||
+      categoryMatches.some((match) => {
+        const contains = (match as { eventName?: { contains?: string } }).eventName?.contains;
+        return contains ? ticketEventName.includes(contains.toLowerCase()) : false;
+      });
+
+    if (!ticketMatchesEventScope) {
+      return NextResponse.json({ error: "No eligible ticket found for this event." }, { status: 409 });
     }
 
     const existingQueue = await db.eventQueueEntry.findFirst({

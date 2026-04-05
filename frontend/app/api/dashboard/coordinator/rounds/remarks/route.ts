@@ -35,8 +35,12 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    if (round.event.status !== "STARTED" || round.status !== "IN_PROGRESS") {
-      return NextResponse.json({ error: "Remarks can only be updated while the match is running." }, { status: 409 });
+    if (round.event.status === "NOT_STARTED") {
+      return NextResponse.json({ error: "Event has not started yet." }, { status: 409 });
+    }
+
+    if (round.status !== "IN_PROGRESS" && round.status !== "COMPLETED") {
+      return NextResponse.json({ error: "Remarks can be updated for in-progress or completed matches only." }, { status: 409 });
     }
 
     const updated = await db.eventRound.update({

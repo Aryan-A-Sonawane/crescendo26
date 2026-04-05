@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import jsQR from "jsqr";
 
 type QueueEntryStatus = "QUEUED" | "IN_PROGRESS" | "COMPLETED";
 
@@ -78,6 +79,13 @@ function prettyQueueStatus(status: QueueEntryStatus) {
   if (status === "QUEUED") return "Queue";
   if (status === "IN_PROGRESS") return "Active";
   return "Completed";
+}
+
+function rowToneClass(status: QueueEntryStatus) {
+  if (status === "QUEUED") return "row-tone-queued";
+  if (status === "IN_PROGRESS") return "row-tone-active";
+  if (status === "COMPLETED") return "row-tone-completed";
+  return "row-tone-default";
 }
 
 function isVsFormat(format: ManagedEvent["format"]) {
@@ -210,6 +218,8 @@ export default function CoordinatorDashboardPage() {
   const [selectedEventId, setSelectedEventId] = useState<number | "">("");
   const [scanToken, setScanToken] = useState("");
   const [scanOpen, setScanOpen] = useState(false);
+  const [scanCameraReady, setScanCameraReady] = useState(false);
+  const [scanCameraError, setScanCameraError] = useState("");
   const [registeredSearch, setRegisteredSearch] = useState("");
   const [registeredParticipants, setRegisteredParticipants] = useState<RegisteredParticipant[]>([]);
   const [registeredLoading, setRegisteredLoading] = useState(false);
@@ -222,6 +232,11 @@ export default function CoordinatorDashboardPage() {
   const [opponentByEntry, setOpponentByEntry] = useState<Record<number, number | "">>({});
   const [teamEditEntryId, setTeamEditEntryId] = useState<number | null>(null);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const scannerVideoRef = useRef<HTMLVideoElement | null>(null);
+  const scannerStreamRef = useRef<MediaStream | null>(null);
+  const scannerLoopTimerRef = useRef<number | null>(null);
+  const lastScanRef = useRef<{ token: string; at: number }>({ token: "", at: 0 });
+  const scanInFlightRef = useRef(false);
 
   const header = useMemo(
     () => ({ "Content-Type": "application/json", "x-user-email": user?.email || "" }),
@@ -397,6 +412,26 @@ export default function CoordinatorDashboardPage() {
     setTimeout(() => {
       setToasts((prev) => prev.filter((toast) => toast.id !== id));
     }, 3200);
+  };
+
+  const stopScanner = () => {
+    if (scannerLoopTimerRef.current) {
+      window.clearInterval(scannerLoopTimerRef.current);
+      scannerLoopTimerRef.current = null;
+    }
+
+    if (scannerStreamRef.current) {
+      for (const track of scannerStreamRef.current.getTracks()) {
+        track.stop();
+      }
+      scannerStreamRef.current = null;
+    }
+
+    if (scannerVideoRef.current) {
+      scannerVideoRef.current.srcObject = null;
+    }
+
+    setScanCameraReady(false);
   };
 
   const loadAccess = async (email: string) => {
@@ -612,7 +647,7 @@ export default function CoordinatorDashboardPage() {
     });
   };
 
-  const handleAddParticipant = async () => {
+  const handleAddParticipant = async (scannedToken?: string) => {
     if (!user || !selectedEvent) return;
     if (teamEditEntryId) {
       showToast("error", "Finish team edit or cancel it before adding a new participant.");
@@ -622,7 +657,7 @@ export default function CoordinatorDashboardPage() {
       showToast("error", "Event is not started. Start the event first.");
       return;
     }
-    const token = scanToken.trim();
+    const token = (scannedToken ?? scanToken).trim();
     if (!token) return;
 
     const teamPayload = getTeamPayload();
@@ -638,6 +673,7 @@ export default function CoordinatorDashboardPage() {
       });
       setScanToken("");
       setScanOpen(false);
+      stopScanner();
       setTeamName("");
       setTeammates([]);
       await Promise.all([loadEvents(), loadRegisteredParticipants()]);
@@ -648,6 +684,111 @@ export default function CoordinatorDashboardPage() {
       setSaving(false);
     }
   };
+
+  useEffect(() => {
+    if (!scanOpen || !selectedEvent || !eventStarted) {
+      stopScanner();
+      return;
+    }
+
+    let cancelled = false;
+
+    const startScanner = async () => {
+      setScanCameraError("");
+
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setScanCameraError("Camera access is not supported in this browser.");
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" } },
+          audio: false,
+        });
+
+        if (cancelled) {
+          for (const track of stream.getTracks()) track.stop();
+          return;
+        }
+
+        scannerStreamRef.current = stream;
+        if (scannerVideoRef.current) {
+          scannerVideoRef.current.srcObject = stream;
+          await scannerVideoRef.current.play().catch(() => undefined);
+        }
+        setScanCameraReady(true);
+
+        const frameCanvas = document.createElement("canvas");
+        const frameContext = frameCanvas.getContext("2d", { willReadFrequently: true });
+        if (!frameContext) {
+          setScanCameraError("Camera opened, but the browser cannot read camera frames for QR decoding.");
+          return;
+        }
+
+        const BarcodeDetectorCtor = (window as unknown as { BarcodeDetector?: new (options?: { formats?: string[] }) => { detect: (source: ImageBitmapSource) => Promise<Array<{ rawValue?: string }>> } }).BarcodeDetector;
+        const detector = BarcodeDetectorCtor ? new BarcodeDetectorCtor({ formats: ["qr_code"] }) : null;
+
+        scannerLoopTimerRef.current = window.setInterval(async () => {
+          if (scanInFlightRef.current || !scannerVideoRef.current) return;
+
+          try {
+            let rawValue = "";
+
+            if (detector) {
+              const found = await detector.detect(scannerVideoRef.current);
+              rawValue = (found[0]?.rawValue || "").trim();
+            }
+
+            if (!rawValue) {
+              const video = scannerVideoRef.current;
+              if (video.readyState >= 2) {
+                const width = video.videoWidth;
+                const height = video.videoHeight;
+
+                if (width > 0 && height > 0) {
+                  frameCanvas.width = width;
+                  frameCanvas.height = height;
+                  frameContext.drawImage(video, 0, 0, width, height);
+                  const imageData = frameContext.getImageData(0, 0, width, height);
+                  const decoded = jsQR(imageData.data, width, height, {
+                    inversionAttempts: "dontInvert",
+                  });
+                  rawValue = (decoded?.data || "").trim();
+                }
+              }
+            }
+
+            if (!rawValue) return;
+
+            const now = Date.now();
+            if (lastScanRef.current.token === rawValue && now - lastScanRef.current.at < 1800) {
+              return;
+            }
+
+            lastScanRef.current = { token: rawValue, at: now };
+            setScanToken(rawValue);
+            scanInFlightRef.current = true;
+            await handleAddParticipant(rawValue);
+          } catch {
+            // Ignore transient detection errors and keep scanning.
+          } finally {
+            scanInFlightRef.current = false;
+          }
+        }, 450);
+      } catch {
+        setScanCameraError("Unable to access camera. Please allow camera permission and retry.");
+      }
+    };
+
+    void startScanner();
+
+    return () => {
+      cancelled = true;
+      stopScanner();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanOpen, selectedEvent?.id, eventStarted]);
 
   const handleAddRegisteredParticipant = async (ticketId: number) => {
     if (!user || !selectedEvent) return;
@@ -1120,7 +1261,7 @@ export default function CoordinatorDashboardPage() {
               onClick={() => setScanOpen((prev) => !prev)}
               disabled={saving || !selectedEvent || !eventStarted}
             >
-              Scan Ticket
+              {scanOpen ? "Close Scanner" : "Scan Ticket"}
             </button>
           </div>
 
@@ -1131,18 +1272,33 @@ export default function CoordinatorDashboardPage() {
           )}
 
           {scanOpen && (
-            <div className="scan-row">
-              <input
-                placeholder="Paste/scan QR token"
-                value={scanToken}
-                onChange={(e) => setScanToken(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAddParticipant();
-                }}
-              />
-              <button onClick={handleAddParticipant} disabled={saving || !selectedEvent || !eventStarted || !scanToken.trim()}>
-                Add
-              </button>
+            <div className="scanner-panel">
+              <div className="scanner-preview-wrap">
+                <video
+                  ref={scannerVideoRef}
+                  className="scanner-video"
+                  autoPlay
+                  muted
+                  playsInline
+                />
+              </div>
+              {!scanCameraReady && !scanCameraError && (
+                <p className="scanner-help">Starting camera...</p>
+              )}
+              {scanCameraError && <p className="scanner-error">{scanCameraError}</p>}
+              <div className="scan-row">
+                <input
+                  placeholder="Paste/scan QR token"
+                  value={scanToken}
+                  onChange={(e) => setScanToken(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleAddParticipant();
+                  }}
+                />
+                <button onClick={() => handleAddParticipant()} disabled={saving || !selectedEvent || !eventStarted || !scanToken.trim()}>
+                  Add
+                </button>
+              </div>
             </div>
           )}
 
@@ -1238,7 +1394,7 @@ export default function CoordinatorDashboardPage() {
               <tbody>
                 {(viewTab === "IN_PROGRESS") && filteredPairedQueueMatches.map(({ entryA, entryB }) => {
                   return (
-                    <tr key={`queued-pair-${entryA.id}-${entryB.id}`}>
+                    <tr key={`queued-pair-${entryA.id}-${entryB.id}`} className={rowToneClass("QUEUED")}>
                       <td>
                         <div className="participant-cell">
                           <div className="participant-name">{entryA.participantName} vs {entryB.participantName}</div>
@@ -1284,7 +1440,7 @@ export default function CoordinatorDashboardPage() {
                   const teamMetaB = entryB ? getTeamMeta(entryB) : null;
 
                   return (
-                    <tr key={`round-${round.id}`}>
+                    <tr key={`round-${round.id}`} className={rowToneClass("IN_PROGRESS")}>
                       <td>
                         <div className="participant-cell">
                           <div className="participant-name">{round.entryA.participantName}{round.entryB ? ` vs ${round.entryB.participantName}` : ""}</div>
@@ -1371,7 +1527,7 @@ export default function CoordinatorDashboardPage() {
                   const teamMetaB = entryB ? getTeamMeta(entryB) : null;
 
                   return (
-                    <tr key={`round-${round.id}`}>
+                    <tr key={`round-${round.id}`} className={rowToneClass("COMPLETED")}>
                       <td>
                         <div className="participant-cell">
                           <div className="match-header-row">
@@ -1410,6 +1566,16 @@ export default function CoordinatorDashboardPage() {
                       <td>
                         <div className="actions-row">
                           <button
+                            className="icon-action note"
+                            onClick={() => handleAddRemarks(round)}
+                            title="Add remarks"
+                            aria-label={`Add remarks for match ${round.id}`}
+                            disabled={saving}
+                          >
+                            <ActionIcon type="note" />
+                          </button>
+
+                          <button
                             className="icon-action warn"
                             onClick={() => handleScoreForRound(round)}
                             title="Assign score"
@@ -1442,7 +1608,7 @@ export default function CoordinatorDashboardPage() {
                   const selectedOpponentId = opponentByEntry[entry.id] ?? "";
 
                   return (
-                  <tr key={entry.id}>
+                  <tr key={entry.id} className={rowToneClass(entry.status)}>
                     <td>
                       <div className="participant-cell">
                         <div className="participant-name">{entry.participantName}</div>
@@ -1688,6 +1854,44 @@ export default function CoordinatorDashboardPage() {
           gap: 10px;
         }
 
+        .scanner-panel {
+          border: 1px solid #d6deea;
+          border-radius: 14px;
+          padding: 10px;
+          background: #f8fafc;
+          display: grid;
+          gap: 10px;
+        }
+
+        .scanner-preview-wrap {
+          width: min(100%, 420px);
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid #d6deea;
+          background: #0f172a;
+        }
+
+        .scanner-video {
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          object-fit: cover;
+          display: block;
+        }
+
+        .scanner-help {
+          margin: 0;
+          font-size: 12px;
+          color: #334155;
+          font-weight: 600;
+        }
+
+        .scanner-error {
+          margin: 0;
+          font-size: 12px;
+          color: #991b1b;
+          font-weight: 700;
+        }
+
         .scan-btn.active {
           background: #15803d;
           border-color: #15803d;
@@ -1905,6 +2109,22 @@ export default function CoordinatorDashboardPage() {
           text-align: left;
           vertical-align: top;
           font-size: 14px;
+        }
+
+        .participants-table tbody tr.row-tone-default {
+          background: #ffffff;
+        }
+
+        .participants-table tbody tr.row-tone-queued {
+          background: #fffbeb;
+        }
+
+        .participants-table tbody tr.row-tone-active {
+          background: #f0fdf4;
+        }
+
+        .participants-table tbody tr.row-tone-completed {
+          background: #eff6ff;
         }
 
         .participants-table th {
@@ -2163,6 +2383,21 @@ export default function CoordinatorDashboardPage() {
         }
 
         @media (max-width: 980px) {
+          .dashboard-shell {
+            padding: 12px;
+            gap: 12px;
+          }
+
+          .dashboard-card {
+            padding: 12px;
+            border-radius: 14px;
+          }
+
+          .header-row {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
           .with-sidebar {
             grid-template-columns: 1fr;
           }
@@ -2179,10 +2414,57 @@ export default function CoordinatorDashboardPage() {
             grid-template-columns: 1fr;
           }
 
+          .participants-table {
+            min-width: 760px;
+          }
+
+          .participants-table th,
+          .participants-table td {
+            padding: 8px;
+            font-size: 12px;
+          }
+
+          .actions-row {
+            gap: 4px;
+          }
+
+          .icon-action {
+            min-height: 30px;
+            padding: 0 8px;
+            font-size: 11px;
+          }
+
+          .opponent-select {
+            min-height: 30px;
+            font-size: 11px;
+            max-width: 160px;
+          }
+
+          .dashboard-main :global(input),
+          .dashboard-main :global(select),
+          .dashboard-main :global(button) {
+            min-height: 36px;
+          }
+
           .toast-stack {
             left: 12px;
             right: 12px;
             max-width: none;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .participants-table {
+            min-width: 680px;
+          }
+
+          .tab-btn {
+            min-height: 34px;
+            font-size: 11px;
+          }
+
+          .scanner-preview-wrap {
+            width: 100%;
           }
         }
       `}</style>

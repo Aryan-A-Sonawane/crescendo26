@@ -63,7 +63,7 @@ export default function SelectEventsPage() {
           All Done!
         </h2>
         <p className="text-sm mb-6" style={{ color: "#7B2D0E" }}>
-          Your event interests have been saved. Our team will reach out!
+          Your event interests have been saved. Our publicity team will contact you and help out for registrations for the events of your interest.
         </p>
         <a
           href={TICKETS_URL}
@@ -79,6 +79,18 @@ export default function SelectEventsPage() {
         >
           BUY TICKETS
         </a>
+        <Link
+          href="/profile"
+          className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
+          style={{
+            backgroundColor: "#FFF8E7",
+            color: "#4a0e00",
+            borderColor: "#8B1538",
+            fontFamily: "'Cinzel Decorative', serif",
+          }}
+        >
+          VIEW TICKETS
+        </Link>
         <Link
           href="/"
           className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest"

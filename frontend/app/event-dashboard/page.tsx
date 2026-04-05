@@ -1086,6 +1086,19 @@ export default function EventDashboardPage() {
             border-bottom: 1px solid #d9e0ea;
           }
 
+          .main-panel {
+            padding: 14px;
+            gap: 14px;
+          }
+
+          .page-head h1 {
+            font-size: 30px;
+          }
+
+          .brand h2 {
+            font-size: 24px;
+          }
+
           .card-grid {
             grid-template-columns: 1fr;
           }
@@ -1094,6 +1107,25 @@ export default function EventDashboardPage() {
           .toolbar,
           .top-tabs {
             grid-template-columns: 1fr;
+          }
+
+          .admin-table {
+            min-width: 760px;
+          }
+
+          .admin-table th,
+          .admin-table td {
+            padding: 8px;
+            font-size: 12px;
+          }
+
+          .actions-col,
+          .events-col {
+            min-width: 0;
+          }
+
+          .actions-col {
+            align-items: stretch;
           }
 
           .compact-btn,
@@ -1109,6 +1141,34 @@ export default function EventDashboardPage() {
 
           .modal-grid {
             grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .main-panel {
+            padding: 10px;
+          }
+
+          .page-head h1 {
+            font-size: 24px;
+          }
+
+          .admin-table {
+            min-width: 680px;
+          }
+
+          .top-tabs {
+            gap: 6px;
+            padding: 3px;
+          }
+
+          .tab {
+            height: 34px;
+            font-size: 12px;
+          }
+
+          .modal-card {
+            padding: 12px;
           }
         }
       `}</style>

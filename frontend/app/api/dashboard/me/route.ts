@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAccess, getRequestEmail, normalizeEmail } from "@/lib/dashboard-auth";
 import { prisma } from "@/lib/prisma";
 
-const db = prisma;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = prisma as any;
 
 export async function GET(req: NextRequest) {
   try {
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
         isSuperAdmin: access.isSuperAdmin,
         isCoordinator: access.isCoordinator,
         showDashboardAccess: access.isSuperAdmin || access.isCoordinator,
-        assignedEvents: assignedEvents.map((entry) => entry.event),
+        assignedEvents: assignedEvents.map((entry: any) => entry.event),
       },
       { status: 200 }
     );

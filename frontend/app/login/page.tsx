@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
+const GOOGLE_LOGIN_URL = "/api/auth/google/start?redirect=/login";
+
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -13,6 +15,17 @@ function LoginContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [found, setFound] = useState<{ name: string; email: string; college: string } | null>(null);
+
+  const loginWithEmail = async (rawEmail: string) => {
+    const trimmedEmail = rawEmail.trim().toLowerCase();
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: trimmedEmail }),
+    });
+    const data = await res.json();
+    return { res, data, trimmedEmail };
+  };
 
   // If already logged in, redirect to select-events
   useEffect(() => {
@@ -24,12 +37,84 @@ function LoginContent() {
         if (next === "select-events") {
           router.replace("/select-events");
         } else {
-          setFound(user);
+          setFound({
+            name: user?.name || "Participant",
+            email: user?.email || "",
+            college: user?.college || "",
+          });
         }
       } catch {
         localStorage.removeItem("crescendo_user");
       }
     }
+  }, [router, searchParams]);
+
+  useEffect(() => {
+    const googleError = searchParams.get("google_error");
+    const googleEmail = searchParams.get("google_email");
+
+    if (!googleError && !googleEmail) {
+      return;
+    }
+
+    const next = searchParams.get("next");
+    const cleanParams = new URLSearchParams();
+    if (next) cleanParams.set("next", next);
+    const nextUrl = cleanParams.toString() ? `/login?${cleanParams.toString()}` : "/login";
+    window.history.replaceState({}, "", nextUrl);
+
+    if (googleError) {
+      setError(googleError);
+      return;
+    }
+
+    if (!googleEmail) {
+      return;
+    }
+
+    setEmail(googleEmail);
+    setLoading(true);
+    setError("");
+
+    void (async () => {
+      try {
+        const { res, data, trimmedEmail } = await loginWithEmail(googleEmail);
+
+        if (!res.ok) {
+          setError(data.error || "Something went wrong. Please try again.");
+          return;
+        }
+
+        if (!data.found) {
+          setError("This Google account is not registered yet. Please register first.");
+          return;
+        }
+
+        const userData = {
+          name: data.name,
+          email: data.email,
+          college: data.college || "",
+          phone: data.phone || "",
+        };
+        localStorage.setItem("crescendo_user", JSON.stringify(userData));
+        window.dispatchEvent(new Event("crescendo_user_updated"));
+
+        if (next === "select-events") {
+          router.replace("/select-events");
+          return;
+        }
+
+        setFound({
+          name: data.name,
+          email: data.email || trimmedEmail,
+          college: data.college || "",
+        });
+      } catch {
+        setError("Network error. Please check your connection.");
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [router, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,12 +130,7 @@ function LoginContent() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmedEmail }),
-      });
-      const data = await res.json();
+      const { res, data } = await loginWithEmail(trimmedEmail);
 
       if (!res.ok) {
         setError(data.error || "Something went wrong. Please try again.");
@@ -66,10 +146,19 @@ function LoginContent() {
       }
 
       // Store and show welcome
-      const userData = { name: data.name, email: data.email };
+      const userData = {
+        name: data.name,
+        email: data.email,
+        college: data.college || "",
+        phone: data.phone || "",
+      };
       localStorage.setItem("crescendo_user", JSON.stringify(userData));
       window.dispatchEvent(new Event("crescendo_user_updated"));
-      setFound(data);
+      setFound({
+        name: data.name,
+        email: data.email,
+        college: data.college || "",
+      });
     } catch {
       setError("Network error. Please check your connection.");
     } finally {
@@ -119,7 +208,7 @@ function LoginContent() {
               </h2>
               <p className="font-bold text-base" style={{ color: "#8B1538" }}>{found.name}</p>
               <p className="text-xs" style={{ color: "#7B2D0E" }}>
-                {found.college}
+                {found.college || "Crescendo'26 Participant"}
               </p>
               <p className="text-xs mt-1" style={{ color: "#7B2D0E" }}>
                 You&apos;re registered for Crescendo&apos;26 🎉
@@ -137,6 +226,18 @@ function LoginContent() {
                   }}
                 >
                   SELECT EVENTS OF INTEREST
+                </Link>
+                <Link
+                  href="/profile"
+                  className="block w-full font-bold text-sm py-2.5 rounded-xl border-2 text-center transition-all hover:scale-105 tracking-widest shadow-lg"
+                  style={{
+                    backgroundColor: "#D4A017",
+                    color: "#4a0e00",
+                    borderColor: "#8B1538",
+                    fontFamily: "'Cinzel Decorative', serif",
+                  }}
+                >
+                  VIEW TICKETS
                 </Link>
                 <Link
                   href="/"
@@ -161,6 +262,16 @@ function LoginContent() {
                 <p className="text-xs mt-1" style={{ color: "#7B2D0E" }}>
                   Enter your registered email to continue
                 </p>
+              </div>
+
+              <div className="mb-4">
+                <a
+                  href={GOOGLE_LOGIN_URL}
+                  className="block w-full text-center text-xs font-bold px-3 py-2.5 rounded-lg border-2 transition-all hover:scale-[1.02]"
+                  style={{ backgroundColor: "#FFF8E7", color: "#4a0e00", borderColor: "#8B1538" }}
+                >
+                  CONTINUE WITH GOOGLE
+                </a>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>

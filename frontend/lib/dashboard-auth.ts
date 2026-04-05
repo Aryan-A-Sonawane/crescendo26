@@ -4,6 +4,13 @@ import type { NextRequest } from "next/server";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
+const DEFAULT_SUPER_ADMIN_EMAILS = [
+  "s.aryan0505@gmail.com",
+  "amit.aryan23@vit.edu",
+  "agbhalerao1895@gmail.com",
+  "anushka.bhalerao23@vit.edu",
+];
+
 export function normalizeEmail(value: string | null | undefined): string {
   return (value || "").trim().toLowerCase();
 }
@@ -15,10 +22,13 @@ export function getRequestEmail(req: NextRequest): string {
 }
 
 export function getSuperAdminEmails(): string[] {
-  return (process.env.SUPER_ADMIN_EMAILS || "")
+  const envConfigured = (process.env.SUPER_ADMIN_EMAILS || "")
     .split(",")
     .map((item) => normalizeEmail(item))
     .filter(Boolean);
+
+  const merged = new Set<string>([...DEFAULT_SUPER_ADMIN_EMAILS.map(normalizeEmail), ...envConfigured]);
+  return Array.from(merged);
 }
 
 export async function getAccess(email: string) {

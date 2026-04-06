@@ -24,6 +24,7 @@ async function isRateLimited(email: string): Promise<boolean> {
 }
 
 export async function POST(req: NextRequest) {
+  let createdOtpId: number | null = null;
   try {
     const body = await req.json();
     const parsed = sendOtpSchema.safeParse(body);
@@ -65,20 +66,45 @@ export async function POST(req: NextRequest) {
     const otp = String(crypto.randomInt(100000, 999999));
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
-    await prisma.otpCode.create({
+    const otpRow = await prisma.otpCode.create({
       data: { email, code: otp, expiresAt },
+      select: { id: true },
     });
+    createdOtpId = otpRow.id;
 
     await sendOtpEmail(email, otp, name);
 
     return NextResponse.json({ message: "OTP sent successfully" }, { status: 200 });
   } catch (err) {
+    if (createdOtpId) {
+      try {
+        await prisma.otpCode.update({
+          where: { id: createdOtpId },
+          data: { used: true },
+        });
+      } catch {
+        // Best-effort cleanup only.
+      }
+    }
+
+    const message = err instanceof Error ? err.message : String(err);
+    const isSmtpAuthError = /535|badcredentials|username and password not accepted|invalid login/i.test(message);
+
     console.error("[send-otp] Error:", {
-      message: err instanceof Error ? err.message : String(err),
+      message,
+      isSmtpAuthError,
       hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
       hasEmailUser: Boolean(process.env.EMAIL_USER),
       hasEmailPass: Boolean(process.env.EMAIL_PASS),
     });
+
+    if (isSmtpAuthError) {
+      return NextResponse.json(
+        { error: "Email service authentication failed. Please refresh SMTP app password in server env." },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to send OTP. Please try again." },
       { status: 500 }

@@ -1,25 +1,79 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CORE, SABHAS, Member, Sabha } from "@/lib/team";
 
 export default function TeamPage() {
-  const [openId, setOpenId] = useState<string | null>(null);
-  const [hoveredMember, setHoveredMember] = useState<Member | null>(null);
+  const [activeMember, setActiveMember] = useState<Member | null>(null);
+  const memberRefsDesktop = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  // Scroll-based member highlighting with RAF for smooth 60fps tracking
+  useEffect(() => {
+    let rafId: number | null = null;
+
+    const handleScroll = () => {
+      const viewportCenter = window.innerHeight / 2;
+      let closestMember: Member | null = null;
+      let closestDistance = Infinity;
+
+      // Check all member elements - ONLY from SABHAS (not CORE)
+      Object.entries(memberRefsDesktop.current).forEach(([memberName, ref]) => {
+        if (ref) {
+          const rect = ref.getBoundingClientRect();
+          const elementCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(elementCenter - viewportCenter);
+
+          // Find member closest to viewport center (from SABHAS only)
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            // Only search in SABHAS members, not CORE
+            const allSabhasMembers = SABHAS.flatMap((s) => s.members);
+            const member = allSabhasMembers.find((m) => m.name === memberName);
+            if (member) {
+              closestMember = member;
+            }
+          }
+        }
+      });
+
+      if (closestMember) {
+        setActiveMember(closestMember);
+      }
+    };
+
+    // Use RequestAnimationFrame for smooth 60fps updates
+    const onScroll = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(handleScroll);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    handleScroll(); // Call once on mount
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#8B1538] font-sans selection:bg-[#E7A92E] selection:text-[#8B1538]">
       <Navbar />
 
       {/* 1. VIBRANT MERGED TOP SECTION */}
-      <section className="relative pt-48 pb-24 px-6 md:px-24 bg-gradient-to-b from-[#8B1538] via-[#B85042] to-[#E7A92E] overflow-hidden">
+      <section className="relative pt-48 pb-4 px-6 md:px-24 bg-gradient-to-b from-[#8B1538] via-[#B85042] to-[#E7A92E] overflow-hidden">
         {/* Subtle radial glow to add "vibe" without being too dark */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(231,169,46,0.15)_0%,_transparent_70%)] pointer-events-none" />
         
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-[1440px] mx-auto">
           <header className="mb-20">
             <motion.span 
               initial={{ opacity: 0, x: -20 }}
@@ -43,50 +97,119 @@ export default function TeamPage() {
             </h3>
           </div>
           
-          {/* GRID: Core Members with Uniform Heights */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 items-stretch">
-            {CORE.map((m, index) => (
-              <motion.div 
-                key={m.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-                onMouseEnter={() => setHoveredMember(m)}
-                onMouseLeave={() => setHoveredMember(null)}
-                className="group flex"
-              >
-                {/* min-h-[220px] ensures all cards match the 'University Representative' height */}
-                <div className="w-full min-h-[220px] bg-white/90 backdrop-blur-md border-2 border-transparent p-6 rounded-[2.5rem] flex flex-col items-center text-center transition-all duration-500 group-hover:bg-[#8B1538] group-hover:scale-105 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+          {/* GRID: Core Members - Spotlight Style */}
+          <div className="hidden lg:block w-full">
+            <div className="grid grid-cols-3 xl:grid-cols-5 gap-4 auto-rows-[350px] w-full">
+              {CORE.map((m, index) => (
+                <motion.div 
+                  key={m.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  className="group flex flex-col transition-all duration-300 h-full"
+                >
+                  {/* Card matching spotlight style */}
+                  <div className="w-full h-full bg-[#8B1538] rounded-[2rem] border-[8px] border-white shadow-xl overflow-hidden relative flex flex-col transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl">
                   
-                  <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-5 border-2 border-[#E7A92E] shadow-md group-hover:border-white transition-all">
-                    <span className="font-nistha text-3xl text-[#8B1538]">
-                      {m.initial}
-                    </span>
+                  {/* Photo - Prominent area */}
+                  <div className="flex-1 bg-white relative overflow-hidden flex items-center justify-center">
+                    {m.photo ? (
+                      <Image 
+                        src={m.photo} 
+                        alt={m.name}
+                        fill
+                        priority={index < 3}
+                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 14vw"
+                        className="w-full h-full object-cover object-top"
+                      />
+                    ) : (
+                      <span className="absolute text-[150px] font-nistha text-[#8B1538]/10 leading-none select-none">
+                        {m.initial}
+                      </span>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#8B1538] via-transparent to-transparent opacity-60 z-10" />
                   </div>
 
-                  <p className="font-bold text-[#8B1538] group-hover:text-white text-sm leading-tight mb-auto transition-colors">
-                    {m.name}
-                  </p>
-                  
-                  {/* Pushes the role to the absolute bottom of the card for alignment */}
-                  <div className="mt-4 pt-3 border-t border-[#8B1538]/10 w-full group-hover:border-white/20">
-                    <p className="text-[10px] uppercase font-black tracking-widest text-[#B85042] group-hover:text-[#E7A92E] transition-colors leading-tight">
+                  {/* Name and Role - Bottom Section */}
+                  <div className="p-4 bg-[#8B1538] text-white">
+                    <h5 className="font-nistha text-2xl mb-1 leading-tight">
+                      {m.name}
+                    </h5>
+                    <div className="h-1 w-12 bg-[#E7A92E] mb-2" />
+                    <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#E7A92E]">
                       {m.role}
                     </p>
                   </div>
                 </div>
               </motion.div>
             ))}
+            </div>
+          </div>
+
+          {/* Mobile: Core Members - Same style as Sabhas */}
+          <div className="lg:hidden mb-16">
+            <div className="mb-8">
+              <h3 className="font-taiganja text-3xl uppercase text-[#8B1538] mb-2">
+                Core Durbar
+              </h3>
+              <div className="h-1 w-16 bg-white" />
+            </div>
+
+            {/* 2-Column Grid for Core Members */}
+            <div className="grid grid-cols-2 gap-4 auto-rows-[250px] md:auto-rows-[320px]">
+              {CORE.map((m) => (
+                <motion.div 
+                  key={m.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="group flex flex-col transition-all duration-300 h-full"
+                >
+                  {/* Card matching desktop spotlight style */}
+                  <div className="w-full h-full bg-[#8B1538] rounded-[1.2rem] border-4 border-white shadow-lg overflow-hidden relative flex flex-col transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                  
+                    {/* Photo - Prominent area */}
+                    <div className="flex-1 bg-white relative overflow-hidden flex items-center justify-center">
+                      {m.photo ? (
+                        <Image 
+                          src={m.photo} 
+                          alt={m.name}
+                          fill
+                          className="w-full h-full object-cover object-top"
+                        />
+                      ) : (
+                        <span className="absolute text-[80px] font-nistha text-[#8B1538]/10 leading-none select-none">
+                          {m.initial}
+                        </span>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#8B1538] via-transparent to-transparent opacity-60 z-10" />
+                    </div>
+
+                    {/* Name and Role - Bottom Section */}
+                    <div className="p-3 bg-[#8B1538] text-white">
+                      <h5 className="font-nistha text-lg mb-0.5 leading-tight">
+                        {m.name}
+                      </h5>
+                      <div className="h-0.5 w-8 bg-[#E7A92E] mb-1.5" />
+                      <p className="text-[6px] font-black uppercase tracking-[0.15em] text-[#E7A92E]">
+                        {m.role}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* 2. MAIN SABHA AREA: Vibrant Sunset Theme */}
-      <main className="relative px-6 md:px-24 py-32 flex flex-col lg:flex-row gap-16 bg-gradient-to-b from-[#E7A92E] to-[#8B1538]">
+      <main className="relative px-6 md:px-24 py-6 flex flex-col lg:flex-row gap-16 bg-gradient-to-b from-[#E7A92E] to-[#E7A92E]">
+        <div className="max-w-[1440px] mx-auto w-full flex flex-col lg:flex-row gap-16">
         
-        {/* LEFT: Sabha List */}
-        <div className="w-full lg:w-7/12">
+        {/* LEFT: Sabha List - Desktop Accordion */}
+        <div className="hidden lg:block w-full lg:w-7/12">
           <div className="mb-12">
             <h4 className="font-taiganja text-4xl uppercase text-[#8B1538] tracking-tighter drop-shadow-sm">
               The Sabhas
@@ -98,85 +221,160 @@ export default function TeamPage() {
             {SABHAS.map((s) => (
               <div 
                 key={s.id} 
-                className={`transition-all duration-500 rounded-[2.5rem] border-2 
-                ${openId === s.id ? 'border-white bg-white/20 shadow-2xl' : 'border-[#8B1538]/10 bg-white/10 hover:bg-white/30'}`}
+                className={`transition-all duration-500 rounded-[2.5rem] border-2 border-[#8B1538]/10 bg-white/10`}
               >
-                <button 
-                  onClick={() => setOpenId(openId === s.id ? null : s.id)}
-                  className="w-full p-8 flex items-center justify-between outline-none group"
-                >
-                  <div className="flex items-center gap-8">
-                    <div className={`w-3 h-3 rounded-full transition-all duration-500 ${openId === s.id ? 'bg-white scale-[2.5] shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'bg-[#8B1538]/40'}`} />
-                    <h2 className={`font-taiganja text-3xl transition-colors ${openId === s.id ? 'text-white' : 'text-[#8B1538]/80'}`}>
+                <div className="w-full p-8">
+                  <div className="flex items-center gap-8 mb-6">
+                    <div className="w-3 h-3 rounded-full bg-[#8B1538]/40" />
+                    <h2 className="font-taiganja text-3xl text-[#8B1538]/80">
                       {s.name}
                     </h2>
                   </div>
-                  <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500
-                    ${openId === s.id ? 'rotate-180 bg-white border-white text-[#8B1538]' : 'border-[#8B1538]/20 text-[#8B1538]'}`}>
-                    <span className="text-xl font-bold">↓</span>
-                  </div>
-                </button>
 
-                <AnimatePresence>
-                  {openId === s.id && (
-                    <motion.div 
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="px-8 pb-10 space-y-2"
-                    >
-                      {s.members.map((m) => (
-                        <div 
-                          key={m.name}
-                          onMouseEnter={() => setHoveredMember(m)}
-                          onMouseLeave={() => setHoveredMember(null)}
-                          className="p-5 rounded-2xl cursor-pointer hover:bg-white group/member transition-all flex justify-between items-center"
-                        >
-                          <div>
-                            <p className="font-bold text-xl text-[#8B1538] transition-colors">
-                              {m.name}
-                            </p>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8B1538]/60 group-hover/member:text-[#E7A92E]">
-                              {m.role}
-                            </p>
-                          </div>
-                          <span className="opacity-0 group-hover/member:opacity-100 transition-opacity text-[#8B1538] font-black">PROFILE</span>
+                  <div className="space-y-2">
+                    {s.members.map((m) => (
+                      <div 
+                        key={m.name}
+                        data-member-name={m.name}
+                        ref={(el) => {
+                          if (el) memberRefsDesktop.current[m.name] = el;
+                        }}
+                        className={`p-5 rounded-2xl transition-all flex justify-between items-center ${
+                          activeMember?.name === m.name
+                            ? "bg-white shadow-lg"
+                            : "bg-transparent"
+                        }`}
+                      >
+                        <div>
+                          <p className={`font-bold text-xl transition-colors ${
+                            activeMember?.name === m.name
+                              ? "text-[#8B1538]"
+                              : "text-[#8B1538]"
+                          }`}>
+                            {m.name}
+                          </p>
+                          <p className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${
+                            activeMember?.name === m.name
+                              ? "text-[#8B1538]"
+                              : "text-[#8B1538]/60"
+                          }`}>
+                            {m.role}
+                          </p>
                         </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
+          
+          {/* Extra scroll space to allow last member to reach viewport center */}
+          <div style={{ height: "calc(100vh - 200px)" }} />
         </div>
 
-        {/* RIGHT: STICKY SPOTLIGHT */}
+        {/* Mobile: Grid Layout for All Sabhas */}
+        <div className="lg:hidden w-full">
+          
+          {/* Sabhas Title */}
+          <div className="mb-12">
+            <h4 className="font-taiganja text-4xl uppercase text-[#8B1538] tracking-tighter drop-shadow-sm">
+              The Sabhas
+            </h4>
+            <div className="h-1 w-20 bg-white mt-2" />
+          </div>
+          {SABHAS.map((s) => (
+            <div key={s.id} className="mb-16">
+              <div className="mb-8">
+                <h3 className="font-taiganja text-3xl uppercase text-[#8B1538] mb-2">
+                  {s.name}
+                </h3>
+                <div className="h-1 w-16 bg-white" />
+              </div>
+
+              {/* 2-Column Grid for Members */}
+              <div className="grid grid-cols-2 gap-4 auto-rows-[250px] md:auto-rows-[320px]">
+                {s.members.map((m) => (
+                  <motion.div 
+                    key={m.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="group flex flex-col transition-all duration-300 h-full"
+                  >
+                    {/* Card matching desktop spotlight style */}
+                    <div className="w-full h-full bg-[#8B1538] rounded-[1.2rem] border-4 border-white shadow-lg overflow-hidden relative flex flex-col transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                      
+                      {/* Photo - Prominent area */}
+                      <div className="flex-1 bg-white relative overflow-hidden flex items-center justify-center">
+                        {m.photo ? (
+                          <Image 
+                            src={m.photo} 
+                            alt={m.name}
+                            fill
+                            className="w-full h-full object-cover object-top"
+                          />
+                        ) : (
+                          <span className="absolute text-[80px] font-nistha text-[#8B1538]/10 leading-none select-none">
+                            {m.initial}
+                          </span>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#8B1538] via-transparent to-transparent opacity-60 z-10" />
+                      </div>
+
+                      {/* Name and Role - Bottom Section */}
+                      <div className="p-3 bg-[#8B1538] text-white">
+                        <h5 className="font-nistha text-lg mb-0.5 leading-tight">
+                          {m.name}
+                        </h5>
+                        <div className="h-0.5 w-8 bg-[#E7A92E] mb-1.5" />
+                        <p className="text-[6px] font-black uppercase tracking-[0.15em] text-[#E7A92E]">
+                          {m.role}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT: STICKY SPOTLIGHT (Desktop Only) */}
         <div className="hidden lg:block w-5/12 relative">
-          <div className="sticky top-40 h-[650px] w-full max-w-[450px] ml-auto">
+          <div className="sticky top-32 w-full max-w-[450px] ml-auto" style={{ height: "calc(100vh - 160px)" }}>
             <div className="w-full h-full bg-[#8B1538] rounded-[4rem] border-[12px] border-white shadow-2xl overflow-hidden relative flex flex-col">
               
               <AnimatePresence mode="wait">
-                {hoveredMember ? (
+                {activeMember ? (
                   <motion.div
-                    key={hoveredMember.name}
+                    key={activeMember.name}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 1.05 }}
                     className="h-full flex flex-col"
                   >
                     <div className="flex-1 bg-white relative overflow-hidden flex items-center justify-center">
-                       <span className="absolute text-[300px] font-nistha text-[#8B1538]/5 leading-none select-none">
-                          {hoveredMember.initial}
-                       </span>
+                      {activeMember.photo ? (
+                        <Image 
+                          src={activeMember.photo} 
+                          alt={activeMember.name}
+                          fill
+                          className="w-full h-full object-cover object-top"
+                        />
+                      ) : (
+                        <span className="absolute text-[300px] font-nistha text-[#8B1538]/5 leading-none select-none">
+                          {activeMember.initial}
+                        </span>
+                      )}
                        <div className="absolute inset-0 bg-gradient-to-t from-[#8B1538] via-transparent to-transparent opacity-70 z-20" />
                     </div>
 
                     <div className="p-10 bg-[#8B1538] text-white">
-                      <h4 className="font-nistha text-6xl mb-2">{hoveredMember.name}</h4>
+                      <h4 className="font-nistha text-3xl mb-2">{activeMember.name}</h4>
                       <div className="h-1 w-20 bg-[#E7A92E] mb-4" />
                       <p className="text-[11px] font-black uppercase tracking-[0.4em] text-[#E7A92E]">
-                        {hoveredMember.role}
+                        {activeMember.role}
                       </p>
                     </div>
                   </motion.div>
@@ -185,12 +383,13 @@ export default function TeamPage() {
                     <div className="w-24 h-24 rounded-full border-4 border-white/20 flex items-center justify-center mb-8 animate-pulse">
                        <div className="w-12 h-12 bg-[#E7A92E] rounded-full blur-xl opacity-50" />
                     </div>
-                    <p className="font-taiganja text-2xl text-white uppercase tracking-widest">Select a Lead</p>
+                    <p className="font-taiganja text-2xl text-white uppercase tracking-widest">Scroll to View</p>
                   </div>
                 )}
               </AnimatePresence>
             </div>
           </div>
+        </div>
         </div>
 
       </main>

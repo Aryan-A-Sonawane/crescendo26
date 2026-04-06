@@ -6,6 +6,91 @@ import Link from "next/link";
 import EventsInterest from "@/components/EventsInterest";
 
 const TICKETS_URL = "https://learner.vierp.in/events";
+const GOOGLE_SIGNIN_URL = "/api/auth/google/start?redirect=/onboard";
+const BASE_COLLEGES = [
+  "Vishwakarma Institute of Technology, Bibwewadi",
+  "Vishwakarma Institute of Technology, Kondhwa",
+  "COEP Technological University",
+  "Government College of Engineering and Research, Avasari Khurd",
+  "College of Military Engineering",
+  "Pune Institute of Computer Technology",
+  "Pimpri Chinchwad College of Engineering",
+  "MIT Academy of Engineering",
+  "Army Institute of Technology",
+  "Symbiosis Institute of Technology",
+  "Bharati Vidyapeeth Deemed University College of Engineering, Pune",
+  "Dr. D. Y. Patil College of Engineering, Akurdi",
+  "Dr. D. Y. Patil Institute of Technology, Pimpri",
+  "AISSMS College of Engineering",
+  "AISSMS Institute of Information Technology",
+  "International Institute of Information Technology, Pune",
+  "Modern Education Society's College of Engineering",
+  "PES Modern College of Engineering",
+  "Pune Vidyarthi Griha's College of Engineering and Technology",
+  "Marathwada Mitra Mandal's College of Engineering",
+  "Rajarshi Shahu College of Engineering",
+  "Cummins College of Engineering for Women, Pune",
+  "Sinhgad College of Engineering, Vadgaon",
+  "Sinhgad Institute of Technology, Lonavala",
+  "NBN Sinhgad School of Engineering",
+  "Sinhgad Institute of Technology and Science",
+  "JSPM's Jayawantrao Sawant College of Engineering",
+  "JSPM's Imperial College of Engineering and Research",
+  "JSPM's Bhivarabai Sawant Institute of Technology and Research",
+  "Indira College of Engineering and Management",
+  "Genba Sopanrao Moze College of Engineering",
+  "Trinity College of Engineering and Research",
+  "Zeal College of Engineering and Research",
+  "Nutan College of Engineering and Research",
+  "Siddhant College of Engineering",
+  "Sahyadri Valley College of Engineering and Technology",
+  "Imperial College of Engineering and Research",
+  "Shri Chhatrapati Shivajiraje College of Engineering",
+];
+
+function GoogleIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#EA4335"
+        d="M12 10.2v3.9h5.4c-.23 1.25-.94 2.3-2 3.01l3.24 2.51c1.89-1.74 2.98-4.29 2.98-7.32 0-.7-.06-1.37-.18-2.02H12z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 22c2.7 0 4.96-.9 6.61-2.44l-3.24-2.51c-.9.6-2.05.95-3.37.95-2.59 0-4.79-1.75-5.57-4.1l-3.35 2.58A9.99 9.99 0 0 0 12 22z"
+      />
+      <path
+        fill="#4A90E2"
+        d="M6.43 13.9a5.99 5.99 0 0 1 0-3.8L3.08 7.52a9.99 9.99 0 0 0 0 8.96l3.35-2.58z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M12 5.98c1.47 0 2.8.5 3.84 1.5l2.88-2.88A9.57 9.57 0 0 0 12 2a9.99 9.99 0 0 0-8.92 5.52l3.35 2.58c.78-2.35 2.98-4.12 5.57-4.12z"
+      />
+    </svg>
+  );
+}
+
+function GoogleAuthButton({ href, googleVerified, compact = false }: { href: string; googleVerified: boolean; compact?: boolean }) {
+  return (
+    <a
+      href={href}
+      className={`group block w-full rounded-xl border-2 transition-all hover:scale-[1.01] ${compact ? "px-3 py-2" : "px-4 py-2.5"}`}
+      style={{
+        backgroundColor: "#FFFFFF",
+        borderColor: "#DADCE0",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+      }}
+    >
+      <span className={`flex items-center justify-center gap-2 ${compact ? "text-xs" : "text-sm"} font-semibold`} style={{ color: "#3C4043" }}>
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full" style={{ backgroundColor: "#fff" }}>
+          <GoogleIcon size={18} />
+        </span>
+        {googleVerified ? "Continue with another Google account" : "Sign in with Google"}
+      </span>
+    </a>
+  );
+}
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -25,6 +110,8 @@ export default function RegisterPage() {
   const [customCollege, setCustomCollege] = useState("");
   const [customColleges, setCustomColleges] = useState<string[]>([]);
   const [registeredUser, setRegisteredUser] = useState<{ name: string; email: string } | null>(null);
+  const [googleVerified, setGoogleVerified] = useState(false);
+  const [googleId, setGoogleId] = useState("");
 
   // Load custom colleges + check if already registered
   useEffect(() => {
@@ -34,6 +121,58 @@ export default function RegisterPage() {
     const user = localStorage.getItem("crescendo_user");
     if (user) {
       try { setRegisteredUser(JSON.parse(user)); } catch { /* ignore */ }
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const googleIdentity = params.get("google_id");
+    const googleEmail = params.get("google_email");
+    const googleName = params.get("google_name");
+    const googleError = params.get("google_error");
+
+    if (googleError) {
+      setServerError(googleError);
+    }
+
+    if (googleIdentity && googleEmail && googleName) {
+      setFormData((prev) => ({
+        ...prev,
+        email: googleEmail,
+        name: googleName,
+      }));
+      setGoogleId(googleIdentity);
+      setGoogleVerified(true);
+      setServerError("");
+
+      void (async () => {
+        try {
+          const loginRes = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: googleEmail.toLowerCase().trim() }),
+          });
+
+          const loginData = await loginRes.json();
+          if (loginRes.ok && loginData?.found) {
+            localStorage.setItem(
+              "crescendo_user",
+              JSON.stringify({
+                name: loginData.name || googleName,
+                email: loginData.email || googleEmail,
+                college: loginData.college || "",
+                phone: loginData.phone || "",
+              })
+            );
+            window.dispatchEvent(new Event("crescendo_user_updated"));
+            window.location.replace("/select-events");
+          }
+        } catch {
+          // Keep the registration form flow available if auto-login check fails.
+        }
+      })();
+    }
+
+    if (googleIdentity || googleEmail || googleName || googleError) {
+      window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);
 
@@ -61,6 +200,50 @@ export default function RegisterPage() {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
+  const completeRegistration = async (errorTarget: "server" | "otp" = "server") => {
+    const regRes = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...formData,
+        authProvider: googleVerified ? "google" : "otp",
+        googleId: googleVerified ? googleId : undefined,
+      }),
+    });
+    const regData = await regRes.json();
+
+    if (!regRes.ok) {
+      if (regData.errors) {
+        setErrors(regData.errors);
+        setStep("form");
+        const firstError = Object.values(regData.errors)[0];
+        setServerError(typeof firstError === "string" ? firstError : "Please check the form and try again.");
+      } else {
+        const message = regData.error || "Registration failed. Please try again.";
+        if (errorTarget === "otp") {
+          setOtpError(message);
+        } else {
+          setServerError(message);
+        }
+      }
+      return false;
+    }
+
+    // Save to localStorage so Navbar & select-events page can detect the user
+    localStorage.setItem(
+      "crescendo_user",
+      JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        college: formData.college,
+        phone: formData.phone,
+      })
+    );
+    window.dispatchEvent(new Event("crescendo_user_updated"));
+    setStep("events");
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -70,7 +253,13 @@ export default function RegisterPage() {
     }
     setLoading(true);
     setServerError("");
+    setOtpError("");
     try {
+      if (googleVerified) {
+        await completeRegistration("server");
+        return;
+      }
+
       const res = await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -108,26 +297,7 @@ export default function RegisterPage() {
         setOtpError(verifyData.error || "Invalid OTP. Please try again.");
         return;
       }
-      const regRes = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const regData = await regRes.json();
-      if (!regRes.ok) {
-        if (regData.errors) {
-          setErrors(regData.errors);
-          setStep("form");
-          setServerError("Please check the form and try again.");
-        } else {
-          setOtpError(regData.error || "Registration failed. Please try again.");
-        }
-        return;
-      }
-      // Save to localStorage so Navbar & select-events page can detect the user
-      localStorage.setItem("crescendo_user", JSON.stringify({ name: formData.name, email: formData.email }));
-      window.dispatchEvent(new Event("crescendo_user_updated"));
-      setStep("events");
+      await completeRegistration("otp");
     } catch {
       setOtpError("Network error. Please check your connection and try again.");
     } finally {
@@ -152,55 +322,12 @@ export default function RegisterPage() {
       }}
     >
       <option value="" disabled>Select your college</option>
-      <optgroup label="Government / Public Engineering Colleges">
-        <option>COEP Technological University</option>
-        <option>Government College of Engineering and Research, Avasari Khurd</option>
-        <option>College of Military Engineering</option>
-      </optgroup>
-      <optgroup label="Autonomous / Top Private Engineering Colleges">
-        <option>Pune Institute of Computer Technology</option>
-        <option>Vishwakarma Institute of Technology</option>
-        <option>Pimpri Chinchwad College of Engineering</option>
-        <option>MIT Academy of Engineering</option>
-        <option>Army Institute of Technology</option>
-        <option>Symbiosis Institute of Technology</option>
-      </optgroup>
-      <optgroup label="Major Private Engineering Colleges">
-        <option>Bharati Vidyapeeth Deemed University College of Engineering, Pune</option>
-        <option>Dr. D. Y. Patil College of Engineering, Akurdi</option>
-        <option>Dr. D. Y. Patil Institute of Technology, Pimpri</option>
-        <option>AISSMS College of Engineering</option>
-        <option>AISSMS Institute of Information Technology</option>
-        <option>International Institute of Information Technology, Pune</option>
-      </optgroup>
-      <optgroup label="Other Engineering Colleges in Pune">
-        <option>Modern Education Society&apos;s College of Engineering</option>
-        <option>PES Modern College of Engineering</option>
-        <option>Pune Vidyarthi Griha&apos;s College of Engineering and Technology</option>
-        <option>Marathwada Mitra Mandal&apos;s College of Engineering</option>
-        <option>Rajarshi Shahu College of Engineering</option>
-        <option>Cummins College of Engineering for Women, Pune</option>
-      </optgroup>
-      <optgroup label="Sinhgad Group Engineering Colleges">
-        <option>Sinhgad College of Engineering, Vadgaon</option>
-        <option>Sinhgad Institute of Technology, Lonavala</option>
-        <option>NBN Sinhgad School of Engineering</option>
-        <option>Sinhgad Institute of Technology and Science</option>
-      </optgroup>
-      <optgroup label="Other Private Engineering Colleges">
-        <option>JSPM&apos;s Jayawantrao Sawant College of Engineering</option>
-        <option>JSPM&apos;s Imperial College of Engineering and Research</option>
-        <option>JSPM&apos;s Bhivarabai Sawant Institute of Technology and Research</option>
-        <option>Indira College of Engineering and Management</option>
-        <option>Genba Sopanrao Moze College of Engineering</option>
-        <option>Trinity College of Engineering and Research</option>
-        <option>Zeal College of Engineering and Research</option>
-        <option>Nutan College of Engineering and Research</option>
-        <option>Siddhant College of Engineering</option>
-        <option>Sahyadri Valley College of Engineering and Technology</option>
-        <option>Imperial College of Engineering and Research</option>
-        <option>Shri Chhatrapati Shivajiraje College of Engineering</option>
-      </optgroup>
+      {BASE_COLLEGES.map((college) => (
+        <option key={college}>{college}</option>
+      ))}
+      {customColleges.map((college, index) => (
+        <option key={`${college}-${index}`}>{college}</option>
+      ))}
       <option value="Other">Other</option>
     </select>
   );
@@ -593,6 +720,13 @@ export default function RegisterPage() {
                   </p>
                 )}
 
+                <div className="space-y-2">
+                  <GoogleAuthButton href={GOOGLE_SIGNIN_URL} googleVerified={googleVerified} />
+                  <p className="text-center text-xs" style={{ color: "#7B2D0E" }}>
+                    {googleVerified ? "Google verified your email. OTP will be skipped." : "Google sign-in can auto-verify your email."}
+                  </p>
+                </div>
+
                 {/* NAME */}
                 <div>
                   <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#7B2D0E" }}>
@@ -624,10 +758,11 @@ export default function RegisterPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    readOnly={googleVerified}
                     placeholder="Enter your email"
                     className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
                     style={{
-                      backgroundColor: "#fff8e1",
+                      backgroundColor: googleVerified ? "#f6dea1" : "#fff8e1",
                       border: `2px solid ${errors.email ? "#cc0000" : "#b5420a"}`,
                       color: "#3a1a00",
                     }}
@@ -679,46 +814,11 @@ export default function RegisterPage() {
                     }}
                   >
                     <option value="" disabled>Select your college</option>
-                    <option>Vishwakarma Institute of Technology, Bibwewadi</option>
-                    <option>Vishwakarma Institute of Technology, Kondhwa</option>
-                    <option>COEP Technological University</option>
-                    <option>Government College of Engineering and Research, Avasari Khurd</option>
-                    <option>College of Military Engineering</option>
-                    <option>Pune Institute of Computer Technology</option>
-                    <option>Pimpri Chinchwad College of Engineering</option>
-                    <option>MIT Academy of Engineering</option>
-                    <option>Army Institute of Technology</option>
-                    <option>Symbiosis Institute of Technology</option>
-                    <option>Bharati Vidyapeeth Deemed University College of Engineering, Pune</option>
-                    <option>Dr. D. Y. Patil College of Engineering, Akurdi</option>
-                    <option>Dr. D. Y. Patil Institute of Technology, Pimpri</option>
-                    <option>AISSMS College of Engineering</option>
-                    <option>AISSMS Institute of Information Technology</option>
-                    <option>International Institute of Information Technology, Pune</option>
-                    <option>Modern Education Society&apos;s College of Engineering</option>
-                    <option>PES Modern College of Engineering</option>
-                    <option>Pune Vidyarthi Griha&apos;s College of Engineering and Technology</option>
-                    <option>Marathwada Mitra Mandal&apos;s College of Engineering</option>
-                    <option>Rajarshi Shahu College of Engineering</option>
-                    <option>Cummins College of Engineering for Women, Pune</option>
-                    <option>Sinhgad College of Engineering, Vadgaon</option>
-                    <option>Sinhgad Institute of Technology, Lonavala</option>
-                    <option>NBN Sinhgad School of Engineering</option>
-                    <option>Sinhgad Institute of Technology and Science</option>
-                    <option>JSPM&apos;s Jayawantrao Sawant College of Engineering</option>
-                    <option>JSPM&apos;s Imperial College of Engineering and Research</option>
-                    <option>JSPM&apos;s Bhivarabai Sawant Institute of Technology and Research</option>
-                    <option>Indira College of Engineering and Management</option>
-                    <option>Genba Sopanrao Moze College of Engineering</option>
-                    <option>Trinity College of Engineering and Research</option>
-                    <option>Zeal College of Engineering and Research</option>
-                    <option>Nutan College of Engineering and Research</option>
-                    <option>Siddhant College of Engineering</option>
-                    <option>Sahyadri Valley College of Engineering and Technology</option>
-                    <option>Imperial College of Engineering and Research</option>
-                    <option>Shri Chhatrapati Shivajiraje College of Engineering</option>
+                    {BASE_COLLEGES.map((college) => (
+                      <option key={college}>{college}</option>
+                    ))}
                     {customColleges.map((college, index) => (
-                      <option key={index}>{college}</option>
+                      <option key={`${college}-${index}`}>{college}</option>
                     ))}
                     <option value="Other">Other</option>
                   </select>
@@ -773,7 +873,7 @@ export default function RegisterPage() {
                     borderColor: "#b5420a",
                   }}
                 >
-                  {loading ? "SENDING OTP..." : "SUBMIT"}
+                  {loading ? (googleVerified ? "PROCESSING..." : "SENDING OTP...") : "SUBMIT"}
                 </button>
 
               </form>

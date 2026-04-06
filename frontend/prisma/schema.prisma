@@ -6,6 +6,46 @@ datasource db {
   provider = "postgresql"
 }
 
+enum AdminRole {
+  SUPER_ADMIN
+  COORDINATOR
+
+  @@map("admin_role")
+}
+
+enum EventFormat {
+  SINGLE_PARTICIPANT
+  SINGLE_VS_SINGLE
+  TEAM_SOLO
+  TEAM_VS_TEAM
+
+  @@map("event_format")
+}
+
+enum EventStatus {
+  NOT_STARTED
+  STARTED
+  PAUSED
+  COMPLETED
+
+  @@map("event_status")
+}
+
+enum QueueEntryStatus {
+  QUEUED
+  IN_PROGRESS
+  COMPLETED
+
+  @@map("queue_entry_status")
+}
+
+enum EventRoundStatus {
+  IN_PROGRESS
+  COMPLETED
+
+  @@map("event_round_status")
+}
+
 model Registration {
   id             Int      @id @default(autoincrement())
   name           String
@@ -13,9 +53,11 @@ model Registration {
   phone          String   @unique
   college        String
   verified       Boolean  @default(false)
+  authProvider   String   @default("otp") @map("auth_provider")
+  googleId       String?  @unique @map("google_id")
+  passwordHash   String?  @map("password_hash")
   eventInterests String?  @map("event_interests")
   createdAt      DateTime @default(now())
-
   @@map("registrations")
 }
 
@@ -29,4 +71,111 @@ model OtpCode {
 
   @@index([email])
   @@map("otp_codes")
+}
+
+model AdminAccess {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  role      AdminRole
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@map("admin_access")
+}
+
+model ManagedEvent {
+  id           Int                     @id @default(autoincrement())
+  name         String                  @unique
+  category     String
+  format       EventFormat
+  teamSize     Int?                    @map("team_size")
+  venue        String?
+  allowOnSpotEntry Boolean             @default(false) @map("allow_on_spot_entry")
+  status       EventStatus             @default(NOT_STARTED)
+  createdAt    DateTime                @default(now()) @map("created_at")
+  updatedAt    DateTime                @updatedAt @map("updated_at")
+  assignments  CoordinatorAssignment[]
+  queueEntries EventQueueEntry[]
+  rounds       EventRound[]
+  tickets      Ticket[]
+
+  @@map("managed_events")
+}
+
+model CoordinatorAssignment {
+  id         Int          @id @default(autoincrement())
+  email      String
+  eventId    Int          @map("event_id")
+  createdAt  DateTime     @default(now()) @map("created_at")
+  event      ManagedEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([email, eventId])
+  @@index([email])
+  @@map("coordinator_assignments")
+}
+
+model Ticket {
+  id             Int             @id @default(autoincrement())
+  sourceFile     String          @map("source_file")
+  sourceRow      Int             @map("source_row")
+  eventName      String          @map("event_name")
+  eventId        Int?            @map("event_id")
+  email          String
+  participantName String         @map("participant_name")
+  phone          String?
+  receipt        String?
+  qrToken        String          @unique @map("qr_token")
+  isPlayed       Boolean         @default(false) @map("is_played")
+  playedAt       DateTime?       @map("played_at")
+  playedByEmail  String?         @map("played_by_email")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  event          ManagedEvent?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  queueEntries   EventQueueEntry[]
+
+  @@unique([sourceFile, sourceRow])
+  @@index([email])
+  @@index([eventName])
+  @@map("tickets")
+}
+
+model EventQueueEntry {
+  id              Int               @id @default(autoincrement())
+  eventId         Int               @map("event_id")
+  ticketId        Int               @map("ticket_id")
+  participantName String            @map("participant_name")
+  participantEmail String           @map("participant_email")
+  participantPhone String?          @map("participant_phone")
+  teamMembersJson Json?             @map("team_members_json")
+  status          QueueEntryStatus  @default(QUEUED)
+  queuedAt        DateTime          @default(now()) @map("queued_at")
+  startedAt       DateTime?         @map("started_at")
+  completedAt     DateTime?         @map("completed_at")
+  event           ManagedEvent      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticket          Ticket            @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  roundsAsA       EventRound[]      @relation("RoundEntryA")
+  roundsAsB       EventRound[]      @relation("RoundEntryB")
+
+  @@index([eventId, status])
+  @@map("event_queue_entries")
+}
+
+model EventRound {
+  id            Int              @id @default(autoincrement())
+  eventId       Int              @map("event_id")
+  entryAId      Int              @map("entry_a_id")
+  entryBId      Int?             @map("entry_b_id")
+  status        EventRoundStatus @default(IN_PROGRESS)
+  scoreA        Int              @default(0) @map("score_a")
+  scoreB        Int?             @map("score_b")
+  remarks       String?
+  isStarred     Boolean          @default(false) @map("is_starred")
+  starredAt     DateTime?        @map("starred_at")
+  startedAt     DateTime         @default(now()) @map("started_at")
+  endedAt       DateTime?        @map("ended_at")
+  event         ManagedEvent     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  entryA        EventQueueEntry  @relation("RoundEntryA", fields: [entryAId], references: [id], onDelete: Restrict)
+  entryB        EventQueueEntry? @relation("RoundEntryB", fields: [entryBId], references: [id], onDelete: Restrict)
+
+  @@index([eventId, status])
+  @@map("event_rounds")
 }

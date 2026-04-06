@@ -1,8 +1,9 @@
 import nodemailer from "nodemailer";
 
 function getMailerConfig() {
-  const user = process.env.EMAIL_USER;
-  const pass = process.env.EMAIL_PASS;
+  const user = String(process.env.EMAIL_USER || "").trim();
+  // Gmail app passwords are often copied with spaces; sanitize defensively.
+  const pass = String(process.env.EMAIL_PASS || "").replace(/\s+/g, "");
 
   if (!user || !pass) {
     throw new Error("[mailer] EMAIL_USER or EMAIL_PASS is not configured.");

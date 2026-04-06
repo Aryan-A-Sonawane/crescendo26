@@ -19,7 +19,11 @@ const navLinkClass =
 const mobileNavLinkClass =
   "text-[#a71d16] hover:text-white py-2 px-4 text-center text-sm font-bold rounded-full hover:bg-white/30 transition-all";
 
-export default function Navbar() {
+interface NavbarProps {
+  hideAuthButton?: boolean;
+}
+
+export default function Navbar({ hideAuthButton = false }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [registeredUser, setRegisteredUser] = useState<{ name: string } | null>(null);
 
@@ -141,25 +145,26 @@ export default function Navbar() {
                       </Link>
                     )
                   ))}
-                  {registeredUser ? (
-                    <Link
-                      href="/profile"
-                      className="bg-[#8B1538] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#8B1538] transition-all mt-2"
-                      onClick={() => setIsMenuOpen(false)}
-                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    >
-                      PROFILE
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/onboard"
-                      className="bg-[#a71d16] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#a71d16] transition-all mt-2"
-                      onClick={() => setIsMenuOpen(false)}
-                      style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                    >
-                      REGISTER
-                    </Link>
-                  )}
+                  {!hideAuthButton &&
+                    (registeredUser ? (
+                      <Link
+                        href="/profile"
+                        className="bg-[#8B1538] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#8B1538] transition-all mt-2"
+                        onClick={() => setIsMenuOpen(false)}
+                        style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                      >
+                        PROFILE
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/onboard"
+                        className="bg-[#a71d16] text-white text-base font-bold py-2 px-4 text-center rounded-full hover:bg-white hover:text-[#a71d16] transition-all mt-2"
+                        onClick={() => setIsMenuOpen(false)}
+                        style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                      >
+                        REGISTER
+                      </Link>
+                    ))}
                 </div>
               </div>
             </div>
@@ -167,23 +172,24 @@ export default function Navbar() {
         </div>
 
         {/* Register/Profile Button — outside the pill, to the right */}
-        {registeredUser ? (
-          <Link
-            href="/profile"
-            className="hidden lg:inline-flex items-center text-sm font-bold px-4 py-2 lg:px-5 xl:px-6 xl:py-2.5 rounded-full border-4 shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
-            style={{ backgroundColor: "#8B1538", color: "#ffb51d", borderColor: "#8B1538", fontFamily: "'Cinzel Decorative', serif" }}
-          >
-            PROFILE
-          </Link>
-        ) : (
-          <Link
-            href="/onboard"
-            className="hidden lg:inline-flex items-center text-sm font-bold px-4 py-2 lg:px-5 xl:px-6 xl:py-2.5 rounded-full border-4 border-[#a71d16] shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
-            style={{ backgroundColor: "#a71d16", color: "#ffb51d", fontFamily: "'Cinzel Decorative', serif" }}
-          >
-            REGISTER
-          </Link>
-        )}
+        {!hideAuthButton &&
+          (registeredUser ? (
+            <Link
+              href="/profile"
+              className="hidden lg:inline-flex items-center text-sm font-bold px-4 py-2 lg:px-5 xl:px-6 xl:py-2.5 rounded-full border-4 shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
+              style={{ backgroundColor: "#8B1538", color: "#ffb51d", borderColor: "#8B1538", fontFamily: "'Cinzel Decorative', serif" }}
+            >
+              PROFILE
+            </Link>
+          ) : (
+            <Link
+              href="/onboard"
+              className="hidden lg:inline-flex items-center text-sm font-bold px-4 py-2 lg:px-5 xl:px-6 xl:py-2.5 rounded-full border-4 border-[#a71d16] shadow-2xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
+              style={{ backgroundColor: "#a71d16", color: "#ffb51d", fontFamily: "'Cinzel Decorative', serif" }}
+            >
+              REGISTER
+            </Link>
+          ))}
 
       </div>
     </nav>

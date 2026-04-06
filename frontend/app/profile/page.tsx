@@ -104,6 +104,9 @@ export default function ProfilePage() {
           if (accessData.isSuperAdmin) {
             setDashboardRoute("/event-dashboard");
             setDashboardLabel("ACCESS SUPER ADMIN DASHBOARD");
+          } else if (accessData.isVenueTeam) {
+            setDashboardRoute("/venue-dashboard");
+            setDashboardLabel("ACCESS VENUE TEAM DASHBOARD");
           } else {
             setDashboardRoute("/coordinator-dashboard");
             setDashboardLabel("ACCESS COORDINATOR DASHBOARD");

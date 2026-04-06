@@ -27,7 +27,8 @@ export async function GET(req: NextRequest) {
         email,
         isSuperAdmin: access.isSuperAdmin,
         isCoordinator: access.isCoordinator,
-        showDashboardAccess: access.isSuperAdmin || access.isCoordinator,
+        isVenueTeam: access.isVenueTeam,
+        showDashboardAccess: access.isSuperAdmin || access.isCoordinator || access.isVenueTeam,
         assignedEvents: assignedEvents.map((entry: any) => entry.event),
       },
       { status: 200 }

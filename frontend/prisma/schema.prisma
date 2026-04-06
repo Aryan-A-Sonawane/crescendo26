@@ -9,6 +9,7 @@ datasource db {
 enum AdminRole {
   SUPER_ADMIN
   COORDINATOR
+  VENUE_TEAM
 
   @@map("admin_role")
 }
@@ -80,6 +81,22 @@ model AdminAccess {
   createdAt DateTime  @default(now()) @map("created_at")
 
   @@map("admin_access")
+}
+
+model GateEntryLog {
+  id                Int      @id @default(autoincrement())
+  participantEmail  String   @map("participant_email")
+  participantName   String   @map("participant_name")
+  participantPhone  String?  @map("participant_phone")
+  participantCollege String? @map("participant_college")
+  qrToken           String   @map("qr_token")
+  scannedByEmail    String   @map("scanned_by_email")
+  scannedAt         DateTime @default(now()) @map("scanned_at")
+  entryDate         String   @map("entry_date")
+
+  @@index([scannedAt])
+  @@index([scannedByEmail, scannedAt])
+  @@map("gate_entry_logs")
 }
 
 model ManagedEvent {

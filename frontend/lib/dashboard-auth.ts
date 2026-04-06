@@ -34,7 +34,7 @@ export function getSuperAdminEmails(): string[] {
 export async function getAccess(email: string) {
   const normalized = normalizeEmail(email);
   if (!normalized) {
-    return { isSuperAdmin: false, isCoordinator: false };
+    return { isSuperAdmin: false, isCoordinator: false, isVenueTeam: false };
   }
 
   const envSuperAdmin = getSuperAdminEmails().includes(normalized);
@@ -45,8 +45,9 @@ export async function getAccess(email: string) {
 
   const isSuperAdmin = envSuperAdmin || dbAccess?.role === "SUPER_ADMIN";
   const isCoordinator = isSuperAdmin || dbAccess?.role === "COORDINATOR";
+  const isVenueTeam = isSuperAdmin || dbAccess?.role === "VENUE_TEAM";
 
-  return { isSuperAdmin, isCoordinator };
+  return { isSuperAdmin, isCoordinator, isVenueTeam };
 }
 
 export async function assertSuperAdmin(email: string): Promise<boolean> {
@@ -70,4 +71,9 @@ export async function canCoordinateEvent(email: string, eventId: number): Promis
   });
 
   return Boolean(assignment);
+}
+
+export async function assertVenueTeam(email: string): Promise<boolean> {
+  const access = await getAccess(email);
+  return access.isVenueTeam;
 }

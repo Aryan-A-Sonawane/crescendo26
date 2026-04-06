@@ -18,12 +18,13 @@ type AccessResponse = {
   email: string;
   isSuperAdmin: boolean;
   isCoordinator: boolean;
+  isVenueTeam: boolean;
   showDashboardAccess: boolean;
 };
 
 type CoordinatorAccessRow = {
   email: string;
-  role: "SUPER_ADMIN" | "COORDINATOR";
+  role: "SUPER_ADMIN" | "COORDINATOR" | "VENUE_TEAM";
   assignments?: Array<{
     eventId: number;
     event?: { id: number; name: string; category: string };
@@ -71,11 +72,11 @@ export default function EventDashboardPage() {
 
   const [searchUsers, setSearchUsers] = useState("");
   const [searchEvents, setSearchEvents] = useState("");
-  const [roleFilter, setRoleFilter] = useState<"ALL" | "SUPER_ADMIN" | "COORDINATOR">("ALL");
+  const [roleFilter, setRoleFilter] = useState<"ALL" | "SUPER_ADMIN" | "COORDINATOR" | "VENUE_TEAM">("ALL");
   const [statusFilter, setStatusFilter] = useState<"ALL" | ManagedEvent["status"]>("ALL");
 
   const [grantEmail, setGrantEmail] = useState("");
-  const [grantRole, setGrantRole] = useState<"SUPER_ADMIN" | "COORDINATOR">("COORDINATOR");
+  const [grantRole, setGrantRole] = useState<"SUPER_ADMIN" | "COORDINATOR" | "VENUE_TEAM">("COORDINATOR");
   const [grantEventId, setGrantEventId] = useState<number | "">("");
 
   const [inlineEventByEmail, setInlineEventByEmail] = useState<Record<string, number | "">>({});
@@ -191,7 +192,7 @@ export default function EventDashboardPage() {
           }
 
           if (!a.isSuperAdmin) {
-            router.replace("/coordinator-dashboard");
+            router.replace(a.isVenueTeam ? "/venue-dashboard" : "/coordinator-dashboard");
             return;
           }
 
@@ -363,10 +364,11 @@ export default function EventDashboardPage() {
 
         <div className="nav-list">
           <button className="nav-item" onClick={() => router.push("/coordinator-dashboard")}>Event Coordinator</button>
+          <button className="nav-item" onClick={() => router.push("/venue-dashboard")}>Venue Dashboard</button>
           <button className="nav-item active">Web Admin</button>
         </div>
 
-        <div className="nav-note">Super admin can manage users, events, and coordinator assignments.</div>
+        <div className="nav-note">Super admin can access coordinator, venue, and web admin controls.</div>
       </aside>
 
       <section className="main-panel">
@@ -413,8 +415,9 @@ export default function EventDashboardPage() {
                 value={grantEmail}
                 onChange={(e) => setGrantEmail(e.target.value)}
               />
-              <select value={grantRole} onChange={(e) => setGrantRole(e.target.value as "SUPER_ADMIN" | "COORDINATOR")}>
+              <select value={grantRole} onChange={(e) => setGrantRole(e.target.value as "SUPER_ADMIN" | "COORDINATOR" | "VENUE_TEAM")}>
                 <option value="COORDINATOR">COORDINATOR</option>
+                <option value="VENUE_TEAM">VENUE_TEAM</option>
                 <option value="SUPER_ADMIN">SUPER_ADMIN</option>
               </select>
               <select
@@ -438,9 +441,10 @@ export default function EventDashboardPage() {
                 value={searchUsers}
                 onChange={(e) => setSearchUsers(e.target.value)}
               />
-              <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value as "ALL" | "SUPER_ADMIN" | "COORDINATOR")}>
+              <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value as "ALL" | "SUPER_ADMIN" | "COORDINATOR" | "VENUE_TEAM")}>
                 <option value="ALL">All Roles</option>
                 <option value="COORDINATOR">COORDINATOR</option>
+                <option value="VENUE_TEAM">VENUE_TEAM</option>
                 <option value="SUPER_ADMIN">SUPER_ADMIN</option>
               </select>
               <button className="compact-btn" onClick={handleRefreshData} disabled={saving}>Refresh</button>
@@ -474,7 +478,9 @@ export default function EventDashboardPage() {
                       </td>
                       <td>
                         <div className="events-col">
-                          {(row.assignments || []).length === 0 ? (
+                          {row.role !== "COORDINATOR" ? (
+                            <span className="muted">Not required for this role</span>
+                          ) : (row.assignments || []).length === 0 ? (
                             <span className="muted">No event assigned</span>
                           ) : (
                             (row.assignments || []).slice(0, 3).map((assignment) => (
@@ -495,23 +501,27 @@ export default function EventDashboardPage() {
                       <td>{row.email}</td>
                       <td>
                         <div className="actions-col">
-                          <select
-                            value={inlineEventByEmail[row.email] ?? ""}
-                            onChange={(e) =>
-                              setInlineEventByEmail((prev) => ({
-                                ...prev,
-                                [row.email]: e.target.value ? Number(e.target.value) : "",
-                              }))
-                            }
-                          >
-                            <option value="">Select event</option>
-                            {adminEvents.map((event) => (
-                              <option key={event.id} value={event.id}>
-                                {event.name}
-                              </option>
-                            ))}
-                          </select>
-                          <button className="icon-btn compact" onClick={() => addAssignment(row.email)} disabled={saving}>Add Event</button>
+                          {row.role === "COORDINATOR" ? (
+                            <>
+                              <select
+                                value={inlineEventByEmail[row.email] ?? ""}
+                                onChange={(e) =>
+                                  setInlineEventByEmail((prev) => ({
+                                    ...prev,
+                                    [row.email]: e.target.value ? Number(e.target.value) : "",
+                                  }))
+                                }
+                              >
+                                <option value="">Select event</option>
+                                {adminEvents.map((event) => (
+                                  <option key={event.id} value={event.id}>
+                                    {event.name}
+                                  </option>
+                                ))}
+                              </select>
+                              <button className="icon-btn compact" onClick={() => addAssignment(row.email)} disabled={saving}>Add Event</button>
+                            </>
+                          ) : null}
                           <button className="icon-btn danger" onClick={() => revokeAllAccess(row.email)} disabled={saving}>Revoke All</button>
                         </div>
                       </td>

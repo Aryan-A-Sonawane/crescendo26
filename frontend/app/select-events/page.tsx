@@ -86,7 +86,7 @@ export default function SelectEventsPage() {
           fontFamily: "'Cinzel Decorative', serif",
         }}
       >
-        VIEW TICKETS
+        ACCESS TICKETS AND PROFILE
       </Link>
       <Link
         href="/gate-pass"

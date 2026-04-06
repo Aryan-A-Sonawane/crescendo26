@@ -421,6 +421,12 @@ export default function RegisterPage() {
                 <Link href="/login" className="font-bold underline" style={{ color: "#8B1538" }}>Login here</Link>
               </p>
             )}
+            <div className="w-full mb-4 space-y-2">
+              <GoogleAuthButton href={GOOGLE_SIGNIN_URL} googleVerified={googleVerified} compact />
+              <p className="text-center text-[11px]" style={{ color: "#7B2D0E" }}>
+                {googleVerified ? "Google verified your email. OTP will be skipped." : "Google sign-in can auto-verify your email."}
+              </p>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-4 w-full" noValidate>
                 {/* NAME */}
                 <div>
@@ -520,7 +526,7 @@ export default function RegisterPage() {
         className="fixed top-12 left-14 z-50 inline-flex items-center text-sm font-bold px-5 py-2.5 rounded-full border-2 shadow-2xl transition-all duration-300 hover:scale-105"
         style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538", fontFamily: "'Cinzel Decorative', serif" }}
       >
-        HOME
+        BACK TO HOME
       </Link>
       <a
         href={TICKETS_URL}

@@ -8,7 +8,7 @@ const db = prisma as any;
 
 const schema = z.object({
   email: z.string().email(),
-  role: z.enum(["COORDINATOR", "SUPER_ADMIN"]).default("COORDINATOR"),
+  role: z.enum(["COORDINATOR", "SUPER_ADMIN", "VENUE_TEAM"]).default("COORDINATOR"),
 });
 
 const deleteSchema = z.object({
@@ -46,9 +46,9 @@ export async function GET(req: NextRequest) {
       assignmentsByEmail.set(assignment.email, current);
     }
 
-    const result = coordinators.map((item: { email: string; role: "SUPER_ADMIN" | "COORDINATOR" }) => ({
+    const result = coordinators.map((item: { email: string; role: "SUPER_ADMIN" | "COORDINATOR" | "VENUE_TEAM" }) => ({
       ...item,
-      assignments: assignmentsByEmail.get(item.email) || [],
+      assignments: item.role === "COORDINATOR" ? assignmentsByEmail.get(item.email) || [] : [],
     }));
 
     return NextResponse.json({ coordinators: result }, { status: 200 });

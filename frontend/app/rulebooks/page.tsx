@@ -22,9 +22,21 @@ const rulebooks = [
 export default function RulebooksPage() {
   return (
     <div className="min-h-screen bg-[#f3ba35] relative overflow-x-hidden">
+      {/* Paisley pattern overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url('/paisley-pattern.png')",
+          backgroundRepeat: "repeat",
+          backgroundSize: "420px 420px",
+          opacity: 0.14,
+          zIndex: 0,
+        }}
+      />
+
       <Navbar />
 
-      <main className="px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-16">
+      <main className="px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-16 relative z-[1]">
         <section className="max-w-6xl mx-auto">
           <h1
             className="text-4xl md:text-5xl font-bold text-center"

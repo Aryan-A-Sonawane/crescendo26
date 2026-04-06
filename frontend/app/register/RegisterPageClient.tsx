@@ -438,6 +438,13 @@ export default function RegisterPage() {
               </p>
             )}
             <form onSubmit={handleSubmit} className="space-y-4 w-full" noValidate>
+                <div className="space-y-2">
+                  <GoogleAuthButton href={GOOGLE_SIGNIN_URL} googleVerified={googleVerified} compact={true} />
+                  <p className="text-center text-[10px]" style={{ color: "#7B2D0E" }}>
+                    {googleVerified ? "Google verified your email. OTP will be skipped." : "Google sign-in can auto-verify your email."}
+                  </p>
+                </div>
+
                 {/* NAME */}
                 <div>
                   <label className="block font-bold text-xs tracking-widest mb-1.5" style={{ color: "#4a0e00" }}>NAME</label>

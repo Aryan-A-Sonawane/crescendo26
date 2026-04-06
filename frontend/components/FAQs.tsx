@@ -27,6 +27,7 @@ const faqs = [
 
 export default function FAQs() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [showContacts, setShowContacts] = useState(false);
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -38,7 +39,7 @@ export default function FAQs() {
       className="py-12 md:py-20"
       style={{ background: "linear-gradient(180deg, #000 0%, #9f3026 50%, #000 100%)" }}
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 md:mb-16">
           <p
             className="text-xs sm:text-sm tracking-[0.35em] uppercase mb-3"
@@ -123,6 +124,7 @@ export default function FAQs() {
         <div className="text-center mt-8 md:mt-12">
           <p className="text-sm md:text-base mb-4 px-2" style={{ color: "#f6d9ac" }}>Still have questions?</p>
           <button
+            onClick={() => setShowContacts((prev) => !prev)}
             className="w-full sm:w-auto px-6 md:px-8 py-3 rounded-full font-semibold transition-all hover:scale-105"
             style={{
               background: "linear-gradient(90deg, #8B1538 0%, #D4A017 100%)",
@@ -131,8 +133,78 @@ export default function FAQs() {
               fontFamily: "'Cinzel Decorative', serif",
             }}
           >
-            Contact Us
+            {showContacts ? "Hide Contacts" : "Contact Us"}
           </button>
+
+          {showContacts && (
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+              <div
+                className="rounded-2xl p-4 md:p-5"
+                style={{
+                  border: "1px solid rgba(212,160,23,0.45)",
+                  background: "linear-gradient(145deg, #3a0f16 0%, #2a0a10 100%)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                }}
+              >
+                <h3 className="text-sm md:text-base font-semibold mb-3" style={{ color: "#FFD27D", fontFamily: "'Cinzel Decorative', serif" }}>
+                  Function Execution Secretary
+                </h3>
+                <div className="space-y-2 text-sm lg:text-base" style={{ color: "#F6DFC0" }}>
+                  <p className="md:whitespace-nowrap">
+                    Ayush Gupta - <a href="tel:9990109251" style={{ color: "#D4A017", textDecoration: "underline" }}>9990109251</a>
+                  </p>
+                  <p className="md:whitespace-nowrap">
+                    Shripad Kanakdande - <a href="tel:7028189628" style={{ color: "#D4A017", textDecoration: "underline" }}>7028189628</a>
+                  </p>
+                  <p className="md:whitespace-nowrap">
+                    Shruti Raina - <a href="tel:9086094452" style={{ color: "#D4A017", textDecoration: "underline" }}>9086094452</a>
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className="rounded-2xl p-4 md:p-5"
+                style={{
+                  border: "1px solid rgba(212,160,23,0.45)",
+                  background: "linear-gradient(145deg, #3a0f16 0%, #2a0a10 100%)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                }}
+              >
+                <h3 className="text-sm md:text-base font-semibold mb-3" style={{ color: "#FFD27D", fontFamily: "'Cinzel Decorative', serif" }}>
+                  PR and Branding
+                </h3>
+                <div className="space-y-2 text-sm lg:text-base" style={{ color: "#F6DFC0" }}>
+                  <p className="md:whitespace-nowrap">
+                    Ameya Badge - <a href="tel:8830762974" style={{ color: "#D4A017", textDecoration: "underline" }}>8830762974</a>
+                  </p>
+                  <p className="md:whitespace-nowrap">
+                    Krishna Ardhapurkar - <a href="tel:8485805407" style={{ color: "#D4A017", textDecoration: "underline" }}>8485805407</a>
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className="rounded-2xl p-4 md:p-5"
+                style={{
+                  border: "1px solid rgba(212,160,23,0.45)",
+                  background: "linear-gradient(145deg, #3a0f16 0%, #2a0a10 100%)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                }}
+              >
+                <h3 className="text-sm md:text-base font-semibold mb-3" style={{ color: "#FFD27D", fontFamily: "'Cinzel Decorative', serif" }}>
+                  Website Secretary
+                </h3>
+                <div className="space-y-2 text-sm lg:text-base" style={{ color: "#F6DFC0" }}>
+                  <p className="md:whitespace-nowrap">
+                    Aryan Sonawane - <a href="tel:9370950520" style={{ color: "#D4A017", textDecoration: "underline" }}>9370950520</a>
+                  </p>
+                  <p className="md:whitespace-nowrap">
+                    Anushka Bhalerao - <a href="tel:7887796921" style={{ color: "#D4A017", textDecoration: "underline" }}>7887796921</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

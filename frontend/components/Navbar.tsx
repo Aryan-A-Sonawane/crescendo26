@@ -9,7 +9,7 @@ const navLinks = [
   { href: "https://learner.vierp.in/events", label: "BUY TICKETS", external: true },
   { href: "/competitions", label: "COMPETITIONS" },
   { href: "/timeline", label: "TIMELINE" },
-  { href: "/#partner", label: "PARTNERS" },
+  { href: "/partners", label: "PARTNERS" },
   { href: "/team", label: "TEAM" },
 ];
 

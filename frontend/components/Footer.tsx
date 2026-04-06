@@ -47,16 +47,25 @@ const SOCIALS = [
         <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none" />
       </svg>
     ),
+  },
+  {
+    label: "LinkedIn",
+    link: "https://www.linkedin.com/company/student-council-vit-pune/posts/?feedView=all",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
+        <rect x="2" y="9" width="4" height="12" />
+        <circle cx="4" cy="4" r="2" fill="currentColor" stroke="none" />
+      </svg>
+    ),
   }
 ];
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/events", label: "Events" },
-  { href: "/#competitions", label: "Competitions" },
-  { href: "/#about", label: "About" },
-  { href: "/#faqs", label: "FAQs" },
-  { href: "/register", label: "Register" },
+  { href: "/rulebooks", label: "Rulebooks" },
+  { href: "/competitions", label: "Competitions" },
+  { href: "/onboard", label: "Register" },
 ];
 
 export default function Footer() {
@@ -134,7 +143,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-10">
 
             {/* LEFT — Branding */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <p style={{ fontFamily: "'Cinzel Decorative', serif", fontSize: "0.58rem", letterSpacing: "0.38em", color: "#FF6B35", textTransform: "uppercase", marginBottom: 5 }}>
                 VIT Pune Presents
               </p>
@@ -167,7 +176,7 @@ export default function Footer() {
 
             {/* Vertical divider — desktop only */}
             <div
-              className="hidden md:block flex-shrink-0"
+              className="hidden md:block shrink-0"
               style={{ width: 1, alignSelf: "stretch", background: "linear-gradient(to bottom, transparent, rgba(212,160,23,0.35) 30%, rgba(212,160,23,0.35) 70%, transparent)" }}
             />
 
@@ -184,6 +193,12 @@ export default function Footer() {
                     <li key={href}>
                       <Link
                         href={href}
+                        onClick={(e) => {
+                          if (label === "Home" && window.location.pathname === "/") {
+                            e.preventDefault();
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }
+                        }}
                         style={{ fontFamily: "'Poppins', sans-serif", fontSize: "0.78rem", color: "#c9a87c", textDecoration: "none", transition: "color 0.2s, padding-left 0.2s" }}
                         onMouseEnter={e => { e.currentTarget.style.color = "#D4A017"; e.currentTarget.style.paddingLeft = "5px"; }}
                         onMouseLeave={e => { e.currentTarget.style.color = "#c9a87c"; e.currentTarget.style.paddingLeft = "0"; }}

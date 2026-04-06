@@ -9,10 +9,10 @@ const db = prisma as any;
 
 const schema = z.object({
   eventId: z.number().int().positive(),
-  participantName: z.string().min(2).max(120),
-  participantEmail: z.string().email().optional().or(z.literal("")),
-  participantPhone: z.string().max(30).optional().or(z.literal("")),
-  receipt: z.string().max(120).optional().or(z.literal("")),
+  participantName: z.string().trim().min(2).max(120),
+  participantEmail: z.string().trim().email(),
+  participantPhone: z.string().trim().min(1).max(30),
+  receipt: z.string().trim().min(1).max(120),
   teamName: z.string().max(120).optional().or(z.literal("")),
   teammates: z
     .array(
@@ -25,12 +25,6 @@ const schema = z.object({
     .max(20)
     .optional(),
 });
-
-function fallbackEmail(eventId: number, receipt: string, actorEmail: string) {
-  const seed = `${eventId}|${receipt}|${Date.now()}|${Math.random()}|${actorEmail}`;
-  const token = crypto.createHash("sha256").update(seed).digest("hex").slice(0, 18);
-  return `onspot.${token}@crescendo.local`;
-}
 
 function makeQrToken(email: string, eventId: number, sourceRow: number) {
   const source = `on-spot|${email}|${eventId}|${sourceRow}`;
@@ -51,9 +45,9 @@ export async function POST(req: NextRequest) {
     const {
       eventId,
       participantName,
-      participantEmail = "",
-      participantPhone = "",
-      receipt = "",
+      participantEmail,
+      participantPhone,
+      receipt,
       teamName = "",
       teammates = [],
     } = parsed.data;
@@ -79,11 +73,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Event is not started. Start the event to allow on-spot entry." }, { status: 409 });
     }
 
-    const cleanReceipt = String(receipt || "").trim();
+    const cleanReceipt = String(receipt).trim();
     const cleanName = participantName.trim();
     const cleanEmail = normalizeEmail(participantEmail);
-    const finalEmail = cleanEmail || fallbackEmail(eventId, cleanReceipt || "no-receipt", actorEmail);
-    const cleanPhone = String(participantPhone || "").trim() || null;
+    const finalEmail = cleanEmail;
+    const cleanPhone = String(participantPhone).trim();
 
     const sourceRow =
       ((Math.floor(Date.now() / 1000) % 1_500_000_000) + Math.floor(Math.random() * 100_000)) | 0;
@@ -106,7 +100,7 @@ export async function POST(req: NextRequest) {
         email: finalEmail,
         participantName: cleanName,
         phone: cleanPhone,
-        receipt: cleanReceipt || null,
+        receipt: cleanReceipt,
         qrToken,
         isPlayed: false,
         playedAt: null,

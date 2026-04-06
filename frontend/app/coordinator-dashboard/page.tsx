@@ -846,15 +846,29 @@ export default function CoordinatorDashboardPage() {
       return;
     }
 
-    const participantName = (prompt("On-spot participant name") || "").trim();
+    const participantName = (prompt("On-spot participant name (required)") || "").trim();
     if (!participantName) {
       showToast("error", "Participant name is required for on-spot entry.");
       return;
     }
 
-    const participantPhone = (prompt("Participant phone (optional)") || "").trim();
-    const participantEmail = (prompt("Participant email (optional)") || "").trim();
-    const receipt = (prompt("Receipt number (optional)") || "").trim();
+    const participantPhone = (prompt("Participant phone (required)") || "").trim();
+    if (!participantPhone) {
+      showToast("error", "Participant phone is required for on-spot entry.");
+      return;
+    }
+
+    const participantEmail = (prompt("Participant email (required)") || "").trim();
+    if (!participantEmail) {
+      showToast("error", "Participant email is required for on-spot entry.");
+      return;
+    }
+
+    const receipt = (prompt("Receipt number (required)") || "").trim();
+    if (!receipt) {
+      showToast("error", "Receipt number is required for on-spot entry.");
+      return;
+    }
 
     const teamPayload = getTeamPayload();
     if (!teamPayload) return;

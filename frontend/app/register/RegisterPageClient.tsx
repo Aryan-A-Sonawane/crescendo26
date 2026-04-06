@@ -313,12 +313,12 @@ export default function RegisterPage() {
         setFormData({ ...formData, college: e.target.value });
         setErrors({ ...errors, college: "" });
       }}
-      className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all"
+      className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-400"
       style={{
-        backgroundColor: "rgba(255,220,150,0.55)",
-        border: `2px solid ${errors.college ? "#cc0000" : "#c45e00"}`,
-        color: formData.college ? "#3a0a00" : "#7a4010",
-        backdropFilter: "blur(2px)",
+        backgroundColor: "rgba(235,245,255,0.7)",
+        border: `2px solid ${errors.college ? "#cc0000" : "#1e3a8a"}`,
+        color: formData.college ? "#1e1b4b" : "#64748b",
+        backdropFilter: "blur(4px)",
       }}
     >
       <option value="" disabled>Select your college</option>
@@ -335,19 +335,16 @@ export default function RegisterPage() {
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
 
-      {/* ════════════════════════════════════════════════════
-          EVENTS INTEREST OVERLAY  (fixed — covers both layouts)
-      ════════════════════════════════════════════════════ */}
       {step === "events" && (
         <div
-          className="fixed inset-0 z-200 flex flex-col items-center justify-center overflow-auto py-8 px-4"
-          style={{ background: "rgba(243,186,53,0.97)", backdropFilter: "blur(8px)" }}
+          className="fixed inset-0 z-[200] flex flex-col items-center justify-center overflow-auto py-8 px-4"
+          style={{ background: "rgba(30,58,138,0.85)", backdropFilter: "blur(12px)" }}
         >
           <div
             className="w-full max-w-lg rounded-3xl border-4 p-6 shadow-2xl overflow-y-auto"
             style={{
-              borderColor: "#a71d16",
-              backgroundColor: "rgba(255,248,231,0.97)",
+              borderColor: "#D4A017",
+              backgroundColor: "rgba(255,248,231,0.98)",
               maxHeight: "calc(100vh - 80px)",
             }}
           >
@@ -364,161 +361,162 @@ export default function RegisterPage() {
           MOBILE LAYOUT  (shown only on screens < lg)
       ════════════════════════════════════════════════════ */}
       <div
-        className="lg:hidden relative w-full"
+        className="lg:hidden flex flex-col w-full min-h-screen"
         style={{
-          backgroundImage: "url('/register_page.png')",
+          backgroundImage: "url('/blue-background.jpeg')",
           backgroundSize: "cover",
-          backgroundPosition: "center top",
+          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          minHeight: "100svh",
         }}
       >
-        {/* Top actions — top right corner */}
-        <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-2">
+        {/* Top actions area */}
+        <div className="w-full pt-6 px-6 flex items-center justify-between z-50">
+          <Link href="/"
+            className="flex items-center gap-1.5 text-[10px] font-bold px-4 py-2 rounded-full border-2 transition-all hover:scale-105 shadow-md"
+            style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}>
+            Home
+          </Link>
           <a
             href={TICKETS_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border-2 transition-all hover:scale-105 shadow-md"
+            className="flex items-center gap-1.5 text-[10px] font-bold px-4 py-2 rounded-full border-2 transition-all hover:scale-105 shadow-md"
             style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
           >
             Buy Tickets
           </a>
-          <Link href="/"
-            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border-2 transition-all hover:scale-105 shadow-md"
-            style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
-            Back to home
-          </Link>
         </div>
 
-        {/* Success overlay — full screen, always visible */}
-        {step === "success" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 px-6"
-            style={{ background: "rgba(255,220,150,0.85)", backdropFilter: "blur(6px)" }}>
-            <div className="text-6xl">🎉</div>
-            <p className="font-bold text-xl" style={{ color: "#4a0e00" }}>Welcome, {formData.name}!</p>
-            <p className="text-sm" style={{ color: "#7B2D0E" }}>Confirmation sent to <span className="font-bold">{formData.email}</span></p>
-            <a
-              href={TICKETS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-2 font-taiganja text-sm font-bold px-7 py-2.5 rounded-full border-2 transition-all hover:scale-105"
-              style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
-            >
-              BUY TICKETS
-            </a>
-            <Link href="/" className="inline-block mt-2 font-taiganja text-sm font-bold px-7 py-2.5 rounded-full border-2 transition-all hover:scale-105"
-              style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
-              BACK TO HOME
-            </Link>
-          </div>
-        )}
-
-        {/* Form — positioned absolutely so you can freely move it */}
-        {step === "form" && (
-        <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
-          <h2 className="text-center font-bold tracking-widest mb-1 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>REGISTRATION <br /> FORM</h2>
-          {registeredUser ? (
-            <div className="flex flex-col items-center gap-1 mb-3">
-              <p className="text-center text-xs" style={{ color: "#7B2D0E" }}>Welcome back, <span className="font-bold">{registeredUser.name}</span>!</p>
-              <button
-                type="button"
-                onClick={openEventsForRegisteredUser}
-                className="text-xs font-bold px-4 py-1.5 rounded-full border-2 transition-all hover:scale-105 shadow"
-                style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
-              >
-                SELECT / EDIT YOUR EVENTS
-              </button>
+        {/* Form Container — now using Flexbox to prevent overlap */}
+        <div className="flex-1 flex items-center justify-center p-4">
+          
+          {/* Success overlay */}
+          {step === "success" && (
+            <div className="w-full max-w-sm flex flex-col items-center justify-center text-center space-y-6 px-6 py-12 rounded-3xl"
+              style={{ background: "rgba(235,245,255,0.92)", backdropFilter: "blur(10px)", border: "2px solid #1e3a8a", boxShadow: "0 10px 30px rgba(0,0,0,0.2)" }}>
+              <div className="text-6xl">🎉</div>
+              <p className="font-bold text-xl" style={{ color: "#1e3a8a" }}>Welcome, {formData.name}!</p>
+              <p className="text-sm" style={{ color: "#2563eb" }}>Confirmation sent to <span className="font-bold">{formData.email}</span></p>
+              <div className="flex flex-col gap-3 w-full">
+                <a
+                  href={TICKETS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-taiganja text-sm font-bold py-3 rounded-full border-2 transition-all hover:scale-105 text-center shadow-lg"
+                  style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
+                >
+                  BUY TICKETS
+                </a>
+                <Link href="/" className="font-taiganja text-sm font-bold py-3 rounded-full border-2 transition-all hover:scale-105 text-center shadow-lg"
+                  style={{ backgroundColor: "#1e3a8a", color: "#FFF8E7", borderColor: "#D4A017" }}>
+                  BACK TO HOME
+                </Link>
+              </div>
             </div>
-          ) : (
-            <p className="text-center text-xs mb-3" style={{ color: "#7B2D0E" }}>
-              Already registered?{" "}
-              <Link href="/login" className="font-bold underline" style={{ color: "#8B1538" }}>Login here</Link>
-            </p>
           )}
-          <form onSubmit={handleSubmit} className="space-y-3 w-full" noValidate>
-              <GoogleAuthButton href={GOOGLE_SIGNIN_URL} googleVerified={googleVerified} compact />
-              <p className="text-center text-[10px]" style={{ color: "#7B2D0E" }}>
-                {googleVerified ? "Google verified your email. OTP will be skipped." : "Google sign-in can auto-verify your email."}
-              </p>
 
-              {/* NAME */}
-              <div>
-                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>NAME</label>
-                <input type="text" name="name" value={formData.name} onChange={handleChange}
-                  placeholder="Enter your full name"
-                  className="w-full px-3 py-2 text-sm rounded-lg outline-none"
-                  style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${errors.name ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }} />
-                {errors.name && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.name}</p>}
+          {/* Form Step — mobile */}
+          {step === "form" && (
+          <div style={{ position: "relative", width: "100%", maxWidth: 360, minHeight: 480, backgroundImage: "url('/border-pink.png')", backgroundSize: "100% 100%", backgroundRepeat: "no-repeat", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "75px 40px 35px 40px" }}>
+            <h2 className="text-center font-bold tracking-widest mb-1.5 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>REGISTRATION <br /> FORM</h2>
+            {registeredUser ? (
+              <div className="flex flex-col items-center gap-2 mb-4">
+                <p className="text-center text-xs" style={{ color: "#7B2D0E" }}>Welcome back, <span className="font-bold">{registeredUser.name}</span>!</p>
+                <button
+                  type="button"
+                  onClick={openEventsForRegisteredUser}
+                  className="text-xs font-bold px-5 py-2 rounded-full border-2 transition-all hover:scale-105 shadow"
+                  style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
+                >
+                  SELECT / EDIT YOUR EVENTS
+                </button>
               </div>
-              {/* EMAIL */}
+            ) : (
+              <p className="text-center text-xs mb-4" style={{ color: "#7B2D0E" }}>
+                Already registered?{" "}
+                <Link href="/login" className="font-bold underline" style={{ color: "#8B1538" }}>Login here</Link>
+              </p>
+            )}
+            <form onSubmit={handleSubmit} className="space-y-4 w-full" noValidate>
+                {/* NAME */}
+                <div>
+                  <label className="block font-bold text-xs tracking-widest mb-1.5" style={{ color: "#4a0e00" }}>NAME</label>
+                  <input type="text" name="name" value={formData.name} onChange={handleChange}
+                    placeholder="Enter your full name"
+                    className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-400"
+                    style={{ backgroundColor: "rgba(235,245,255,0.7)", border: `2px solid ${errors.name ? "#cc0000" : "#1e3a8a"}`, color: "#1e1b4b", backdropFilter: "blur(4px)" }} />
+                  {errors.name && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.name}</p>}
+                </div>
+                {/* EMAIL */}
+                <div>
+                  <label className="block font-bold text-xs tracking-widest mb-1.5" style={{ color: "#1e3a8a" }}>EMAIL ID</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-400"
+                    style={{ backgroundColor: "rgba(235,245,255,0.7)", border: `2px solid ${errors.email ? "#cc0000" : "#1e3a8a"}`, color: "#1e1b4b", backdropFilter: "blur(4px)" }} />
+                  {errors.email && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.email}</p>}
+                </div>
+                {/* PHONE */}
+                <div>
+                  <label className="block font-bold text-xs tracking-widest mb-1.5" style={{ color: "#1e3a8a" }}>MOBILE NO</label>
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
+                    placeholder="10-digit mobile number" maxLength={10}
+                    className="w-full px-3 py-2 text-sm rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-400"
+                    style={{ backgroundColor: "rgba(235,245,255,0.7)", border: `2px solid ${errors.phone ? "#cc0000" : "#1e3a8a"}`, color: "#1e1b4b", backdropFilter: "blur(4px)" }} />
+                  {errors.phone && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.phone}</p>}
+                </div>
+                {/* COLLEGE */}
+                <div>
+                  <label className="block font-bold text-xs tracking-widest mb-1.5" style={{ color: "#1e3a8a" }}>COLLEGE NAME</label>
+                  {/* Since mobileCollegeSelect is a separate const, we should update it there or inline it if possible, but let's assume we update the input/select styles within it via a different call or just update the variable passed to the component */}
+                  {mobileCollegeSelect}
+                  {errors.college && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.college}</p>}
+                </div>
+                {serverError && <p className="text-red-700 text-xs font-bold text-center">{serverError}</p>}
+                {/* Submit */}
+                <button type="submit" disabled={loading}
+                  className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: "#1e3a8a", color: "#FFF8E7", borderColor: "#D4A017" }}>
+                  {loading ? "SENDING OTP..." : "SUBMIT"}
+                </button>
+              </form>
+          </div>
+          )}
+
+          {/* OTP Step — mobile */}
+          {step === "otp" && (
+          <div style={{ position: "relative", width: "100%", maxWidth: 360, minHeight: 400, backgroundImage: "url('/border-pink.png')", backgroundSize: "100% 100%", backgroundRepeat: "no-repeat", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "65px 40px 35px 40px" }}>
+            <h2 className="text-center font-bold tracking-widest mb-1.5 text-base" style={{ color: "#1e3a8a", textShadow: "0 1px 4px rgba(235,245,255,0.7)" }}>VERIFY<br/>EMAIL</h2>
+            <p className="text-center text-xs mb-4" style={{ color: "#2563eb" }}>OTP sent to<br/><span className="font-bold">{formData.email}</span></p>
+            <form onSubmit={handleVerifyOtp} className="space-y-4 w-full" noValidate>
               <div>
-                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>EMAIL ID</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} readOnly={googleVerified}
-                  placeholder="Enter your email"
-                  className="w-full px-3 py-2 text-sm rounded-lg outline-none"
-                  style={{ backgroundColor: googleVerified ? "rgba(240,200,120,0.65)" : "rgba(255,220,150,0.55)", border: `2px solid ${errors.email ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }} />
-                {errors.email && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.email}</p>}
+                <label className="block font-bold text-xs tracking-widest mb-1.5" style={{ color: "#1e3a8a" }}>ENTER OTP</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={otpInput}
+                  onChange={(e) => { setOtpInput(e.target.value.replace(/\D/g, "")); setOtpError(""); }}
+                  placeholder="6-digit OTP"
+                  className="w-full px-3 py-2 text-sm rounded-lg outline-none text-center tracking-[0.3em] font-bold"
+                  style={{ backgroundColor: "rgba(235,245,255,0.7)", border: `2px solid ${otpError ? "#cc0000" : "#1e3a8a"}`, color: "#1e1b4b", backdropFilter: "blur(4px)" }}
+                />
+                {otpError && <p className="text-red-700 text-xs mt-0.5 font-bold">{otpError}</p>}
               </div>
-              {/* PHONE */}
-              <div>
-                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>MOBILE NO</label>
-                <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
-                  placeholder="10-digit mobile number" maxLength={10}
-                  className="w-full px-3 py-2 text-sm rounded-lg outline-none"
-                  style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${errors.phone ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }} />
-                {errors.phone && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.phone}</p>}
-              </div>
-              {/* COLLEGE */}
-              <div>
-                <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>COLLEGE NAME</label>
-                {mobileCollegeSelect}
-                {errors.college && <p className="text-red-700 text-xs mt-0.5 font-bold">{errors.college}</p>}
-              </div>
-              {serverError && <p className="text-red-700 text-xs font-bold text-center">{serverError}</p>}
-              {/* Submit */}
               <button type="submit" disabled={loading}
                 className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
-                {loading ? (googleVerified ? "PROCESSING..." : "SENDING OTP...") : "SUBMIT"}
+                {loading ? "VERIFYING..." : "VERIFY OTP"}
+              </button>
+              <button type="button" disabled={loading} onClick={() => setStep("form")}
+                className="w-full text-xs font-bold py-1 transition-all hover:underline disabled:opacity-50"
+                style={{ color: "#7B2D0E", background: "none", border: "none" }}>
+                ← Edit Details / Resend OTP
               </button>
             </form>
+          </div>
+          )}
         </div>
-        )}
-
-        {/* OTP Step — mobile */}
-        {step === "otp" && (
-        <div style={{ position: "absolute", top: "48%", left: "50%", transform: "translate(-50%, -50%)", width: "68%", maxWidth: 240 }}>
-          <h2 className="text-center font-bold tracking-widest mb-1 text-base" style={{ color: "#4a0e00", textShadow: "0 1px 4px rgba(255,220,150,0.7)" }}>VERIFY<br/>EMAIL</h2>
-          <p className="text-center text-xs mb-3" style={{ color: "#7B2D0E" }}>OTP sent to<br/><span className="font-bold">{formData.email}</span></p>
-          <form onSubmit={handleVerifyOtp} className="space-y-3 w-full" noValidate>
-            <div>
-              <label className="block font-bold text-xs tracking-widest mb-1" style={{ color: "#4a0e00" }}>ENTER OTP</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                maxLength={6}
-                value={otpInput}
-                onChange={(e) => { setOtpInput(e.target.value.replace(/\D/g, "")); setOtpError(""); }}
-                placeholder="6-digit OTP"
-                className="w-full px-3 py-2 text-sm rounded-lg outline-none text-center tracking-[0.3em] font-bold"
-                style={{ backgroundColor: "rgba(255,220,150,0.55)", border: `2px solid ${otpError ? "#cc0000" : "#c45e00"}`, color: "#3a0a00", backdropFilter: "blur(2px)" }}
-              />
-              {otpError && <p className="text-red-700 text-xs mt-0.5 font-bold">{otpError}</p>}
-            </div>
-            <button type="submit" disabled={loading}
-              className="w-full font-taiganja text-base font-bold py-2.5 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:brightness-110 shadow-lg tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}>
-              {loading ? "VERIFYING..." : "VERIFY OTP"}
-            </button>
-            <button type="button" disabled={loading} onClick={() => setStep("form")}
-              className="w-full text-xs font-bold py-1 transition-all hover:underline disabled:opacity-50"
-              style={{ color: "#7B2D0E", background: "none", border: "none" }}>
-              ← Edit Details / Resend OTP
-            </button>
-          </form>
-        </div>
-        )}
       </div>
 
       {/* ════════════════════════════════════════════════════
@@ -533,6 +531,13 @@ export default function RegisterPage() {
           backgroundRepeat: "no-repeat",
         }}
       >
+      <Link
+        href="/"
+        className="fixed top-12 left-14 z-50 inline-flex items-center text-sm font-bold px-5 py-2.5 rounded-full border-2 shadow-2xl transition-all duration-300 hover:scale-105"
+        style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538", fontFamily: "'Cinzel Decorative', serif" }}
+      >
+        HOME
+      </Link>
       <a
         href={TICKETS_URL}
         target="_blank"
@@ -598,20 +603,8 @@ export default function RegisterPage() {
 
       <div className="relative z-30 flex flex-col items-center justify-start min-h-screen px-4 pb-16">
 
-        {/* ── CRESCENDO LOGO — centered ── */}
-        <Link href="/" className="relative z-10">
-          <Image
-            src="/crescendo-pink.webp"
-            alt="CRESCENDO'26"
-            width={500}
-            height={100}
-            style={{ objectFit: "contain" }}
-            priority
-          />
-        </Link>
-
         {/* ── FORM AREA — centered ── */}
-        <div className="w-full flex justify-center -mt-22">
+        <div className="w-full flex justify-center -mt-8">
           <div
             className="relative w-full max-w-125 flex items-center justify-center bg-no-repeat bg-center"
             style={{
@@ -890,7 +883,7 @@ export default function RegisterPage() {
         </div>{/* end form right wrapper */}
 
       </div>
-      </div> {/* end desktop layout */}
+    </div> {/* end desktop layout */}
     </main>
   );
 }

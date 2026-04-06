@@ -373,11 +373,25 @@ export default function EventsPage() {
   const [active, setActive] = useState(0);
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f3ba35", overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#f3ba35", overflowX: "hidden", position: "relative" }}>
+      {/* Paisley pattern overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "url('/paisley-pattern.png')",
+          backgroundRepeat: "repeat",
+          backgroundSize: "420px 420px",
+          opacity: 0.14,
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+
       <Navbar />
 
       {/* Hero banner */}
-      <div style={{ backgroundColor:"#f3ba35",paddingTop:"clamp(90px,16vw,130px)",textAlign:"center",position:"relative",overflow:"hidden" }}>
+      <div style={{ paddingTop:"clamp(90px,16vw,130px)",textAlign:"center",position:"relative",overflow:"hidden",zIndex:1 }}>
         <div>
           <h1 className="font-nistha" style={{ fontSize:"clamp(2.4rem,9vw,5.5rem)",marginTop:40,textShadow:"0 2px 12px rgba(0,0,0,0.3)" }}>
             Events
@@ -386,7 +400,7 @@ export default function EventsPage() {
       </div>
 
       {/* Body */}
-      <div style={{ backgroundColor:"#f3ba35",position:"relative" }}>
+      <div style={{ position:"relative",zIndex:1 }}>
 
         {/* ── GooeyNav Tab Switcher ── */}
         <div style={{ padding: "0px 16px 0", position: "relative", zIndex: 1 }}>

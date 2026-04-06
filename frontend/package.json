@@ -7,7 +7,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "tickets:import:check": "node scripts/import-ticket-data.cjs",
+    "tickets:import:apply": "node scripts/import-ticket-data.cjs --apply"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",

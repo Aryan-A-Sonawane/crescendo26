@@ -1,3 +1,4 @@
+import "@/lib/neon-client";
 import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 

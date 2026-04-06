@@ -44,13 +44,21 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    await db.adminAccess.upsert({
+    const existingAccess = await db.adminAccess.findUnique({
       where: { email },
-      create: { email, role: "COORDINATOR" },
-      update: {
-        role: "COORDINATOR",
-      },
+      select: { role: true },
     });
+
+    if (!existingAccess) {
+      await db.adminAccess.create({
+        data: { email, role: "COORDINATOR" },
+      });
+    } else if (existingAccess.role !== "SUPER_ADMIN") {
+      await db.adminAccess.update({
+        where: { email },
+        data: { role: "COORDINATOR" },
+      });
+    }
 
     return NextResponse.json({ assignment }, { status: 200 });
   } catch (error) {

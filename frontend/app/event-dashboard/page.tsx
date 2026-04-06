@@ -87,17 +87,42 @@ export default function EventDashboardPage() {
     [user?.email]
   );
 
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const requestJson = async (url: string, init?: RequestInit) => {
+    const maxAttempts = 2;
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      try {
+        const res = await fetch(url, init);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error((data as { error?: string }).error || "Request failed");
+        }
+        return data;
+      } catch (error) {
+        lastError = error;
+        if (attempt < maxAttempts) {
+          await delay(250);
+          continue;
+        }
+      }
+    }
+
+    if (lastError instanceof Error) {
+      throw lastError;
+    }
+
+    throw new Error("Network error while contacting dashboard APIs.");
+  };
+
   const postJson = async (url: string, body: unknown, method: "POST" | "PATCH" | "DELETE" = "POST") => {
-    const res = await fetch(url, { method, headers: header, body: JSON.stringify(body) });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || "Request failed");
-    return data;
+    return requestJson(url, { method, headers: header, body: JSON.stringify(body) });
   };
 
   const loadAccess = async (email: string) => {
-    const res = await fetch(`/api/dashboard/me?email=${encodeURIComponent(email)}`);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to load access");
+    const data = await requestJson(`/api/dashboard/me?email=${encodeURIComponent(email)}`);
     setAccess(data);
     return data as AccessResponse;
   };
@@ -106,20 +131,10 @@ export default function EventDashboardPage() {
     const email = emailOverride || user?.email;
     if (!email) return;
 
-    const [eventsRes, coordinatorsRes] = await Promise.all([
-      fetch(`/api/dashboard/super-admin/events?email=${encodeURIComponent(email)}`),
-      fetch(`/api/dashboard/super-admin/coordinators?email=${encodeURIComponent(email)}`),
+    const [eventsData, coordinatorsData] = await Promise.all([
+      requestJson(`/api/dashboard/super-admin/events?email=${encodeURIComponent(email)}`),
+      requestJson(`/api/dashboard/super-admin/coordinators?email=${encodeURIComponent(email)}`),
     ]);
-
-    const [eventsData, coordinatorsData] = await Promise.all([eventsRes.json(), coordinatorsRes.json()]);
-
-    if (!eventsRes.ok) {
-      throw new Error(eventsData.error || "Failed to load events.");
-    }
-
-    if (!coordinatorsRes.ok) {
-      throw new Error(coordinatorsData.error || "Failed to load users.");
-    }
 
     const events = eventsData.events || [];
     setAdminEvents(events);

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import EventsInterest from "@/components/EventsInterest";
 
 const TICKETS_URL = "https://learner.vierp.in/events";
 
@@ -32,7 +31,6 @@ export default function SelectEventsPage() {
     }
   });
   const { user, checked } = pageState;
-  const [done, setDone] = useState(false);
 
   // Redirect to login if not registered
   useEffect(() => {
@@ -49,101 +47,71 @@ export default function SelectEventsPage() {
     );
   }
 
-  if (done) {
-    return (
-      <div
-        className="min-h-screen flex flex-col items-center justify-center text-center px-6"
-        style={{ background: "#f3ba35" }}
-      >
-        <div className="text-6xl mb-4">🎊</div>
-        <h2
-          className="text-2xl font-bold mb-3"
-          style={{ color: "#4a0e00", fontFamily: "'Cinzel Decorative', serif" }}
-        >
-          All Done!
-        </h2>
-        <p className="text-sm mb-6" style={{ color: "#7B2D0E" }}>
-          Your event interests have been saved. Our publicity team will contact you and help out for registrations for the events of your interest.
-        </p>
-        <a
-          href={TICKETS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
-          style={{
-            backgroundColor: "#D4A017",
-            color: "#4a0e00",
-            borderColor: "#8B1538",
-            fontFamily: "'Cinzel Decorative', serif",
-          }}
-        >
-          BUY TICKETS
-        </a>
-        <Link
-          href="/profile"
-          className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
-          style={{
-            backgroundColor: "#FFF8E7",
-            color: "#4a0e00",
-            borderColor: "#8B1538",
-            fontFamily: "'Cinzel Decorative', serif",
-          }}
-        >
-          VIEW TICKETS
-        </Link>
-        <Link
-          href="/"
-          className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest"
-          style={{
-            backgroundColor: "#8B1538",
-            color: "#FFF8E7",
-            borderColor: "#D4A017",
-            fontFamily: "'Cinzel Decorative', serif",
-          }}
-        >
-          BACK TO HOME
-        </Link>
-      </div>
-    );
-  }
-
   return (
     <div
-      className="min-h-screen w-full py-24 px-4 flex flex-col items-center"
+      className="min-h-screen flex flex-col items-center justify-center text-center px-6"
       style={{ background: "#f3ba35" }}
     >
-      {/* Back link */}
-      <div className="w-full max-w-lg mb-4 flex justify-start">
-        <Link
-          href="/"
-          className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full border-2 transition-all hover:scale-105"
-          style={{ backgroundColor: "#8B1538", color: "#FFF8E7", borderColor: "#D4A017" }}
-        >
-          ← Home
-        </Link>
-      </div>
-
-      {/* Card */}
-      <div
-        className="w-full max-w-lg rounded-3xl border-4 p-6 shadow-2xl overflow-y-auto"
+      <div className="text-6xl mb-4">🎊</div>
+      <h2
+        className="text-2xl font-bold mb-3"
+        style={{ color: "#4a0e00", fontFamily: "'Cinzel Decorative', serif" }}
+      >
+        All Done!
+      </h2>
+      <p className="text-sm mb-6" style={{ color: "#7B2D0E" }}>
+        Your event interests have been saved. Our publicity team will contact you and help out for registrations for the events of your interest.
+      </p>
+      <a
+        href={TICKETS_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
         style={{
-          borderColor: "#a71d16",
-          backgroundColor: "rgba(255, 248, 231, 0.96)",
-          maxHeight: "calc(100vh - 120px)",
+          backgroundColor: "#D4A017",
+          color: "#4a0e00",
+          borderColor: "#8B1538",
+          fontFamily: "'Cinzel Decorative', serif",
         }}
       >
-        <EventsInterest
-          email={user.email}
-          name={user.name}
-          onComplete={(skipped) => {
-            if (skipped) {
-              router.push("/");
-            } else {
-              setDone(true);
-            }
-          }}
-        />
-      </div>
+        BUY TICKETS
+      </a>
+      <Link
+        href="/profile"
+        className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
+        style={{
+          backgroundColor: "#FFF8E7",
+          color: "#4a0e00",
+          borderColor: "#8B1538",
+          fontFamily: "'Cinzel Decorative', serif",
+        }}
+      >
+        VIEW TICKETS
+      </Link>
+      <Link
+        href="/gate-pass"
+        className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest mb-3"
+        style={{
+          backgroundColor: "#FFF8E7",
+          color: "#8B1538",
+          borderColor: "#8B1538",
+          fontFamily: "'Cinzel Decorative', serif",
+        }}
+      >
+        GET GATE PASS
+      </Link>
+      <Link
+        href="/"
+        className="inline-block font-bold text-sm px-8 py-3 rounded-full border-2 transition-all hover:scale-105 shadow-lg tracking-widest"
+        style={{
+          backgroundColor: "#8B1538",
+          color: "#FFF8E7",
+          borderColor: "#D4A017",
+          fontFamily: "'Cinzel Decorative', serif",
+        }}
+      >
+        BACK TO HOME
+      </Link>
     </div>
   );
 }

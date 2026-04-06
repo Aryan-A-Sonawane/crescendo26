@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import EventsInterest from "@/components/EventsInterest";
 
 const TICKETS_URL = "https://learner.vierp.in/events";
 const GOOGLE_SIGNIN_URL = "/api/auth/google/start?redirect=/onboard";
@@ -100,7 +99,7 @@ export default function RegisterPage() {
     college: "",
   });
 
-  const [step, setStep] = useState<"form" | "otp" | "events" | "success">("form");
+  const [step, setStep] = useState<"form" | "otp" | "success">("form");
   const [otpInput, setOtpInput] = useState("");
   const [otpError, setOtpError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -179,7 +178,7 @@ export default function RegisterPage() {
   const openEventsForRegisteredUser = () => {
     if (!registeredUser) return;
     setFormData((prev) => ({ ...prev, name: registeredUser.name, email: registeredUser.email }));
-    setStep("events");
+    window.location.replace("/select-events");
   };
 
   const validate = () => {
@@ -240,7 +239,7 @@ export default function RegisterPage() {
       })
     );
     window.dispatchEvent(new Event("crescendo_user_updated"));
-    setStep("events");
+    setStep("success");
     return true;
   };
 
@@ -335,28 +334,6 @@ export default function RegisterPage() {
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
 
-      {step === "events" && (
-        <div
-          className="fixed inset-0 z-[200] flex flex-col items-center justify-center overflow-auto py-8 px-4"
-          style={{ background: "rgba(30,58,138,0.85)", backdropFilter: "blur(12px)" }}
-        >
-          <div
-            className="w-full max-w-lg rounded-3xl border-4 p-6 shadow-2xl overflow-y-auto"
-            style={{
-              borderColor: "#D4A017",
-              backgroundColor: "rgba(255,248,231,0.98)",
-              maxHeight: "calc(100vh - 80px)",
-            }}
-          >
-            <EventsInterest
-              email={formData.email}
-              name={formData.name}
-              onComplete={() => setStep(registeredUser ? "form" : "success")}
-            />
-          </div>
-        </div>
-      )}
-
       {/* ════════════════════════════════════════════════════
           MOBILE LAYOUT  (shown only on screens < lg)
       ════════════════════════════════════════════════════ */}
@@ -407,6 +384,13 @@ export default function RegisterPage() {
                 >
                   BUY TICKETS
                 </a>
+                <Link
+                  href="/gate-pass"
+                  className="font-taiganja text-sm font-bold py-3 rounded-full border-2 transition-all hover:scale-105 text-center shadow-lg"
+                  style={{ backgroundColor: "#FFF8E7", color: "#1e3a8a", borderColor: "#1e3a8a" }}
+                >
+                  GET GATE PASS
+                </Link>
                 <Link href="/" className="font-taiganja text-sm font-bold py-3 rounded-full border-2 transition-all hover:scale-105 text-center shadow-lg"
                   style={{ backgroundColor: "#1e3a8a", color: "#FFF8E7", borderColor: "#D4A017" }}>
                   BACK TO HOME
@@ -428,7 +412,7 @@ export default function RegisterPage() {
                   className="text-xs font-bold px-5 py-2 rounded-full border-2 transition-all hover:scale-105 shadow"
                   style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
                 >
-                  SELECT / EDIT YOUR EVENTS
+                  CONTINUE
                 </button>
               </div>
             ) : (
@@ -637,6 +621,15 @@ export default function RegisterPage() {
                 >
                   BUY TICKETS
                 </a>
+                <div>
+                  <Link
+                    href="/gate-pass"
+                    className="inline-block mt-3 font-taiganja text-base font-bold px-8 py-2 rounded-full border-2 transition-all hover:scale-105"
+                    style={{ backgroundColor: "#fff8e1", color: "#7B2D0E", borderColor: "#b5420a" }}
+                  >
+                    GET GATE PASS
+                  </Link>
+                </div>
                 <Link
                   href="/"
                   className="inline-block mt-4 font-taiganja text-base font-bold px-8 py-2 rounded-full border-2 transition-all hover:scale-105"
@@ -710,7 +703,7 @@ export default function RegisterPage() {
                       className="text-sm font-bold px-5 py-2 rounded-full border-2 transition-all hover:scale-105 shadow"
                       style={{ backgroundColor: "#D4A017", color: "#4a0e00", borderColor: "#8B1538" }}
                     >
-                      SELECT / EDIT YOUR EVENTS
+                      CONTINUE
                     </button>
                   </div>
                 ) : (

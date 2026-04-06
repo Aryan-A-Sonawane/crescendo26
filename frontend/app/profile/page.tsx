@@ -287,6 +287,22 @@ export default function ProfilePage() {
                 </div>
               </div>
 
+              <div className="self-start md:self-auto">
+                <Link
+                  href="/gate-pass"
+                  className="inline-flex items-center rounded-full px-4 py-2 text-xs md:text-sm font-bold tracking-[0.14em] transition-all hover:scale-105"
+                  style={{
+                    backgroundColor: "#FFF8E7",
+                    color: "#8B1538",
+                    border: "2px solid #D4A017",
+                    boxShadow: "0 8px 18px rgba(0,0,0,0.2)",
+                    fontFamily: "'Cinzel Decorative', serif",
+                  }}
+                >
+                  GET GATE PASS
+                </Link>
+              </div>
+
               <div
                 className="absolute bottom-0 left-0 right-0 h-1.5"
                 style={{
@@ -419,12 +435,17 @@ export default function ProfilePage() {
                         key={event.id}
                         className="rounded-xl border px-4 py-3"
                         style={{
-                          borderColor: "rgba(139, 21, 56, 0.2)",
-                          backgroundColor: "rgba(255,248,231,0.9)",
-                          boxShadow: "0 4px 12px rgba(139, 21, 56, 0.08)",
+                          borderColor: event.isPlayed ? "rgba(22, 101, 52, 0.35)" : "rgba(139, 21, 56, 0.2)",
+                          backgroundColor: event.isPlayed ? "rgba(220, 252, 231, 0.7)" : "rgba(255,248,231,0.9)",
+                          boxShadow: event.isPlayed
+                            ? "0 4px 12px rgba(22, 101, 52, 0.12)"
+                            : "0 4px 12px rgba(139, 21, 56, 0.08)",
                         }}
                       >
-                        <p className="text-xs uppercase tracking-[0.16em] font-bold" style={{ color: "#8B1538" }}>
+                        <p
+                          className="text-xs uppercase tracking-[0.16em] font-bold"
+                          style={{ color: event.isPlayed ? "#166534" : "#8B1538" }}
+                        >
                           {event.eventName}
                         </p>
                         <p className="text-xs mt-1" style={{ color: event.isPlayed ? "#8B1538" : "#2D6A4F" }}>

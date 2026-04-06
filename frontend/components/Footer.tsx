@@ -29,7 +29,7 @@ function Diya({ size = 22 }: { size?: number }) {
 const SOCIALS = [
   {
     label: "Instagram",
-    href: "#",
+    link: "https://www.instagram.com/vit_pune_official",
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" />
@@ -40,40 +40,22 @@ const SOCIALS = [
   },
   {
     label: "YouTube",
-    href: "#",
+    link: "https://youtube.com/@vitstudentactivities",
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 0 0 1.95-1.97A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
         <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none" />
       </svg>
     ),
-  },
-  {
-    label: "Facebook",
-    href: "#",
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-      </svg>
-    ),
-  },
-  {
-    label: "X",
-    href: "#",
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-      </svg>
-    ),
-  },
+  }
 ];
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
-  { href: "#competitions", label: "Competitions" },
-  { href: "#about", label: "About" },
-  { href: "#faqs", label: "FAQs" },
+  { href: "/#competitions", label: "Competitions" },
+  { href: "/#about", label: "About" },
+  { href: "/#faqs", label: "FAQs" },
   { href: "/register", label: "Register" },
 ];
 
@@ -219,10 +201,10 @@ export default function Footer() {
                   Find Us
                 </h4>
                 <ul style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  {SOCIALS.map(({ label, href, icon }) => (
+                  {SOCIALS.map(({ label, link, icon }) => (
                     <li key={label}>
                       <a
-                        href={href}
+                        href={link}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ display: "inline-flex", alignItems: "center", gap: 7, color: "#c9a87c", fontFamily: "'Poppins', sans-serif", fontSize: "0.78rem", textDecoration: "none", transition: "color 0.2s, transform 0.2s" }}

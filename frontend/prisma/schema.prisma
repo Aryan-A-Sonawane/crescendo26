@@ -89,6 +89,7 @@ model ManagedEvent {
   format       EventFormat
   teamSize     Int?                    @map("team_size")
   venue        String?
+  allowOnSpotEntry Boolean             @default(false) @map("allow_on_spot_entry")
   status       EventStatus             @default(NOT_STARTED)
   createdAt    DateTime                @default(now()) @map("created_at")
   updatedAt    DateTime                @updatedAt @map("updated_at")
@@ -121,6 +122,7 @@ model Ticket {
   email          String
   participantName String         @map("participant_name")
   phone          String?
+  receipt        String?
   qrToken        String          @unique @map("qr_token")
   isPlayed       Boolean         @default(false) @map("is_played")
   playedAt       DateTime?       @map("played_at")

@@ -55,6 +55,7 @@ type ManagedEvent = {
   format: "SINGLE_PARTICIPANT" | "SINGLE_VS_SINGLE" | "TEAM_SOLO" | "TEAM_VS_TEAM";
   teamSize: number | null;
   venue: string | null;
+  allowOnSpotEntry: boolean;
   status: "NOT_STARTED" | "STARTED" | "PAUSED" | "COMPLETED";
   queueEntries?: QueueEntry[];
   rounds?: EventRound[];
@@ -74,6 +75,13 @@ type ToastKind = "success" | "error";
 type ToastMessage = { id: number; kind: ToastKind; message: string };
 
 const STATUS_STEP_ORDER: QueueEntryStatus[] = ["QUEUED", "IN_PROGRESS", "COMPLETED"];
+
+const DASHBOARD_ASSISTANCE_CONTACTS = [
+  { name: "Aryan Sonawane", phone: "9370950520" },
+  { name: "Anushka Bhalerao", phone: "7887796921" },
+  { name: "Soham Deogaonkar", phone: "708384291" },
+  { name: "Shubham Chauhan", phone: "8591508599" },
+];
 
 function prettyQueueStatus(status: QueueEntryStatus) {
   if (status === "QUEUED") return "Queue";
@@ -823,6 +831,56 @@ export default function CoordinatorDashboardPage() {
     }
   };
 
+  const handleAddOnSpotEntry = async () => {
+    if (!user || !selectedEvent) return;
+    if (teamEditEntryId) {
+      showToast("error", "Finish team edit or cancel it before creating on-spot entry.");
+      return;
+    }
+    if (!eventStarted) {
+      showToast("error", "Event is not started. Start the event first.");
+      return;
+    }
+    if (!selectedEvent.allowOnSpotEntry) {
+      showToast("error", "On-spot entry is disabled for this event.");
+      return;
+    }
+
+    const participantName = (prompt("On-spot participant name") || "").trim();
+    if (!participantName) {
+      showToast("error", "Participant name is required for on-spot entry.");
+      return;
+    }
+
+    const participantPhone = (prompt("Participant phone (optional)") || "").trim();
+    const participantEmail = (prompt("Participant email (optional)") || "").trim();
+    const receipt = (prompt("Receipt number (optional)") || "").trim();
+
+    const teamPayload = getTeamPayload();
+    if (!teamPayload) return;
+
+    setSaving(true);
+    try {
+      await postJson(`/api/dashboard/coordinator/on-spot?email=${encodeURIComponent(user.email)}`, {
+        eventId: selectedEvent.id,
+        participantName,
+        participantPhone,
+        participantEmail,
+        receipt,
+        teamName: teamEventSelected ? teamPayload.teamName : "",
+        teammates: teamEventSelected ? teamPayload.teammates : [],
+      });
+      setTeamName("");
+      setTeammates([]);
+      await Promise.all([loadEvents(), loadRegisteredParticipants()]);
+      showToast("success", "On-spot entry added and queued.");
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "Failed to create on-spot entry");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleStartParticipant = async (entry: QueueEntry) => {
     if (!user || !selectedEvent) return;
 
@@ -1114,12 +1172,38 @@ export default function CoordinatorDashboardPage() {
           <h3>Dashboard Views</h3>
           <button className="side-btn" onClick={() => router.push("/event-dashboard")}>Super User Dashboard</button>
           <button className="side-btn active" disabled>Coordinator Dashboard</button>
+
+          <div className="assist-card desktop-assist">
+            <h4>Dashboard Assistance</h4>
+            <p>For any dashboard assistance - call website team.</p>
+            <div className="assist-list">
+              {DASHBOARD_ASSISTANCE_CONTACTS.map((contact) => (
+                <div key={contact.name} className="assist-item">
+                  <span>{contact.name}</span>
+                  <a href={`tel:${contact.phone}`}>{contact.phone}</a>
+                </div>
+              ))}
+            </div>
+          </div>
         </aside>
       )}
 
       <section className="dashboard-main">
         <h1>Event Management Dashboard</h1>
         <p>Manage participants with queue actions and live status transitions.</p>
+
+        <section className="assist-card mobile-assist">
+          <h4>Dashboard Assistance</h4>
+          <p>For any dashboard assistance - call website team.</p>
+          <div className="assist-list">
+            {DASHBOARD_ASSISTANCE_CONTACTS.map((contact) => (
+              <div key={contact.name} className="assist-item">
+                <span>{contact.name}</span>
+                <a href={`tel:${contact.phone}`}>{contact.phone}</a>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="dashboard-card">
           <div className="header-row">
@@ -1262,6 +1346,23 @@ export default function CoordinatorDashboardPage() {
               disabled={saving || !selectedEvent || !eventStarted}
             >
               {scanOpen ? "Close Scanner" : "Scan Ticket"}
+            </button>
+            <button
+              className="scan-btn"
+              onClick={handleAddOnSpotEntry}
+              disabled={
+                saving ||
+                !selectedEvent ||
+                !eventStarted ||
+                !selectedEvent.allowOnSpotEntry
+              }
+              title={
+                selectedEvent && !selectedEvent.allowOnSpotEntry
+                  ? "Enable on-spot entry from Web Admin event settings"
+                  : "Add on-spot participant"
+              }
+            >
+              On-Spot Entry
             </button>
           </div>
 
@@ -1793,6 +1894,56 @@ export default function CoordinatorDashboardPage() {
           gap: 10px;
         }
 
+        .assist-card {
+          margin-top: 6px;
+          border: 1px solid #d9e0ea;
+          border-radius: 14px;
+          background: #f8fafc;
+          padding: 12px;
+          display: grid;
+          gap: 8px;
+        }
+
+        .assist-card h4 {
+          margin: 0;
+          font-size: 14px;
+          color: #0f172a;
+        }
+
+        .assist-card p {
+          margin: 0;
+          font-size: 12px;
+          color: #475569;
+        }
+
+        .assist-list {
+          display: grid;
+          gap: 6px;
+        }
+
+        .assist-item {
+          display: flex;
+          justify-content: space-between;
+          gap: 8px;
+          font-size: 12px;
+          color: #0f172a;
+          align-items: center;
+        }
+
+        .assist-item a {
+          color: #1d4ed8;
+          font-weight: 700;
+          text-decoration: none;
+        }
+
+        .assist-item a:hover {
+          text-decoration: underline;
+        }
+
+        .mobile-assist {
+          display: none;
+        }
+
         .side-btn {
           border: 1px solid #d3d3d3;
           border-radius: 12px;
@@ -1843,7 +1994,7 @@ export default function CoordinatorDashboardPage() {
 
         .toolbar-row {
           display: grid;
-          grid-template-columns: 1fr auto;
+          grid-template-columns: 1fr auto auto;
           gap: 10px;
           align-items: center;
         }
@@ -2404,6 +2555,14 @@ export default function CoordinatorDashboardPage() {
 
           .dashboard-sidebar {
             position: static;
+          }
+
+          .desktop-assist {
+            display: none;
+          }
+
+          .mobile-assist {
+            display: grid;
           }
 
           .selector-row,

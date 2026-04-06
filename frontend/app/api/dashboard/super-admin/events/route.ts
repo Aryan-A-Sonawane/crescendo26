@@ -13,6 +13,7 @@ const createSchema = z.object({
   format: z.enum(["SINGLE_PARTICIPANT", "SINGLE_VS_SINGLE", "TEAM_SOLO", "TEAM_VS_TEAM"]),
   teamSize: z.number().int().positive().max(20).nullable().optional(),
   venue: z.string().max(200).nullable().optional(),
+  allowOnSpotEntry: z.boolean().optional(),
   status: z.enum(["NOT_STARTED", "STARTED", "PAUSED", "COMPLETED"]).optional(),
 });
 
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
         category: parsed.data.category.trim(),
         teamSize: parsed.data.teamSize ?? null,
         venue: parsed.data.venue ?? null,
+        allowOnSpotEntry: parsed.data.allowOnSpotEntry ?? false,
         status: parsed.data.status ?? "NOT_STARTED",
       },
     });
@@ -115,6 +117,7 @@ export async function PATCH(req: NextRequest) {
         format: data.format,
         teamSize: data.teamSize ?? null,
         venue: data.venue ?? null,
+        allowOnSpotEntry: data.allowOnSpotEntry ?? false,
         status: data.status ?? "NOT_STARTED",
       },
     });

@@ -1,0 +1,5 @@
+ALTER TABLE managed_events
+ADD COLUMN IF NOT EXISTS allow_on_spot_entry BOOLEAN NOT NULL DEFAULT false;
+
+ALTER TABLE tickets
+ADD COLUMN IF NOT EXISTS receipt TEXT;

@@ -10,6 +10,7 @@ type ManagedEvent = {
   format: "SINGLE_PARTICIPANT" | "SINGLE_VS_SINGLE" | "TEAM_SOLO" | "TEAM_VS_TEAM";
   teamSize: number | null;
   venue: string | null;
+  allowOnSpotEntry: boolean;
   status: "NOT_STARTED" | "STARTED" | "PAUSED" | "COMPLETED";
 };
 
@@ -560,6 +561,7 @@ export default function EventDashboardPage() {
                     <th>Event</th>
                     <th>Domain</th>
                     <th>Type</th>
+                    <th>On-Spot</th>
                     <th>Status</th>
                     <th>Venue</th>
                     <th>Actions</th>
@@ -571,6 +573,9 @@ export default function EventDashboardPage() {
                       <td>{event.name}</td>
                       <td>{event.category}</td>
                       <td>{prettyFormat(event.format)}</td>
+                      <td>
+                        <span className="pill">{event.allowOnSpotEntry ? "ALLOWED" : "BLOCKED"}</span>
+                      </td>
                       <td><span className="pill">{event.status}</span></td>
                       <td>{event.venue || "Not set"}</td>
                       <td>
@@ -582,7 +587,7 @@ export default function EventDashboardPage() {
                   ))}
                   {filteredEvents.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="empty-row">No events found for current filters.</td>
+                      <td colSpan={7} className="empty-row">No events found for current filters.</td>
                     </tr>
                   )}
                 </tbody>
@@ -698,6 +703,19 @@ export default function EventDashboardPage() {
                     </option>
                   ))}
                 </select>
+              </label>
+
+              <label className="checkbox-row">
+                <input
+                  type="checkbox"
+                  checked={Boolean(editingEvent.allowOnSpotEntry)}
+                  onChange={(e) =>
+                    setEditingEvent((prev) =>
+                      prev ? { ...prev, allowOnSpotEntry: e.target.checked } : prev
+                    )
+                  }
+                />
+                Allow On-Spot Entry
               </label>
             </div>
 
@@ -1075,6 +1093,14 @@ export default function EventDashboardPage() {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 12px;
+        }
+
+        .checkbox-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: 600;
+          color: #334155;
         }
 
         .modal-grid label {

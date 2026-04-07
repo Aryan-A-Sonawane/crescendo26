@@ -61,7 +61,9 @@ export async function POST(req: NextRequest) {
     const categoryMatches: Array<Record<string, unknown>> = [];
     const category = (event.category || "").toLowerCase();
     if (category.includes("technical")) {
-      categoryMatches.push({ eventName: { contains: "technical", mode: "insensitive" } });
+      // Technical events should only include technical-pass fallback rows, not all technical events.
+      categoryMatches.push({ eventName: { contains: "technical pass", mode: "insensitive" } });
+      categoryMatches.push({ eventName: { contains: "tech pass", mode: "insensitive" } });
     }
     if (category.includes("sports")) {
       categoryMatches.push({ eventName: { contains: "sports", mode: "insensitive" } });

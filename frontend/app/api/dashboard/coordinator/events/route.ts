@@ -31,11 +31,9 @@ export async function GET(req: NextRequest) {
       include: {
         queueEntries: {
           orderBy: { queuedAt: "desc" },
-          take: 300,
         },
         rounds: {
           orderBy: { startedAt: "desc" },
-          take: 120,
           include: {
             entryA: true,
             entryB: true,

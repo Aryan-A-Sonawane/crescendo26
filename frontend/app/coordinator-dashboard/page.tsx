@@ -111,6 +111,49 @@ function formatDate(value: string | null) {
   return date.toLocaleString();
 }
 
+function formatDateForExport(value: string | null) {
+  if (!value) return "";
+  return new Date(value).toLocaleString();
+}
+
+function toFileSafeName(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
+type CompletedExportRow = {
+  eventId: number;
+  eventName: string;
+  category: string;
+  venue: string;
+  format: string;
+  recordType: string;
+  roundId: number | "";
+  status: string;
+  participantAName: string;
+  participantAEmail: string;
+  participantAPhone: string;
+  teamAName: string;
+  participantBName: string;
+  participantBEmail: string;
+  participantBPhone: string;
+  teamBName: string;
+  scoreA: number | "";
+  scoreB: number | "";
+  scoreDisplay: string;
+  remarks: string;
+  isStarred: string;
+  startedAt: string;
+  completedAt: string;
+  queueEntryAId: number | "";
+  queueEntryBId: number | "";
+  queuedAtA: string;
+  queuedAtB: string;
+};
+
 function getTeamMeta(entry: QueueEntry) {
   const raw = entry.teamMembersJson;
   if (!raw || typeof raw !== "object") return null;
@@ -128,6 +171,107 @@ function getTeamMeta(entry: QueueEntry) {
 
   if (!teamName && teammates.length === 0) return null;
   return { teamName, teammates };
+}
+
+function buildCompletedExportRowsForEvent(event: ManagedEvent): CompletedExportRow[] {
+  const queueById = new Map((event.queueEntries || []).map((entry) => [entry.id, entry]));
+  const completedRounds = (event.rounds || []).filter((round) => round.status === "COMPLETED");
+  const rows: CompletedExportRow[] = [];
+  const linkedQueueEntryIds = new Set<number>();
+
+  for (const round of completedRounds) {
+    const entryA = queueById.get(round.entryA.id);
+    const entryB = round.entryB ? queueById.get(round.entryB.id) : null;
+    const teamMetaA = entryA ? getTeamMeta(entryA) : null;
+    const teamMetaB = entryB ? getTeamMeta(entryB) : null;
+
+    linkedQueueEntryIds.add(round.entryA.id);
+    if (round.entryB?.id) linkedQueueEntryIds.add(round.entryB.id);
+
+    rows.push({
+      eventId: event.id,
+      eventName: event.name,
+      category: event.category,
+      venue: event.venue || "",
+      format: event.format,
+      recordType: "ROUND_COMPLETED",
+      roundId: round.id,
+      status: round.status,
+      participantAName: round.entryA.participantName,
+      participantAEmail: entryA?.participantEmail || "",
+      participantAPhone: entryA?.participantPhone || "",
+      teamAName: teamMetaA?.teamName || "",
+      participantBName: round.entryB?.participantName || "",
+      participantBEmail: entryB?.participantEmail || "",
+      participantBPhone: entryB?.participantPhone || "",
+      teamBName: teamMetaB?.teamName || "",
+      scoreA: round.scoreA ?? "",
+      scoreB: round.scoreB ?? "",
+      scoreDisplay: round.entryB ? `${round.scoreA ?? 0} - ${round.scoreB ?? 0}` : `${round.scoreA ?? 0}`,
+      remarks: round.remarks || "",
+      isStarred: round.isStarred ? "Yes" : "No",
+      startedAt: formatDateForExport(round.startedAt),
+      completedAt: formatDateForExport(round.endedAt),
+      queueEntryAId: round.entryA.id,
+      queueEntryBId: round.entryB?.id ?? "",
+      queuedAtA: formatDateForExport(entryA?.queuedAt || null),
+      queuedAtB: formatDateForExport(entryB?.queuedAt || null),
+    });
+  }
+
+  const completedQueueEntries = (event.queueEntries || []).filter(
+    (entry) => entry.status === "COMPLETED" && !linkedQueueEntryIds.has(entry.id)
+  );
+
+  for (const entry of completedQueueEntries) {
+    const teamMeta = getTeamMeta(entry);
+    rows.push({
+      eventId: event.id,
+      eventName: event.name,
+      category: event.category,
+      venue: event.venue || "",
+      format: event.format,
+      recordType: "QUEUE_COMPLETED_ONLY",
+      roundId: "",
+      status: entry.status,
+      participantAName: entry.participantName,
+      participantAEmail: entry.participantEmail,
+      participantAPhone: entry.participantPhone || "",
+      teamAName: teamMeta?.teamName || "",
+      participantBName: "",
+      participantBEmail: "",
+      participantBPhone: "",
+      teamBName: "",
+      scoreA: "",
+      scoreB: "",
+      scoreDisplay: "",
+      remarks: "",
+      isStarred: "",
+      startedAt: formatDateForExport(entry.startedAt),
+      completedAt: formatDateForExport(entry.completedAt),
+      queueEntryAId: entry.id,
+      queueEntryBId: "",
+      queuedAtA: formatDateForExport(entry.queuedAt),
+      queuedAtB: "",
+    });
+  }
+
+  return rows.sort((a, b) => {
+    const tA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+    const tB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+    return tB - tA;
+  });
+}
+
+async function downloadRowsAsExcel(rows: CompletedExportRow[], sheetName: string, fileNameBase: string) {
+  const XLSXModule = await import("xlsx");
+  const withDefault = XLSXModule as typeof XLSXModule & { default?: typeof XLSXModule };
+  const XLSX = withDefault.default ?? XLSXModule;
+
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetName.slice(0, 31));
+  XLSX.writeFile(wb, `${toFileSafeName(fileNameBase) || "completed-export"}.xlsx`);
 }
 
 function ActionIcon({
@@ -1179,6 +1323,26 @@ export default function CoordinatorDashboardPage() {
     await handleAssignScore(round, { scoreA: nextA, scoreB: nextB });
   };
 
+  const handleExportSelectedEventCompleted = async () => {
+    if (!selectedEvent) {
+      showToast("error", "Select an event first.");
+      return;
+    }
+
+    const rows = buildCompletedExportRowsForEvent(selectedEvent);
+    if (rows.length === 0) {
+      showToast("error", "No completed data found for selected event.");
+      return;
+    }
+
+    try {
+      await downloadRowsAsExcel(rows, "Completed", `${selectedEvent.name}-completed`);
+      showToast("success", `Exported completed data for ${selectedEvent.name}.`);
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "Failed to export selected event data");
+    }
+  };
+
   return (
     <main className={access.isSuperAdmin ? "dashboard-shell with-sidebar" : "dashboard-shell"}>
       {access.isSuperAdmin && (
@@ -1225,7 +1389,10 @@ export default function CoordinatorDashboardPage() {
               <h2>Select Event</h2>
               <p>Pick an event and manage entries from queue to completion.</p>
             </div>
-            <button onClick={() => loadEvents()} disabled={saving}>Refresh</button>
+            <div className="header-actions">
+              <button onClick={() => loadEvents()} disabled={saving}>Refresh</button>
+              <button onClick={handleExportSelectedEventCompleted} disabled={saving || !selectedEvent}>Export Event Excel</button>
+            </div>
           </div>
 
           <div className="selector-row">
@@ -1995,6 +2162,13 @@ export default function CoordinatorDashboardPage() {
           align-items: start;
         }
 
+        .header-actions {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+
         .header-row h2 {
           margin: 0;
         }
@@ -2565,6 +2739,15 @@ export default function CoordinatorDashboardPage() {
           .header-row {
             flex-direction: column;
             align-items: stretch;
+          }
+
+          .header-actions {
+            width: 100%;
+            justify-content: stretch;
+          }
+
+          .header-actions :global(button) {
+            flex: 1;
           }
 
           .with-sidebar {

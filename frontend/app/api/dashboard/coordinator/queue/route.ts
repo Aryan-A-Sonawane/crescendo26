@@ -59,9 +59,24 @@ export async function POST(req: NextRequest) {
     }
 
     const categoryMatches: Array<Record<string, unknown>> = [];
+    const technicalPassEligibleEvents = new Set([
+      "agentic ai",
+      "llm workshop",
+      "escape room",
+      "buzzwire",
+      "line following",
+      "gun range",
+      "rc rampage",
+      "sitting soccer",
+      "software hackathon",
+      "software hackware",
+    ]);
     const category = (event.category || "").toLowerCase();
-    if (category.includes("technical")) {
-      // Technical events should only include technical-pass fallback rows, not all technical events.
+    const normalizedEventName = (event.name || "").trim().toLowerCase();
+    const technicalPassEnabled = category.includes("technical") && technicalPassEligibleEvents.has(normalizedEventName);
+
+    if (technicalPassEnabled) {
+      // Technical pass fallback only applies to explicitly allowed technical events.
       categoryMatches.push({ eventName: { contains: "technical pass", mode: "insensitive" } });
       categoryMatches.push({ eventName: { contains: "tech pass", mode: "insensitive" } });
     }
@@ -85,6 +100,13 @@ export async function POST(req: NextRequest) {
         { eventId: event.id },
         { eventName: { equals: event.name, mode: "insensitive" } },
         ...categoryMatches,
+      ],
+    };
+
+    const directEventScopeFilter = {
+      OR: [
+        { eventId: event.id },
+        { eventName: { equals: event.name, mode: "insensitive" } },
       ],
     };
 
@@ -124,7 +146,7 @@ export async function POST(req: NextRequest) {
         where: {
           email: participantEmail,
           isPlayed: true,
-          ...eventScopeFilter,
+          ...directEventScopeFilter,
         },
         select: { id: true },
       });
@@ -141,7 +163,7 @@ export async function POST(req: NextRequest) {
         where: {
           email: participantEmail,
           isPlayed: false,
-          ...eventScopeFilter,
+          ...directEventScopeFilter,
         },
         orderBy: [{ createdAt: "desc" }],
         select: {
@@ -156,10 +178,35 @@ export async function POST(req: NextRequest) {
       });
 
       if (!ticket) {
+        if (technicalPassEnabled) {
+          ticket = await db.ticket.findFirst({
+            where: {
+              email: participantEmail,
+              isPlayed: false,
+              OR: [
+                { eventName: { contains: "technical pass", mode: "insensitive" } },
+                { eventName: { contains: "tech pass", mode: "insensitive" } },
+              ],
+            },
+            orderBy: [{ createdAt: "desc" }],
+            select: {
+              id: true,
+              eventId: true,
+              eventName: true,
+              participantName: true,
+              email: true,
+              phone: true,
+              isPlayed: true,
+            },
+          });
+        }
+      }
+
+      if (!ticket) {
         ticket = await db.ticket.findFirst({
           where: {
             email: participantEmail,
-            ...eventScopeFilter,
+            ...directEventScopeFilter,
           },
           orderBy: [{ createdAt: "desc" }],
           select: {

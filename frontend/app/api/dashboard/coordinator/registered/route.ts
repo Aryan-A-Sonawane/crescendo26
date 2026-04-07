@@ -50,9 +50,24 @@ export async function GET(req: NextRequest) {
       : {};
 
     const categoryMatches: Array<Record<string, unknown>> = [];
+    const technicalPassEligibleEvents = new Set([
+      "agentic ai",
+      "llm workshop",
+      "escape room",
+      "buzzwire",
+      "line following",
+      "gun range",
+      "rc rampage",
+      "sitting soccer",
+      "software hackathon",
+      "software hackware",
+    ]);
     const category = (event.category || "").toLowerCase();
-    if (category.includes("technical")) {
-      // Technical events should only include technical-pass fallback rows, not all technical events.
+    const normalizedEventName = (event.name || "").trim().toLowerCase();
+    const technicalPassEnabled = category.includes("technical") && technicalPassEligibleEvents.has(normalizedEventName);
+
+    if (technicalPassEnabled) {
+      // Technical pass fallback only applies to explicitly allowed technical events.
       categoryMatches.push({ eventName: { contains: "technical pass", mode: "insensitive" } });
       categoryMatches.push({ eventName: { contains: "tech pass", mode: "insensitive" } });
     }
@@ -79,11 +94,20 @@ export async function GET(req: NextRequest) {
       ],
     };
 
+    const directEventScopeFilter = {
+      OR: [
+        { eventId: event.id },
+        { eventName: { equals: event.name, mode: "insensitive" } },
+      ],
+    };
+
     const selectShape = {
       id: true,
       participantName: true,
       email: true,
       phone: true,
+      eventId: true,
+      eventName: true,
       isPlayed: true,
       queueEntries: {
         where: {
@@ -95,9 +119,9 @@ export async function GET(req: NextRequest) {
       },
     };
 
-    const tickets = await db.ticket.findMany({
+    const directTickets = await db.ticket.findMany({
       where: {
-        ...eventScopeFilter,
+        ...directEventScopeFilter,
         ...searchFilter,
       },
       orderBy: [{ participantName: "asc" }, { createdAt: "desc" }],
@@ -105,11 +129,42 @@ export async function GET(req: NextRequest) {
       select: selectShape,
     });
 
+    let passTickets: Array<{
+      id: number;
+      participantName: string;
+      email: string;
+      phone: string | null;
+      eventId: number | null;
+      eventName: string;
+      isPlayed: boolean;
+      queueEntries: Array<{ id: number }>;
+    }> = [];
+
+    if (technicalPassEnabled) {
+      passTickets = await db.ticket.findMany({
+        where: {
+          OR: [
+            { eventName: { contains: "technical pass", mode: "insensitive" } },
+            { eventName: { contains: "tech pass", mode: "insensitive" } },
+          ],
+          ...searchFilter,
+        },
+        orderBy: [{ participantName: "asc" }, { createdAt: "desc" }],
+        take: limit,
+        select: selectShape,
+      });
+    }
+
+    const directEmails = new Set(directTickets.map((t: { email: string }) => t.email.toLowerCase()));
+    const tickets = [...directTickets, ...passTickets.filter((t) => !directEmails.has(t.email.toLowerCase()))];
+
     const mapped = tickets.map((ticket: {
       id: number;
       participantName: string;
       email: string;
       phone: string | null;
+      eventId: number | null;
+      eventName: string;
       isPlayed: boolean;
       queueEntries: Array<{ id: number }>;
     }) => ({
@@ -117,7 +172,12 @@ export async function GET(req: NextRequest) {
       participantName: ticket.participantName,
       participantEmail: ticket.email,
       participantPhone: ticket.phone,
-      isPlayed: ticket.isPlayed,
+      // Technical pass fallback rows should not leak played state from other technical events.
+      isPlayed:
+        technicalPassEnabled &&
+        (!ticket.eventId || /technical\s*pass|tech\s*pass/i.test(ticket.eventName || ""))
+          ? false
+          : ticket.isPlayed,
       inQueue: ticket.queueEntries.length > 0,
     }));
 

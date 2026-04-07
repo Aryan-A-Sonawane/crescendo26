@@ -264,9 +264,7 @@ function buildCompletedExportRowsForEvent(event: ManagedEvent): CompletedExportR
 }
 
 async function downloadRowsAsExcel(rows: CompletedExportRow[], sheetName: string, fileNameBase: string) {
-  const XLSXModule = await import("xlsx");
-  const withDefault = XLSXModule as typeof XLSXModule & { default?: typeof XLSXModule };
-  const XLSX = withDefault.default ?? XLSXModule;
+  const XLSX = await import("xlsx");
 
   const ws = XLSX.utils.json_to_sheet(rows);
   const wb = XLSX.utils.book_new();
